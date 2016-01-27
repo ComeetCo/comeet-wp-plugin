@@ -1,0 +1,156 @@
+.comeet-group-name {
+margin-bottom:20px;
+}
+
+.comeet-position-meta {
+	display: block;
+    font-size: 0.7rem;
+    color: #898787;
+}
+.comeet-position-name {
+margin-bottom:5px !important;
+}
+
+.comeet-position-meta-single {
+	display: block;
+    font-size: 0.8rem;
+    color: #898787;
+	margin-bottom:50px;
+}
+
+.comeet-list ul {
+margin:0px;
+}
+.all-jobs-link {
+padding:10px;
+border-top:1px solid #d5d5d5;
+display:block;
+margin-top:20px;
+}
+.email-resume-link {
+float:right;
+font-size:14px;
+font-weight:normal;
+}
+
+.position-image {
+text-align:center;
+}
+
+.comeet-list a{
+text-decoration:none;
+}
+.comeet-list a:link {
+text-decoration:none;
+}
+
+/* visited link */
+.comeet-list a:visited {
+text-decoration:none;
+}
+
+/* mouse over link */
+.comeet-list a:hover {
+text-decoration:none;
+}
+
+/* selected link */
+.comeet-list a:active {
+text-decoration:none;
+}
+
+.comeet-list ul{
+	list-style:none;
+}
+.comeet-list li{
+	margin-bottom:10px;
+}
+
+.comeet-g {
+    letter-spacing: -0.31em;
+    *letter-spacing: normal;
+    *word-spacing: -0.43em;
+    text-rendering: optimizespeed;
+}
+.opera-only:-o-prefocus,
+.comeet-g {
+    word-spacing: -0.43em;
+}
+.comeet-u {
+    display: inline-block;
+    zoom: 1;
+    *display: inline;
+    letter-spacing: normal;
+    word-spacing: normal;
+    vertical-align: top;
+    text-rendering: auto;
+}
+.comeet-u-1,
+.comeet-u-1-2 {
+    display: inline-block;
+    zoom: 1;
+    *display: inline;
+    letter-spacing: normal;
+    word-spacing: normal;
+    vertical-align: top;
+    text-rendering: auto;
+}
+.comeet-u-1 {
+    display: block;
+}
+.comeet-u-1-2 {
+    width: 50%;
+}
+.comeet-offset-1-2 {
+    margin-left: 50%;
+}
+.comeet-g-r {
+    letter-spacing: -0.31em;
+    *letter-spacing: normal;
+    word-spacing: -0.43em;
+}
+.opera-only:-o-prefocus,
+.comeet-g-r {
+    word-spacing: -0.43em;
+}
+.comeet-g-r img {
+    max-width: 100%;
+}
+
+@media (min-width: 980px) {
+    .comeet-visible-phone {
+        display: none;
+    }
+    .comeet-visible-tablet {
+        display: none;
+    }
+    .comeet-visible-desktop {} .comeet-hidden-phone {} .comeet-hidden-tablet {} .comeet-hidden-desktop {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .comeet-g-r > [class ^ "comeet-u"] {
+        width: 100%;
+    }
+}
+@media (max-width: 767px) {
+    .comeet-g-r > [class ^ "comeet-u"] {
+        width: 100%;
+    }
+    .comeet-visible-phone {} .comeet-hidden-phone {
+        display: none;
+    }
+    .comeet-hidden-desktop {} .comeet-visible-desktop {
+        display: none;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 979px) {
+    .comeet-visible-tablet {} .comeet-hidden-tablet {
+        display: none;
+    }
+    .comeet-hidden-desktop {} .comeet-visible-desktop {
+        display: none;
+    }
+}
