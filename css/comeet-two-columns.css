@@ -6,9 +6,11 @@ margin-bottom:20px;
 	display: block;
     font-size: 0.7rem;
     color: #898787;
+    margin-bottom: 20px;
 }
+
 .comeet-position-name {
-margin-bottom:5px !important;
+    margin-bottom:5px !important;
 }
 
 .comeet-position-meta-single {
@@ -19,7 +21,7 @@ margin-bottom:5px !important;
 }
 
 .comeet-list ul {
-margin:0px;
+    margin: 0px;
 }
 .all-jobs-link {
 padding:10px;
@@ -107,7 +109,14 @@ text-decoration:none;
 .comeet-g-r {
     letter-spacing: -0.31em;
     *letter-spacing: normal;
-    word-spacing: -0.43em;
+    word-spacing: -0.43em;    
+}
+.comeet-groups-list .comeet-g-r {
+    border-top: 1px solid #d5d5d5;
+    padding-top: 20px;
+}
+.comeet-groups-list .comeet-g-r:last-of-type {
+    margin-bottom: 20px;    
 }
 .opera-only:-o-prefocus,
 .comeet-g-r {
@@ -115,6 +124,12 @@ text-decoration:none;
 }
 .comeet-g-r img {
     max-width: 100%;
+}
+
+.comeet-social {
+    border-top: 1px solid #d5d5d5;
+    margin-top: 20px;
+    padding-top: 30px;
 }
 
 @media (min-width: 980px) {
