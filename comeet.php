@@ -70,7 +70,7 @@ if(!class_exists('Comeet')) {
         'advanced_search' => 1,
 		'comeet_color' => '278fe6',
 		'comeet_bgcolor' => '',
-		'comeet_stylesheet' => 'comeet-default.css'
+		'comeet_stylesheet' => 'comeet-basic.css'
       );
 
       $saved = get_option($this->db_opt);
@@ -241,9 +241,10 @@ if(!class_exists('Comeet')) {
       $options = $this->get_options();
       echo '<div>';
 	  echo '<select name="'.$this->db_opt.'[comeet_stylesheet]" id="comeet_stylesheet" style="width:200px">';
-	  echo '<option value="comeet-default.css"'.($options['comeet_stylesheet'] == 'comeet-default.css' ? ' selected="selected"' : '').'>Style 1</option>';
-	  echo '<option value="comeet-style2.css"'.($options['comeet_stylesheet'] == 'comeet-style2.css' ? ' selected="selected"' : '').'>Style 2</option>';
-	  echo '<option value="comeet-style3.css"'.($options['comeet_stylesheet'] == 'comeet-style3.css' ? ' selected="selected"' : '').'>Style 3</option>';
+	  echo '<option value="comeet-basic.css"'.($options['comeet_stylesheet'] == 'comeet-basic.css' ? ' selected="selected"' : '').'>Basic</option>';
+	  echo '<option value="comeet-cards.css"'.($options['comeet_stylesheet'] == 'comeet-cards.css' ? ' selected="selected"' : '').'>Cards</option>';
+	  echo '<option value="comeet-two-columns.css"'.($options['comeet_stylesheet'] == 'comeet-two-columns.css' ? ' selected="selected"' : '').'>Two columns</option>';
+
 	  echo '</select></div>';
 	}
     /**
