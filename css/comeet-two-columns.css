@@ -1,16 +1,16 @@
 .comeet-group-name {
-margin-bottom:20px;
+    margin-bottom:20px;
 }
 
 .comeet-position-meta {
+    margin: 0 0 20px 0;
 	display: block;
     font-size: 0.7rem;
     color: #898787;
-    margin-bottom: 20px;
 }
 
 .comeet-position-name {
-    margin-bottom:5px !important;
+    margin-bottom: 0 0 5px 0;
 }
 
 .comeet-position-meta-single {
@@ -24,41 +24,41 @@ margin-bottom:20px;
     margin: 0px;
 }
 .all-jobs-link {
-padding:10px;
-border-top:1px solid #d5d5d5;
-display:block;
-margin-top:20px;
+    padding:10px;
+    border-top:1px solid #d5d5d5;
+    display:block;
+    margin-top:20px;
 }
 .email-resume-link {
-float:right;
-font-size:14px;
-font-weight:normal;
+    float:right;
+    font-size:14px;
+    font-weight:normal;
 }
 
 .position-image {
-text-align:center;
+    text-align:center;
 }
 
 .comeet-list a{
-text-decoration:none;
+    text-decoration:none;
 }
 .comeet-list a:link {
-text-decoration:none;
+    text-decoration:none;
 }
 
 /* visited link */
 .comeet-list a:visited {
-text-decoration:none;
+    text-decoration:none;
 }
 
 /* mouse over link */
 .comeet-list a:hover {
-text-decoration:none;
+    text-decoration:none;
 }
 
 /* selected link */
 .comeet-list a:active {
-text-decoration:none;
+    text-decoration:none;
 }
 
 .comeet-list ul{

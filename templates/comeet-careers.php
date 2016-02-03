@@ -21,12 +21,12 @@ if (isset($comeetgroups)) {
 						foreach ( $data as $post ) {
 							if ($post[$group_element]==$category) {
 								echo '<li class="comeet-position">';
-								echo '<p class="comeet-position-name"><a href="' . get_the_permalink() . strtolower(clean($category)) . '/' . $post['position_uid'] . '/' . strtolower(clean($post['name'])) . '">' . $post['name'] . '</a></p>';
-								echo '<p class="comeet-position-meta">';
+								echo '<div class="comeet-position-name"><a href="' . get_the_permalink() . strtolower(clean($category)) . '/' . $post['position_uid'] . '/' . strtolower(clean($post['name'])) . '">' . $post['name'] . '</a></div>';
+								echo '<div class="comeet-position-meta">';
 								if($comeet_group==0) { echo $post['department']; } else { echo $post['location']; } 
-								if (!$post['employment_type'] == NULL || !$post['employment_type'] =="") {echo '  &middot;  ' . $post['employment_type'];} 
-								if (!$post['experience_level'] == NULL || !$post['experience_level'] =="") {echo '  &middot;  ' . $post['experience_level'];} 
-								echo '</p></li>';
+								if (!$post['employment_type'] == NULL || !$post['employment_type'] == "") {echo '  &middot;  ' . $post['employment_type'];} 
+								if (!$post['experience_level'] == NULL || !$post['experience_level'] == "") {echo '  &middot;  ' . $post['experience_level'];} 
+								echo '</div></li>';
 							}
 						}
 						echo '</ul>';

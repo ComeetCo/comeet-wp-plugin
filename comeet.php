@@ -221,7 +221,7 @@ if(!class_exists('Comeet')) {
         $page_opts[] = '<option value="' . $page->ID . '"'.($options['post_id'] == $page->ID ? ' selected="selected"' : '').'>' . $page->post_title . '</option>';
       }
       echo '<div><select name="'.$this->db_opt.'[post_id]" id="post_id" style="width:200px">'.implode("\n", $page_opts).'</select></div>';
-	  echo '<p>Your careers website homepage will be at this page.</p>';
+      echo '<p class="description">Your careers website homepage will be at this page.</p>';
     }
 
     function advanced_search_input() {
@@ -232,11 +232,13 @@ if(!class_exists('Comeet')) {
       $options = $this->get_options();
 
       echo '<input type="text" id="comeet_color" name="' . $this->db_opt . '[comeet_color]" value="' . $options['comeet_color'] . '" size="25"  style="width:200px" />';
+      echo '<p class="description">e.g. 278fe6</p>';
     }
     function comeet_bgcolor_input() {
       $options = $this->get_options();
 
       echo '<input type="text" id="comeet_bgcolor" name="' . $this->db_opt . '[comeet_bgcolor]" value="' . $options['comeet_bgcolor'] . '" size="25"  style="width:200px" />';
+      echo '<p class="description">e.g. eeeeee</p>';
     }
     function comeet_stylesheet_input() {
       $options = $this->get_options();
