@@ -136,6 +136,7 @@ li.comeet-position {
     border-top: 1px solid #d5d5d5;
     margin-top: 20px;
     padding-top: 30px;
+    clear: both;        
 }
 
 @media (min-width: 980px) {

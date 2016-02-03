@@ -146,6 +146,7 @@ text-decoration:none;
     border-top: 1px solid #d5d5d5;
     margin-top: 20px;
     padding-top: 30px;
+    clear: both;    
 }
 
 @media (min-width: 980px) {
@@ -162,8 +163,8 @@ text-decoration:none;
 
 @media (max-width: 767px) {
     li.comeet-position {
-        width: 94%;
-        margin: 0 3% 3%;
+        width: 100%;
+        margin: 0 0 3% 0 !important;
     }
     .comeet-visible-phone {} .comeet-hidden-phone {
         display: none;

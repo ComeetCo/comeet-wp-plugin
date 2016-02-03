@@ -136,7 +136,7 @@ if(!class_exists('Comeet')) {
 
       add_settings_section(
         'comeet_other_settings',
-        'Careers Website',
+        'Settings',
         array($this, 'other_text'),
         'comeet'
       );
@@ -232,13 +232,13 @@ if(!class_exists('Comeet')) {
       $options = $this->get_options();
 
       echo '<input type="text" id="comeet_color" name="' . $this->db_opt . '[comeet_color]" value="' . $options['comeet_color'] . '" size="25"  style="width:200px" />';
-      echo '<p class="description">e.g. 278fe6</p>';
+      echo '<p class="description">Optional. e.g. 278fe6</p>';
     }
     function comeet_bgcolor_input() {
       $options = $this->get_options();
 
       echo '<input type="text" id="comeet_bgcolor" name="' . $this->db_opt . '[comeet_bgcolor]" value="' . $options['comeet_bgcolor'] . '" size="25"  style="width:200px" />';
-      echo '<p class="description">e.g. eeeeee</p>';
+      echo '<p class="description">Optional. e.g. eeeeee</p>';
     }
     function comeet_stylesheet_input() {
       $options = $this->get_options();
