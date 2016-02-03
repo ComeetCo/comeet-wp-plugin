@@ -43,7 +43,8 @@ if(!class_exists('Comeet')) {
         add_action('admin_init', array($this, 'register_settings'));
         add_action('admin_menu', array($this, 'options_page'));
       } else {
-        add_filter('the_content', array($this, 'content'));
+        //add_filter('the_content', array($this, 'comeet_content'));
+		add_shortcode('comeet_data',array($this, 'comeet_content'));
       }
     }
 
@@ -135,7 +136,7 @@ if(!class_exists('Comeet')) {
 
       add_settings_section(
         'comeet_other_settings',
-        'Careers Website Homepage',
+        'Careers Website',
         array($this, 'other_text'),
         'comeet'
       );
@@ -156,6 +157,13 @@ if(!class_exists('Comeet')) {
         'comeet_other_settings'
       );
       add_settings_field(
+        'comeet_stylesheet',
+        'Stylesheet',
+        array($this, 'comeet_stylesheet_input'),
+        'comeet',
+        'comeet_other_settings'
+      );
+      add_settings_field(
         'comeet_color',
         'Form Main Color',
         array($this, 'comeet_color_input'),
@@ -169,13 +177,6 @@ if(!class_exists('Comeet')) {
         'comeet',
         'comeet_other_settings'
       );	  
-      add_settings_field(
-        'comeet_stylesheet',
-        'Stylesheet',
-        array($this, 'comeet_stylesheet_input'),
-        'comeet',
-        'comeet_other_settings'
-      );
       add_settings_section(
         'comeet_other_blank',
         '',
@@ -244,6 +245,7 @@ if(!class_exists('Comeet')) {
 	  echo '<option value="comeet-basic.css"'.($options['comeet_stylesheet'] == 'comeet-basic.css' ? ' selected="selected"' : '').'>Basic</option>';
 	  echo '<option value="comeet-cards.css"'.($options['comeet_stylesheet'] == 'comeet-cards.css' ? ' selected="selected"' : '').'>Cards</option>';
 	  echo '<option value="comeet-two-columns.css"'.($options['comeet_stylesheet'] == 'comeet-two-columns.css' ? ' selected="selected"' : '').'>Two columns</option>';
+
 	  echo '</select></div>';
 	}
     /**
@@ -302,7 +304,7 @@ if(!class_exists('Comeet')) {
       global $user_ID;
       $page = array(
         'post_type' => 'page',
-        'post_content' => '',
+        'post_content' => '[comeet_data]',
         'post_parent' => 0,
         'post_author' => $user_ID,
         'post_title' => 'Careers',
@@ -314,17 +316,14 @@ if(!class_exists('Comeet')) {
       return wp_insert_post($page);
     }
 
-    function content($text) {
+    function comeet_content($text) {
       $options = $this->get_options();
       if(get_the_ID() == $options['post_id']) {
 
 		$this->add_frontend_css();
 		$this->add_frontend_scripts();
-
-        $text .= '<div id="comeet-wrap">';
 		$text .= $this->comeet_add_template();
-
-		$text .= '</div>';
+		
       }
       return $text;
     }
@@ -379,8 +378,9 @@ if(!class_exists('Comeet')) {
 				echo '<div class="error">Error: Can not render page &ndash; no template found.</div>';
 				die();
 			}
-	  
-		include_once($template);
+
+			include_once($template);
+		
 	}
 
 } //  End class

@@ -12,7 +12,9 @@ positions.
 1. Upload the Comeet plugin to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Visit the Comeet settings page, enter the required information and select or create a careers home page.
+4. If you are using an exiting page for careers home, please add the shortcode [comeet_data] to the page content. If you are creating the new page via plugin, we already have you covered for this.
 4. Save Permanent Links
+5. Visit Careers Page
 
 == Frequently asked questions ==
 
