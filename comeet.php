@@ -187,7 +187,7 @@ if(!class_exists('Comeet')) {
     }
 
     function api_credentials_text() {
-      echo '<div class="card" style="margin-bottom: 2em;"><p>To find these values, navigate in Comeet to Company Settings / Careers Website and make sure to enable the API. These settings are available to the company&#39;s admin. <a href="http://support.comeet.co/knowledgebase/careers-website/" target="_blank">Learn More</a></p>';  
+      echo '<div class="card" style="margin-bottom: 4em;"><p>To find these values, navigate in Comeet to Company Settings / Careers Website and make sure to enable the API. These settings are available to the company&#39;s admin. <a href="http://support.comeet.co/knowledgebase/careers-website/" target="_blank">Learn More</a></p>';  
     }
     function comeet_api_blank() {
       echo '</div>';
