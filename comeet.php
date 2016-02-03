@@ -158,7 +158,7 @@ if(!class_exists('Comeet')) {
       );
       add_settings_field(
         'comeet_stylesheet',
-        'Stylesheet',
+        'Style',
         array($this, 'comeet_stylesheet_input'),
         'comeet',
         'comeet_other_settings'
