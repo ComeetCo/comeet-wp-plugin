@@ -7,8 +7,11 @@
     <?php $options = $this->get_options(); 
     $post = get_post($options['post_id']);
     ?>    
-
-    <a class="button" href="<?php echo site_url() . '/' .$post->post_name;?>" target="_blank" style="float: right;"/>Open &#8599;</a>
+	<?php
+	if (isset($post->post_name)) { ?>
+		<a class="button" href="<?php echo site_url() . '/' .$post->post_name;?>" target="_blank" style="float: right;"/>Open &#8599;</a>
+	<?php }
+	?>
   </h2>
   <form action="options.php" method="post">
     <?php
@@ -19,6 +22,7 @@
       <p>For more information visit <a href="http://support.comeet.co/knowledgebase/wordpress-plug-in/" target="_blank">our guide</a> or <a href="mailto:support@comeet.co" target="_blank">contact us</a>.</p>
     </div>
     <div style="margin-top: 18px;">
+	<p style="font-style:italic;">After saving changes on this page, please save permalinks to make the new careers page available</p>
       <?php submit_button(); ?>
     </div>
     
