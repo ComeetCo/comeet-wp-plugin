@@ -24,6 +24,7 @@
 		}
 	?>
 	<div class="comeet-position-description"><?php echo $post_data['description'] ?></div>
+	<div class="comeet-position-requirements"><?php echo $post_data['requirements'] ?></div>
 </div>
 <div class="comeet-apply">
 	<h4>Apply for this position</h4>
