@@ -149,6 +149,33 @@ text-decoration:none;
     clear: both;    
 }
 
+/* Position info */
+.comeet-position-info * {
+    margin: 0;
+    padding: 0;
+    line-height: 150%;
+}
+
+.comeet-position-info ul, .comeet-position-info ol {
+    margin: 0;
+    padding: 5px 0 0 0;
+    margin-left: 5px;
+    padding-left: 20px;
+}
+
+.comeet-position-info h4 {
+    margin: 30px 0 5px 0;
+}
+
+.comeet-position-meta-single {
+    display: block;
+    font-size: 0.8rem;
+    color: #898787;
+    margin-bottom: 50px;
+}
+
+
+
 @media (min-width: 980px) {
     .comeet-visible-phone {
         display: none;
