@@ -22,6 +22,13 @@ li.comeet-position {
     color: #898787;
 }
 
+.comeet-position-meta-single {
+    display: block;
+    font-size: 0.8rem;
+    color: #898787;
+    margin-bottom: 50px;
+}
+
 .comeet-position-name {
     margin: 0;
 }
@@ -147,15 +154,9 @@ li.comeet-position {
     padding-left: 20px;
 }
 
-.comeet-position-info h4 {
+.comeet-position-info h4, .comeet-apply h4 {
+    font-weight: bold;
     margin: 30px 0 5px 0;
-}
-
-.comeet-position-meta-single {
-    display: block;
-    font-size: 0.8rem;
-    color: #898787;
-    margin-bottom: 50px;
 }
 
 
