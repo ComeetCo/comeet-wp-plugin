@@ -383,8 +383,11 @@ if(!class_exists('Comeet')) {
 				die();
 			}
 
-			include_once($template);
-		
+			ob_start();
+		       include_once($template);
+		       $output = ob_get_contents();
+		    ob_end_clean();
+		    return $output;
 	}
 
 } //  End class
