@@ -102,8 +102,26 @@ if(!class_exists('Comeet')) {
       register_setting('comeet_options', $this->db_opt, array($this, 'validate_options'));
 	  $options = $this->get_options();
 	  $post = get_post($options['post_id']);
-	  add_rewrite_rule($post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]', 'top');
-	  add_rewrite_rule($post->post_name . '/([^/]+)/?$', 'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]', 'top');
+
+    $post_parents = get_post_ancestors( $post );
+
+    if ( ! empty( $post_parents ) ) {
+      $parent_posts_slug = array();
+
+      foreach ( $post_parents as $parent_id ) :
+        $parent = get_post( $parent_id );
+        $parent_posts_slug[] = $parent->post_name;
+      endforeach;
+    }
+
+    if ( ! empty( $parent_posts_slug ) ) {
+      $page_parents = ( count( $parent_posts_slug ) > 1 ? implode( '/', array_reverse( $parent_posts_slug ) ) : reset( $parent_posts_slug ) );
+      add_rewrite_rule( $page_parents . '/' .$post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?pagename=' . $page_parents . '/' .$post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]', 'top');
+      add_rewrite_rule( $page_parents . '/' .$post->post_name . '/([^/]+)/?$', 'index.php?pagename=' . $page_parents . '/' .$post->post_name . '&comeet_cat=$matches[1]', 'top');
+    } else {
+      add_rewrite_rule($post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]', 'top');
+      add_rewrite_rule($post->post_name . '/([^/]+)/?$', 'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]', 'top');
+    }
 	
       // Comeet API required settings.
       add_settings_section(

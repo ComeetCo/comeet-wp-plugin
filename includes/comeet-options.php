@@ -9,7 +9,7 @@
     ?>    
 	<?php
 	if (isset($post->post_name)) { ?>
-		<a class="button" href="<?php echo site_url() . '/' .$post->post_name;?>" target="_blank" style="float: right;"/>Open &#8599;</a>
+		<a class="button" href="<?php echo get_permalink( $post->ID );?>" target="_blank" style="float: right;"/>Open &#8599;</a>
 	<?php }
 	?>
   </h2>
