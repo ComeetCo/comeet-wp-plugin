@@ -71,9 +71,9 @@ if(!class_exists('Comeet')) {
         'location' => '',
         'post_id' => '',
         'advanced_search' => 1,
-		'comeet_color' => '278fe6',
-		'comeet_bgcolor' => '',
-		'comeet_stylesheet' => 'comeet-basic.css'
+        'comeet_color' => '278fe6',
+        'comeet_bgcolor' => '',
+        'comeet_stylesheet' => 'comeet-cards.css'
       );
 
       $saved = get_option($this->db_opt);
@@ -100,29 +100,29 @@ if(!class_exists('Comeet')) {
 
     function register_settings() {
       register_setting('comeet_options', $this->db_opt, array($this, 'validate_options'));
-	  $options = $this->get_options();
-	  $post = get_post($options['post_id']);
+  	  $options = $this->get_options();
+  	  $post = get_post($options['post_id']);
 
-    $post_parents = get_post_ancestors( $post );
+      $post_parents = get_post_ancestors( $post );
 
-    if ( ! empty( $post_parents ) ) {
-      $parent_posts_slug = array();
+      if ( ! empty( $post_parents ) ) {
+        $parent_posts_slug = array();
 
-      foreach ( $post_parents as $parent_id ) :
-        $parent = get_post( $parent_id );
-        $parent_posts_slug[] = $parent->post_name;
-      endforeach;
-    }
+        foreach ( $post_parents as $parent_id ) :
+          $parent = get_post( $parent_id );
+          $parent_posts_slug[] = $parent->post_name;
+        endforeach;
+      }
 
-    if ( ! empty( $parent_posts_slug ) ) {
-      $page_parents = ( count( $parent_posts_slug ) > 1 ? implode( '/', array_reverse( $parent_posts_slug ) ) : reset( $parent_posts_slug ) );
-      add_rewrite_rule( $page_parents . '/' .$post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?pagename=' . $page_parents . '/' .$post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]', 'top');
-      add_rewrite_rule( $page_parents . '/' .$post->post_name . '/([^/]+)/?$', 'index.php?pagename=' . $page_parents . '/' .$post->post_name . '&comeet_cat=$matches[1]', 'top');
-    } else {
-      add_rewrite_rule($post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]', 'top');
-      add_rewrite_rule($post->post_name . '/([^/]+)/?$', 'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]', 'top');
-    }
-	
+      if ( ! empty( $parent_posts_slug ) ) {
+        $page_parents = ( count( $parent_posts_slug ) > 1 ? implode( '/', array_reverse( $parent_posts_slug ) ) : reset( $parent_posts_slug ) );
+        add_rewrite_rule( $page_parents . '/' .$post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?pagename=' . $page_parents . '/' .$post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]', 'top');
+        add_rewrite_rule( $page_parents . '/' .$post->post_name . '/([^/]+)/?$', 'index.php?pagename=' . $page_parents . '/' .$post->post_name . '&comeet_cat=$matches[1]', 'top');
+      } else {
+        add_rewrite_rule($post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]', 'top');
+        add_rewrite_rule($post->post_name . '/([^/]+)/?$', 'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]', 'top');
+      }
+  	
       // Comeet API required settings.
       add_settings_section(
         'comeet_api_settings',
@@ -247,29 +247,33 @@ if(!class_exists('Comeet')) {
     function advanced_search_input() {
       $options = $this->get_options();
       echo '<div><select name="'.$this->db_opt.'[advanced_search]" id="advanced_search" style="width:200px"><option value="0"'.($options['advanced_search'] == 0 ? ' selected="selected"' : '').'>Location</option><option value="1"'.($options['advanced_search'] == 1 ? ' selected="selected"' : '').'>Department</option></select></div>';
-	}
+  	}
+
     function comeet_color_input() {
       $options = $this->get_options();
 
       echo '<input type="text" id="comeet_color" name="' . $this->db_opt . '[comeet_color]" value="' . $options['comeet_color'] . '" size="25"  style="width:200px" />';
       echo '<p class="description">Optional. e.g. 278fe6</p>';
     }
+
     function comeet_bgcolor_input() {
       $options = $this->get_options();
 
       echo '<input type="text" id="comeet_bgcolor" name="' . $this->db_opt . '[comeet_bgcolor]" value="' . $options['comeet_bgcolor'] . '" size="25"  style="width:200px" />';
       echo '<p class="description">Optional. e.g. eeeeee</p>';
     }
+
     function comeet_stylesheet_input() {
       $options = $this->get_options();
       echo '<div>';
-	  echo '<select name="'.$this->db_opt.'[comeet_stylesheet]" id="comeet_stylesheet" style="width:200px">';
-	  echo '<option value="comeet-basic.css"'.($options['comeet_stylesheet'] == 'comeet-basic.css' ? ' selected="selected"' : '').'>Basic</option>';
-	  echo '<option value="comeet-cards.css"'.($options['comeet_stylesheet'] == 'comeet-cards.css' ? ' selected="selected"' : '').'>Cards</option>';
-	  echo '<option value="comeet-two-columns.css"'.($options['comeet_stylesheet'] == 'comeet-two-columns.css' ? ' selected="selected"' : '').'>Two columns</option>';
+  	  echo '<select name="'.$this->db_opt.'[comeet_stylesheet]" id="comeet_stylesheet" style="width:200px">';
+  	  echo '<option value="comeet-basic.css"'.($options['comeet_stylesheet'] == 'comeet-basic.css' ? ' selected="selected"' : '').'>Basic</option>';
+  	  echo '<option value="comeet-cards.css"'.($options['comeet_stylesheet'] == 'comeet-cards.css' ? ' selected="selected"' : '').'>Cards</option>';
+  	  echo '<option value="comeet-two-columns.css"'.($options['comeet_stylesheet'] == 'comeet-two-columns.css' ? ' selected="selected"' : '').'>Two columns</option>';
 
-	  echo '</select></div>';
-	}
+  	  echo '</select></div>';
+  	}
+
     /**
      * Validates plugin settings form when submitted.
      *
@@ -279,10 +283,10 @@ if(!class_exists('Comeet')) {
       $valid['comeet_token'] = $input['comeet_token'];
       $valid['comeet_uid'] = trim($input['comeet_uid']);
       $valid['location'] = trim($input['location']);
-		$valid['comeet_color'] = trim($input['comeet_color']);
-		$valid['comeet_bgcolor'] = trim($input['comeet_bgcolor']);
+  		$valid['comeet_color'] = trim($input['comeet_color']);
+  		$valid['comeet_bgcolor'] = trim($input['comeet_bgcolor']);
       $valid['advanced_search'] = intval($input['advanced_search']);
-	  $valid['comeet_stylesheet'] = $input['comeet_stylesheet'];
+      $valid['comeet_stylesheet'] = $input['comeet_stylesheet'];
 	  
 
       if($input['post_id'] == '-1') {
@@ -300,8 +304,9 @@ if(!class_exists('Comeet')) {
       } else {
         $valid['post_id'] = $input['post_id'];
       }
-	  $transient_reset = 'comeet-careers-' . $valid['comeet_uid'] . '-' . $valid['comeet_token'];
-		delete_transient( $transient_reset );
+      
+  	  $transient_reset = 'comeet-careers-' . $valid['comeet_uid'] . '-' . $valid['comeet_token'];
+  		delete_transient( $transient_reset );
       return $valid;
     }
 
@@ -342,9 +347,9 @@ if(!class_exists('Comeet')) {
       $options = $this->get_options();
       if(get_the_ID() == $options['post_id']) {
 
-		$this->add_frontend_css();
-		$this->add_frontend_scripts();
-		$text .= $this->comeet_add_template();
+  		$this->add_frontend_css();
+  		$this->add_frontend_scripts();
+  		$text .= $this->comeet_add_template();
 		
       }
       return $text;
@@ -416,12 +421,12 @@ if(!class_exists('Comeet')) {
     register_activation_hook( __FILE__, array(&$Comeet, 'install'));
 
 		function comeet_add_query_vars($aVars) {
-		$aVars[] = "comeet_cat"; // represents the name of the department or location in URL
-		$aVars[] = "comeet_pos"; // represents the name of the position as shown in URL
-		return $aVars;
-	}
-	// hook add_query_vars function into query_vars
-	add_filter('query_vars', 'comeet_add_query_vars');
+  		$aVars[] = "comeet_cat"; // represents the name of the department or location in URL
+  		$aVars[] = "comeet_pos"; // represents the name of the position as shown in URL
+  		return $aVars;
+  	}
+  	// hook add_query_vars function into query_vars
+  	add_filter('query_vars', 'comeet_add_query_vars');
 
   }
 }
