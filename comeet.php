@@ -9,25 +9,25 @@
  * License: Apache 2
  */
 
- 
+
  /*
- 
+
  Copyright 2016 Comeet
- 
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
     http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
- 
+
  */
- 
+
 if(!class_exists('Comeet')) {
 
   class Comeet {
@@ -44,9 +44,10 @@ if(!class_exists('Comeet')) {
       if(is_admin()) {
         add_action('admin_init', array($this, 'register_settings'));
         add_action('admin_menu', array($this, 'options_page'));
+		add_action('admin_init', array($this, 'flush_permalinks'));
       } else {
         //add_filter('the_content', array($this, 'comeet_content'));
-		add_shortcode('comeet_data',array($this, 'comeet_content'));
+		      add_shortcode('comeet_data',array($this, 'comeet_content'));
       }
     }
 
@@ -57,7 +58,94 @@ if(!class_exists('Comeet')) {
     public function deactivate() {
 
     }
+	
+    public function check_for_keys(){
 
+      if(is_admin()){
+  			if((empty($this->comeet_token) || empty($this->comeet_uid)) && empty($_POST['save'])){
+  				add_action('admin_notices', array($this, 'admin_keys_notice'));
+  			}
+  		}
+    }
+    public function admin_keys_notice(){
+  		if(empty($this->comeet_token)) $message = 'Almost done! Just enter your Comeet Token to get started';
+  		if(empty($this->comeet_uid)) $message = 'Almost done! Just enter your Comeet UID to get started';
+  		echo '<div class="updated"><p>'.$message.' <a href="'.admin_url('admin.php?page=comeet').'">here</a></p></div>';
+  	}
+
+    public function check_for_curl(){
+      //echo 'Curl: ', function_exists('curl_version') ? 'Enabled' : 'Disabled';
+      if(is_admin()){
+        if  (!in_array ('curl', get_loaded_extensions())) {
+			if ($_GET['page'] == 'comeet') {
+				add_action('admin_notices', array($this, 'admin_curl_notice'));				
+			}
+        }
+  		}
+    }
+    public function check_for_comeetapi(){
+
+      if(is_admin()){
+		  
+  			if( (!empty($this->comeet_token) && !empty($this->comeet_uid))){
+				add_action('admin_notices', array($this, 'admin_comeet_api_notice'));
+  			}
+  		}
+    }
+
+    public function admin_curl_notice(){
+  		$message = 'The Comeet plugin may not function properly as cURL is not enabled on the server.<br /><br />Ensure that Curl for php is enabled and that your server can execute http requests to www.comeet.co (used to retrieve the positions data).';
+  		echo '<div class="error"><p>'.$message.'</p></div>';
+		echo '<div id="message" class="updated">
+		<h3>How to enable cURL on your server?</h3>
+		<p>If you are seeing this error message, the best way to resolve the problem is to ask your hosting provider or system admin to enable cURL on the server. If you are on your own, then the following tips may work:</p>
+		<p><strong>Option 1 : Enable CURL via the php.ini</strong></p>
+
+		<p>This is the main method on any windows install like WAMP, XAMPP etc.</p>
+
+		<ol>
+		<li>Locate  your PHP.ini file (normally located at in the bin folder of your apache install)</li>
+		<li>Open the PHP.ini in notepad</li>
+		<li>Search or find the following : ‘;extension=php_curl.dll’</li>
+		<li>Uncomment this by removing the semi-colon ‘;’ before it</li>
+		<li>Save and Close PHP.ini</li>
+		<li>Restart Apache</li>
+		</ol>
+
+		<p><strong>Option 2: Enabling CURL in WAMP</strong></p>
+
+		<ol>
+		<li>Left-click on the WAMP server icon in the bottom right of the screen</li>
+		<li>PHP -> PHP Extensions -> php_curl</li>
+		</ol>
+
+		<p><strong>Option 3: enable CURL in Ubuntu</strong></p>
+
+		<p>Run the following command:</p>
+
+		<ol>
+		<li>sudo apt-get install php5-curl</li>
+		<li>sudo service apache2 restart</li>
+		</ol>
+		<p><i>Note: Each server is setup differently and depending on the setup these instructions may not work. But in most cases, these instructions should help.</i> </p>
+		</div>';
+  	}
+	
+    public function admin_comeet_api_notice(){
+				$apiurl = 'https://www.comeet.co/careers-api/1.0/company/' . $this->comeet_uid . '/positions?token=' . $this->comeet_token;
+				$request = wp_remote_get( $apiurl );
+				//var_dump($request);
+				$response = $request['response'];
+				if($response['code'] == 400 ) {
+					$jsonresponse = json_decode($request['body']);
+					$message = $jsonresponse->message;
+					echo '<div class="error"><p>'.$message.'</p></div>'; 
+				} elseif ($response['code'] == 500 || $response['code'] == 204) {
+					$message = 'Comeet - Unexpected error retrieving positions data. If the problem persists please contact us at: <a href="mailto:support@comeet.co" target="_blank">support@comeet.co</a>';
+					echo '<div class="error"><p>'.$message.'</p></div>';					
+				};
+  	}
+	
     /**
      * Gets plugin config options
      *
@@ -98,9 +186,31 @@ if(!class_exists('Comeet')) {
       add_options_page('Comeet Settings', 'Comeet', 'manage_options', 'comeet', array($this, 'handle_options'));
     }
 
+	function flush_permalinks() {
+		 if( isset($_GET['settings-updated']) ) { 
+			flush_rewrite_rules( false );
+			echo '<div id="message" class="updated"><p><strong> New settings have been saved and permalinks have been updated.</strong></p></div>';			
+		 } 
+	}
+	
     function register_settings() {
+
       register_setting('comeet_options', $this->db_opt, array($this, 'validate_options'));
   	  $options = $this->get_options();
+      // Fetch the integration settings
+      $this->comeet_token = $options['comeet_token'];
+      $this->comeet_uid = $options['comeet_uid'];
+
+      // check if token and UID are both entered
+      $this->check_for_keys();
+
+      // check if cURL is installed on the server
+      $this->check_for_curl();
+
+
+      // check if API returns a proper response
+      $this->check_for_comeetapi();
+
   	  $post = get_post($options['post_id']);
 
       $post_parents = get_post_ancestors( $post );
@@ -122,7 +232,7 @@ if(!class_exists('Comeet')) {
         add_rewrite_rule($post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]', 'top');
         add_rewrite_rule($post->post_name . '/([^/]+)/?$', 'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]', 'top');
       }
-  	
+
       // Comeet API required settings.
       add_settings_section(
         'comeet_api_settings',
@@ -145,13 +255,13 @@ if(!class_exists('Comeet')) {
         'comeet',
         'comeet_api_settings'
       );
-	
+
 	   add_settings_section(
         'comeet_api_blank',
         '',
         array($this, 'comeet_api_blank'),
         'comeet'
-      );  
+      );
       // Other fields as needed.
 
       add_settings_section(
@@ -196,18 +306,18 @@ if(!class_exists('Comeet')) {
         array($this, 'comeet_bgcolor_input'),
         'comeet',
         'comeet_other_settings'
-      );	  
+      );
       add_settings_section(
         'comeet_other_blank',
         '',
         array($this, 'comeet_other_blank'),
         'comeet'
       );
-
+//flush_rewrite_rules( true );
     }
 
     function api_credentials_text() {
-      echo '<div class="card" style="margin-bottom: 4em;"><p>To find these values, navigate in Comeet to Company Settings / Careers Website and make sure to enable the API. These settings are available to the company&#39;s admin. <a href="http://support.comeet.co/knowledgebase/careers-website/" target="_blank">Learn More</a></p>';  
+      echo '<div class="card" style="margin-bottom: 4em;"><p>To find these values, navigate in Comeet to Company Settings / Careers Website and make sure to enable the API. These settings are available to the company&#39;s admin. <a href="http://support.comeet.co/knowledgebase/careers-website/" target="_blank">Learn More</a></p>';
     }
     function comeet_api_blank() {
       echo '</div>';
@@ -287,7 +397,7 @@ if(!class_exists('Comeet')) {
   		$valid['comeet_bgcolor'] = trim($input['comeet_bgcolor']);
       $valid['advanced_search'] = intval($input['advanced_search']);
       $valid['comeet_stylesheet'] = $input['comeet_stylesheet'];
-	  
+
 
       if($input['post_id'] == '-1') {
         // Create a new page for the job posts to appear.
@@ -304,7 +414,7 @@ if(!class_exists('Comeet')) {
       } else {
         $valid['post_id'] = $input['post_id'];
       }
-      
+
   	  $transient_reset = 'comeet-careers-' . $valid['comeet_uid'] . '-' . $valid['comeet_token'];
   		delete_transient( $transient_reset );
       return $valid;
@@ -350,14 +460,14 @@ if(!class_exists('Comeet')) {
   		$this->add_frontend_css();
   		$this->add_frontend_scripts();
   		$text .= $this->comeet_add_template();
-		
+
       }
       return $text;
     }
-	
-	
+
+
     protected function add_frontend_scripts() {
-		
+
 		wp_register_script( "comeet_script", ($this->plugin_url . 'js/comeet.js'));
 		$options = $this->get_options();
 		$post = get_post($options['post_id']);
@@ -368,7 +478,7 @@ if(!class_exists('Comeet')) {
 		wp_enqueue_script("comeet_script");
 
     }
-	
+
 	protected function add_frontend_css() {
 		$options = $this->get_options();
 		$css_url = 'css/' . $options['comeet_stylesheet'];
@@ -396,7 +506,7 @@ if(!class_exists('Comeet')) {
 		} else {
 			$template = 'comeet-careers.php';
 		}
-			
+
 			if(file_exists(get_template_directory() . '/' . $template)) {
 				$template = get_template_directory() . '/' . $template;
 			} elseif( file_exists($this->plugin_dir . 'templates/' . $template)) {

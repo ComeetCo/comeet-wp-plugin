@@ -28,6 +28,7 @@ function comeet_get_data($comeeturl) {
 			$post_data = comeet_get_data($comeet_post_url);	
 			set_transient( $transient_key, $post_data, 60 * 5 * 1 );
 		}
+			//echo $post_data['status']; 	
 	} else {
 		$transient_key = 'comeet-careers-' . $options['comeet_uid'] . '-' . $options['comeet_token'];
 		//delete_transient($transient_key);

@@ -8,6 +8,16 @@
 ?>
 <a href="<?php echo site_url() . '/' . $post->post_name; ?>">&larr; All Jobs</a>
 </div>
+<div><?php
+if ($post_data['status'] == 404) {
+	$careerurl=site_url() . '/' . $post->post_name;;
+	echo '<meta http-equiv="refresh" content="1; url=' . $careerurl .'" />';
+  echo 'This position was not found. You will be redirected to careers home. If not, click <a href="' . $careerurl .'">here</a>.';
+exit;
+	//wp_redirect( home_url() ); exit;
+}
+?>
+</div>
 <h2 class="comeet-position-name"><?php echo $post_data['name'] ?></h2>
 <div class="comeet-position-meta-single">
 <?php 
