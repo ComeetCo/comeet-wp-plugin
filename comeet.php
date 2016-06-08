@@ -134,16 +134,21 @@ if(!class_exists('Comeet')) {
     public function admin_comeet_api_notice(){
 				$apiurl = 'https://www.comeet.co/careers-api/1.0/company/' . $this->comeet_uid . '/positions?token=' . $this->comeet_token;
 				$request = wp_remote_get( $apiurl );
-				//var_dump($request);
 				$response = $request['response'];
-				if($response['code'] == 400 ) {
+				if($response['code'] != 200 ) {
 					$jsonresponse = json_decode($request['body']);
 					$message = $jsonresponse->message;
-					echo '<div class="error"><p>'.$message.'</p></div>'; 
-				} elseif ($response['code'] == 500 || $response['code'] == 204) {
+					if( strlen(trim($message)) !=0) {
+						echo '<div class="error"><p>'.$message.'</p></div>'; 
+					} else {
+						$message = 'Comeet - Unexpected error retrieving positions data. If the problem persists please contact us at: <a href="mailto:support@comeet.co" target="_blank">support@comeet.co</a>';
+						echo '<div class="error"><p>'.$message.'</p></div>';							
+					}
+				} 
+/* 				if ($response['code'] == 500 || $response['code'] == 204) {
 					$message = 'Comeet - Unexpected error retrieving positions data. If the problem persists please contact us at: <a href="mailto:support@comeet.co" target="_blank">support@comeet.co</a>';
 					echo '<div class="error"><p>'.$message.'</p></div>';					
-				};
+				}; */
   	}
 	
     /**
