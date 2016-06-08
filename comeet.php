@@ -194,7 +194,7 @@ if(!class_exists('Comeet')) {
 	function flush_permalinks() {
 		 if( isset($_GET['settings-updated']) ) { 
 			flush_rewrite_rules( false );
-			echo '<div id="message" class="updated"><p>New settings have been saved and permalinks have been updated. If you are unable to view the career pages, please open the Permalinks settings and click Save</p></div>';			
+			echo '<div id="message" class="updated"><p>Settings have been saved. In case you are unable to view the career pages please open the Permalinks settings and click Save.</p></div>';			
 		 } 
 	}
 	
