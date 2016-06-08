@@ -58,7 +58,7 @@ if(!class_exists('Comeet')) {
     public function deactivate() {
 
     }
-	
+
     public function check_for_keys(){
 
       if(is_admin()){
@@ -78,7 +78,7 @@ if(!class_exists('Comeet')) {
       if(is_admin()){
         if  (!in_array ('curl', get_loaded_extensions())) {
 			if ($_GET['page'] == 'comeet') {
-				add_action('admin_notices', array($this, 'admin_curl_notice'));				
+				add_action('admin_notices', array($this, 'admin_curl_notice'));
 			}
         }
   		}
@@ -86,7 +86,7 @@ if(!class_exists('Comeet')) {
     public function check_for_comeetapi(){
 
       if(is_admin()){
-		  
+
   			if( (!empty($this->comeet_token) && !empty($this->comeet_uid))){
 				add_action('admin_notices', array($this, 'admin_comeet_api_notice'));
   			}
@@ -130,7 +130,7 @@ if(!class_exists('Comeet')) {
 		<p><i>Note: Each server is setup differently and depending on the setup these instructions may not work. But in most cases, these instructions should help.</i> </p>
 		</div>';
   	}
-	
+
     public function admin_comeet_api_notice(){
 				$apiurl = 'https://www.comeet.co/careers-api/1.0/company/' . $this->comeet_uid . '/positions?token=' . $this->comeet_token;
 				$request = wp_remote_get( $apiurl );
@@ -139,18 +139,18 @@ if(!class_exists('Comeet')) {
 					$jsonresponse = json_decode($request['body']);
 					$message = $jsonresponse->message;
 					if( strlen(trim($message)) !=0) {
-						echo '<div class="error"><p>'.$message.'</p></div>'; 
+						echo '<div class="error"><p>'.$message.'</p></div>';
 					} else {
 						$message = 'Comeet - Unexpected error retrieving positions data. If the problem persists please contact us at: <a href="mailto:support@comeet.co" target="_blank">support@comeet.co</a>';
-						echo '<div class="error"><p>'.$message.'</p></div>';							
+						echo '<div class="error"><p>'.$message.'</p></div>';
 					}
-				} 
+				}
 /* 				if ($response['code'] == 500 || $response['code'] == 204) {
 					$message = 'Comeet - Unexpected error retrieving positions data. If the problem persists please contact us at: <a href="mailto:support@comeet.co" target="_blank">support@comeet.co</a>';
-					echo '<div class="error"><p>'.$message.'</p></div>';					
+					echo '<div class="error"><p>'.$message.'</p></div>';
 				}; */
   	}
-	
+
     /**
      * Gets plugin config options
      *
@@ -192,12 +192,12 @@ if(!class_exists('Comeet')) {
     }
 
 	function flush_permalinks() {
-		 if( isset($_GET['settings-updated']) ) { 
+		 if( isset($_GET['settings-updated']) ) {
 			flush_rewrite_rules( false );
-			echo '<div id="message" class="updated"><p>Settings have been saved. In case you are unable to view the career pages please open the Permalinks settings and click Save.</p></div>';			
-		 } 
+			echo '<div id="message" class="updated"><p>Settings have been saved. In case you are unable to view the career pages please open the Permalinks settings and click <i>Save</i>.</p></div>';			
+		 }
 	}
-	
+
     function register_settings() {
 
       register_setting('comeet_options', $this->db_opt, array($this, 'validate_options'));
