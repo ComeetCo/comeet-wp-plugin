@@ -68,9 +68,9 @@ if(!class_exists('Comeet')) {
   		}
     }
     public function admin_keys_notice(){
-  		if(empty($this->comeet_token)) $message = 'Almost done! Just enter your Comeet Token to get started';
-  		if(empty($this->comeet_uid)) $message = 'Almost done! Just enter your Comeet UID to get started';
-  		echo '<div class="updated"><p>'.$message.' <a href="'.admin_url('admin.php?page=comeet').'">here</a></p></div>';
+  		if(empty($this->comeet_token)) $message = 'Almost done! Just enter your <b>Comeet Token</b> in the ';
+  		if(empty($this->comeet_uid)) $message = 'Almost done! Just enter your <b>Comeet UID</b> in the ';
+  		echo '<div class="updated"><p>'.$message.' <a href="'.admin_url('admin.php?page=comeet').'">settings</a></p></div>';
   	}
 
     public function check_for_curl(){
@@ -194,7 +194,7 @@ if(!class_exists('Comeet')) {
 	function flush_permalinks() {
 		 if( isset($_GET['settings-updated']) ) {
 			flush_rewrite_rules( false );
-			echo '<div id="message" class="updated"><p>Settings have been saved. In case you are unable to view the career pages please open the Permalinks settings and click <i>Save</i>.</p></div>';			
+			echo '<div id="message" class="updated"><p><b>Settings have been saved.</b> In case you are unable to view the career pages please open the Permalinks settings and click <i>Save</i>.</p></div>';			
 		 }
 	}
 
