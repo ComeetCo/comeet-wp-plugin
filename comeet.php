@@ -139,11 +139,13 @@ if(!class_exists('Comeet')) {
 					$jsonresponse = json_decode($request['body']);
 					$message = $jsonresponse->message;
 					if( strlen(trim($message)) !=0) {
-						echo '<div class="error"><p>'.$message.'</p></div>';
+						echo '<div class="error"><p>Settings saved but there was an error retrieving positions data: '.$message.'</p></div>';
 					} else {
 						$message = 'Comeet - Unexpected error retrieving positions data. If the problem persists please contact us at: <a href="mailto:support@comeet.co" target="_blank">support@comeet.co</a>';
 						echo '<div class="error"><p>'.$message.'</p></div>';
 					}
+				} else {
+					echo '<div id="message" class="updated"><p>Your career pages are now ready. In case you are unable to view the career pages please open the Permalinks settings and click <i>Save</i>.</p></div>';
 				}
 /* 				if ($response['code'] == 500 || $response['code'] == 204) {
 					$message = 'Comeet - Unexpected error retrieving positions data. If the problem persists please contact us at: <a href="mailto:support@comeet.co" target="_blank">support@comeet.co</a>';
@@ -194,7 +196,7 @@ if(!class_exists('Comeet')) {
 	function flush_permalinks() {
 		 if( isset($_GET['settings-updated']) ) {
 			flush_rewrite_rules( false );
-			echo '<div id="message" class="updated"><p><b>Settings have been saved.</b> In case you are unable to view the career pages please open the Permalinks settings and click <i>Save</i>.</p></div>';			
+			//echo '<div id="message" class="updated"><p><b>Settings have been saved.</b> In case you are unable to view the career pages please open the Permalinks settings and click <i>Save</i>.</p></div>';			
 		 }
 	}
 
