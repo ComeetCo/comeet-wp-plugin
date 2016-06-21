@@ -27,12 +27,12 @@ exit;
  ?>
 </div>
 <div class="comeet-position-info">
-	<h4>About The Position</h4>
 	<?php
 	if (!$post_data['employment_type'] == NULL || !$post_data['employment_type'] =="") {
 		echo '<div class="position-image"><img src="' . $post_data['picture_url'] . '" /></div>';
 		}
 	?>
+	<h4>About The Position</h4>
 	<div class="comeet-position-description"><?php echo $post_data['description'] ?></div>
 	<div class="comeet-position-requirements"><?php echo $post_data['requirements'] ?></div>
 </div>
