@@ -47,10 +47,25 @@ if(!class_exists('Comeet')) {
 		add_action('admin_init', array($this, 'flush_permalinks'));
       } else {
         //add_filter('the_content', array($this, 'comeet_content'));
+          add_filter( 'template_include', array($this, 'career_page_template'), 99 );
 		      add_shortcode('comeet_data',array($this, 'comeet_content'));
+          add_shortcode('comeet_page',array($this, 'comeet_custom_shortcode'));
       }
     }
 
+    function career_page_template( $template ) {
+      global $wp_query;
+  		if(isset($wp_query->query_vars['comeet_pos'])) {
+  			$new_template = locate_template( array( 'page-comeet-pos.php' ) );
+  		} elseif (isset($wp_query->query_vars['comeet_cat'])) {
+        $new_template = locate_template( array( 'page-comeet-sub.php' ) );
+      }
+      if ( '' != $new_template ) {
+        return $new_template ;
+      }
+
+    	return $template;
+    }
     public function install() {
       $this->get_options();
     }
@@ -170,7 +185,9 @@ if(!class_exists('Comeet')) {
         'advanced_search' => 1,
         'comeet_color' => '278fe6',
         'comeet_bgcolor' => '',
-        'comeet_stylesheet' => 'comeet-cards.css'
+        'comeet_stylesheet' => 'comeet-cards.css',
+        'comeet_subpage_template' => 'page.php',
+        'comeet_positionpage_template' => 'page.php'
       );
 
       $saved = get_option($this->db_opt);
@@ -198,7 +215,7 @@ if(!class_exists('Comeet')) {
 	function flush_permalinks() {
 		 if( isset($_GET['settings-updated']) ) {
 			flush_rewrite_rules( false );
-			//echo '<div id="message" class="updated"><p><b>Settings have been saved.</b> In case you are unable to view the career pages please open the Permalinks settings and click <i>Save</i>.</p></div>';			
+			//echo '<div id="message" class="updated"><p><b>Settings have been saved.</b> In case you are unable to view the career pages please open the Permalinks settings and click <i>Save</i>.</p></div>';
 		 }
 	}
 
@@ -316,6 +333,20 @@ if(!class_exists('Comeet')) {
         'comeet',
         'comeet_other_settings'
       );
+      add_settings_field(
+        'comeet_subpage_template',
+        'Use this page for locations/departments',
+        array($this, 'comeet_subpage_input'),
+        'comeet',
+        'comeet_other_settings'
+      );
+      add_settings_field(
+        'comeet_positionpage_template',
+        'Use this page for positions',
+        array($this, 'comeet_positionpage_input'),
+        'comeet',
+        'comeet_other_settings'
+      );
       add_settings_section(
         'comeet_other_blank',
         '',
@@ -381,7 +412,18 @@ if(!class_exists('Comeet')) {
       echo '<input type="text" id="comeet_bgcolor" name="' . $this->db_opt . '[comeet_bgcolor]" value="' . $options['comeet_bgcolor'] . '" size="25"  style="width:200px" />';
       echo '<p class="description">Optional. e.g. eeeeee</p>';
     }
+    function comeet_subpage_input() {
+      $options = $this->get_options();
 
+      echo '<input type="text" id="comeet_subpage_template" name="' . $this->db_opt . '[comeet_subpage_template]" value="' . $options['comeet_subpage_template'] . '" size="25"  style="width:200px" />';
+      echo '<p class="description">Specify the template file for sub-pages (Optional). e.g. page.php</p>';
+    }
+    function comeet_positionpage_input() {
+      $options = $this->get_options();
+
+      echo '<input type="text" id="comeet_positionpage_template" name="' . $this->db_opt . '[comeet_positionpage_template]" value="' . $options['comeet_positionpage_template'] . '" size="25"  style="width:200px" />';
+      echo '<p class="description">Specify the template file for positions pages (Optional) e.g. page.php</p>';
+    }
     function comeet_stylesheet_input() {
       $options = $this->get_options();
       echo '<div>';
@@ -406,6 +448,8 @@ if(!class_exists('Comeet')) {
   		$valid['comeet_bgcolor'] = trim($input['comeet_bgcolor']);
       $valid['advanced_search'] = intval($input['advanced_search']);
       $valid['comeet_stylesheet'] = $input['comeet_stylesheet'];
+      $valid['comeet_subpage_template'] = $input['comeet_subpage_template'];
+      $valid['comeet_positionpage_template'] = $input['comeet_positionpage_template'];
 
 
       if($input['post_id'] == '-1') {
@@ -473,7 +517,15 @@ if(!class_exists('Comeet')) {
       }
       return $text;
     }
+    function comeet_custom_shortcode($attr) {
+      $options = $this->get_options();
+      //print_r($text);
+  		$this->add_frontend_css();
+  		$this->add_frontend_scripts();
+  		$text .= $this->comeet_add_template_custom_shortcode($attr);
 
+      return $text;
+    }
 
     protected function add_frontend_scripts() {
 
@@ -531,6 +583,38 @@ if(!class_exists('Comeet')) {
 		    ob_end_clean();
 		    return $output;
 	}
+
+	function comeet_add_template_custom_shortcode($attr) {
+    $options = $this->get_options();
+
+    $comeet_cat = strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $attr['name'])));
+    //location is 0 and department is 1. Default is location
+    if($attr['type']=='department') {
+      $comeet_group = 1;
+    } else {
+      $comeet_group = 0;
+    }
+
+    //print_r($comeet_group);
+    $template = 'comeet-sub-page.php';
+    if(isset($comeet_group))
+    //set the template file
+    if(file_exists(get_template_directory() . '/' . $template)) {
+      $template = get_template_directory() . '/' . $template;
+    } elseif( file_exists($this->plugin_dir . 'templates/' . $template)) {
+      $template = $this->plugin_dir . 'templates/' . $template;
+    } else {
+      echo '<div class="error">Error: Can not render page &ndash; no template found.</div>';
+      die();
+    }
+
+    //set the output
+    ob_start();
+      include_once($template);
+      $output = ob_get_contents();
+    ob_end_clean();
+    return $output;
+  }
 
 } //  End class
 
