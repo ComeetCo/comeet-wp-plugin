@@ -518,12 +518,12 @@ if(!class_exists('Comeet')) {
       }
       return $text;
     }
-    function comeet_custom_shortcode($attr) {
+    function comeet_custom_shortcode($attr, $content = null) {
       $options = $this->get_options();
       //print_r($text);
   		$this->add_frontend_css();
   		$this->add_frontend_scripts();
-  		$text .= $this->comeet_add_template_custom_shortcode($attr);
+  		$text .= $this->comeet_add_template_custom_shortcode($attr,$content);
 
       return $text;
     }
@@ -585,20 +585,38 @@ if(!class_exists('Comeet')) {
 		    return $output;
 	}
 
-	function comeet_add_template_custom_shortcode($attr) {
+	function comeet_add_template_custom_shortcode($attr,$content) {
     $options = $this->get_options();
+    global $wp_query;
+		if(isset($wp_query->query_vars['comeet_pos'])) {
+			$comeet_pos = urldecode($wp_query->query_vars['comeet_pos']);
+		}
+    if(isset($attr['name'])) {
+			$comeet_cat = strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $attr['name'])));
+		}
 
-    $comeet_cat = strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $attr['name'])));
     //location is 0 and department is 1. Default is location
     if($attr['type']=='department') {
       $comeet_group = 1;
-    } else {
+    } elseif ($attr['type']=='location'){
       $comeet_group = 0;
     }
 
     //print_r($comeet_group);
-    $template = 'comeet-sub-page.php';
-    if(isset($comeet_group))
+    if(isset($comeet_pos)) {
+			$template = 'comeet-position-page.php';
+		} elseif ($comeet_cat) {
+			if($comeet_cat == 'thankyou') {
+				$template = 'comeet-thankyou-page.php';
+			}
+			else {
+				$template = 'comeet-sub-page.php';
+			}
+		} else {
+			$template = 'blank.php';
+		}
+
+    //if(isset($comeet_group))
     //set the template file
     if(file_exists(get_template_directory() . '/' . $template)) {
       $template = get_template_directory() . '/' . $template;
