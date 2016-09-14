@@ -55,10 +55,11 @@ if(!class_exists('Comeet')) {
 
     function career_page_template( $template ) {
       global $wp_query;
+      $options = $this->get_options();
   		if(isset($wp_query->query_vars['comeet_pos'])) {
-  			$new_template = locate_template( array( 'page-comeet-pos.php' ) );
+  			$new_template = locate_template( array( $options['comeet_positionpage_template'] ) );
   		} elseif (isset($wp_query->query_vars['comeet_cat'])) {
-        $new_template = locate_template( array( 'page-comeet-sub.php' ) );
+        $new_template = locate_template( array( $options['comeet_subpage_template'] ) );
       }
       if ( '' != $new_template ) {
         return $new_template ;
