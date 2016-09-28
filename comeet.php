@@ -628,7 +628,7 @@ if(!class_exists('Comeet')) {
 
     //print_r($comeet_group);
     if(isset($comeet_pos)) {
-			$template = 'comeet-position-page.php';
+			$template = 'comeet-position-page-custom.php';
 		} elseif ($comeet_cat) {
 			if($comeet_cat == 'thankyou') {
 				$template = 'comeet-thankyou-page.php';
