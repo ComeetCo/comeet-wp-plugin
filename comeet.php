@@ -334,32 +334,53 @@ if(!class_exists('Comeet')) {
         'comeet',
         'comeet_other_settings'
       );
-      add_settings_field(
-        'comeet_subpage_template',
-        'Use this page for locations/departments',
-        array($this, 'comeet_subpage_input'),
-        'comeet',
-        'comeet_other_settings'
-      );
-      add_settings_field(
-        'comeet_positionpage_template',
-        'Use this page for positions',
-        array($this, 'comeet_positionpage_input'),
-        'comeet',
-        'comeet_other_settings'
-      );
+
       add_settings_section(
         'comeet_other_blank',
         '',
         array($this, 'comeet_other_blank'),
         'comeet'
       );
+      //Advanced Section
+      add_settings_section(
+        'comeet_advanced_settings',
+        'Advanced',
+        array($this, 'comeet_advanced_text'),
+        'comeet'
+      );
+      add_settings_field(
+        'comeet_subpage_template',
+        'Use this page for locations/departments',
+        array($this, 'comeet_subpage_input'),
+        'comeet',
+        'comeet_advanced_settings'
+      );
+      add_settings_field(
+        'comeet_positionpage_template',
+        'Use this page for positions',
+        array($this, 'comeet_positionpage_input'),
+        'comeet',
+        'comeet_advanced_settings'
+      );
+      add_settings_section(
+         'comeet_advanced_blank',
+         '',
+         array($this, 'comeet_advanced_blank'),
+         'comeet'
+       );
 //flush_rewrite_rules( true );
     }
 
     function api_credentials_text() {
       echo '<div class="card" style="margin-bottom: 4em;"><p>To find these values, navigate in Comeet to Company Settings / Careers Website and make sure to enable the API. These settings are available to the company&#39;s admin. <a href="http://support.comeet.co/knowledgebase/careers-website/" target="_blank">Learn More</a></p>';
     }
+    function comeet_advanced_text() {
+      echo '<div class="card" style="margin-bottom: 4em;"><p>
+      The plugin makes it simple to select different theme template files for sub-pages and position pages. You can specify the template file names
+      to be used for the sub-pages and position pages in the plugin settings. The template files are PHP files that reside in your theme folder.
+      <a target="_blank" href="https://developer.wordpress.org/themes/template-files-section/page-template-files/page-templates/">Learn more</a> about page templates in wordpress.</p>';
+    }
+
     function comeet_api_blank() {
       echo '</div>';
     }
@@ -379,6 +400,9 @@ if(!class_exists('Comeet')) {
       echo '<input type="text" id="comeet_uid" name="' . $this->db_opt . '[comeet_uid]" value="' . $options['comeet_uid'] . '" size="25"  style="width:200px" />';
     }
     function comeet_other_blank() {
+      echo '</div>';
+    }
+    function comeet_advanced_blank() {
       echo '</div>';
     }
     function job_page_input() {
@@ -610,7 +634,7 @@ if(!class_exists('Comeet')) {
 				$template = 'comeet-thankyou-page.php';
 			}
 			else {
-				$template = 'comeet-sub-page.php';
+				$template = 'comeet-sub-page-custom.php';
 			}
 		} else {
 			$template = 'blank.php';
