@@ -350,14 +350,14 @@ if(!class_exists('Comeet')) {
       );
       add_settings_field(
         'comeet_subpage_template',
-        'Use this page for locations/departments',
+        'Template for locations / departments',
         array($this, 'comeet_subpage_input'),
         'comeet',
         'comeet_advanced_settings'
       );
       add_settings_field(
         'comeet_positionpage_template',
-        'Use this page for positions',
+        'Template for the position page',
         array($this, 'comeet_positionpage_input'),
         'comeet',
         'comeet_advanced_settings'
@@ -376,8 +376,8 @@ if(!class_exists('Comeet')) {
     }
     function comeet_advanced_text() {
       echo '<div class="card" style="margin-bottom: 4em;"><p>
-      To use a different theme for location/department pages or for the position pages specify the names of the template files you would like to use.
-      The template files are PHP files that reside in your theme folder. <a target="_blank" href="https://developer.wordpress.org/themes/template-files-section/page-template-files/page-templates/">Learn more</a> about page templates in WordPress.
+      Use a different theme by specifying the templates that you would like to use.</br>
+      Templates are PHP files that reside in your theme folder. <a target="_blank" href="https://developer.wordpress.org/themes/template-files-section/page-template-files/page-templates/">Learn more about page templates</a>
       </p>';
     }
 
@@ -441,13 +441,13 @@ if(!class_exists('Comeet')) {
       $options = $this->get_options();
 
       echo '<input type="text" id="comeet_subpage_template" name="' . $this->db_opt . '[comeet_subpage_template]" value="' . $options['comeet_subpage_template'] . '" size="25"  style="width:200px" />';
-      echo '<p class="description">Optional. Specify the template file for sub-pages e.g. page.php</p>';
+      echo '<p class="description">Optional. e.g. page.php</p>';
     }
     function comeet_positionpage_input() {
       $options = $this->get_options();
 
       echo '<input type="text" id="comeet_positionpage_template" name="' . $this->db_opt . '[comeet_positionpage_template]" value="' . $options['comeet_positionpage_template'] . '" size="25"  style="width:200px" />';
-      echo '<p class="description">Optional. Specify the template file for positions pages e.g. page.php</p>';
+      echo '<p class="description">Optional. e.g. page.php</p>';
     }
     function comeet_stylesheet_input() {
       $options = $this->get_options();
