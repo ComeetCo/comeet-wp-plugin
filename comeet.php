@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://www.comeet.co
  * Description: Job listing page using the Comeet API.
- * Version: 1.0
+ * Version: 1.1
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -122,8 +122,8 @@ if(!class_exists('Comeet')) {
 		<ol>
 		<li>Locate  your PHP.ini file (normally located at in the bin folder of your apache install)</li>
 		<li>Open the PHP.ini in notepad</li>
-		<li>Search or find the following : â€˜;extension=php_curl.dllâ€™</li>
-		<li>Uncomment this by removing the semi-colon â€˜;â€™ before it</li>
+		<li>Search or find the following : ‘;extension=php_curl.dll’</li>
+		<li>Uncomment this by removing the semi-colon ‘;’ before it</li>
 		<li>Save and Close PHP.ini</li>
 		<li>Restart Apache</li>
 		</ol>
