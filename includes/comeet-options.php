@@ -6,6 +6,7 @@
 
     <?php $options = $this->get_options(); 
     $post = get_post($options['post_id']);
+
     ?>    
 	<?php
 	if (isset($post->post_name)) { ?>
