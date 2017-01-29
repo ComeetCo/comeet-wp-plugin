@@ -9,7 +9,7 @@
 <a href="<?php echo site_url() . '/' . $post->post_name; ?>">&larr; All Jobs</a>
 </div>
 <div><?php
-if ($post_data['status'] == 404) {
+if (isset($post_data) && ($post_data['status'] == 404)) {
 	$careerurl=site_url() . '/' . $post->post_name;;
 	echo '<meta http-equiv="refresh" content="1; url=' . $careerurl .'" />';
   echo 'This position was not found. You will be redirected to careers home. If not, click <a href="' . $careerurl .'">here</a>.';

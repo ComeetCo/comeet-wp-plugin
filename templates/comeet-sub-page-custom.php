@@ -22,7 +22,7 @@ if (isset($comeetgroups) && count(comeet_search($data, $group_element, $comeet_c
 			echo '<li class="comeet-position">';
 			echo '<div class="comeet-position-name"><a href="' . get_the_permalink($options['post_id']) . $comeet_cat . '/' . $post['position_uid'] . '/' . strtolower(clean($post['name'])) . '">' . $post['name'] . '</a></div>';
 			echo '<div class="comeet-position-meta">';
-			if($comeet_group==0) { echo $post['department']; } else { echo $post['location']; }
+			if (isset($comeet_group) && ($comeet_group==0)) { echo $post['department']; } else { echo $post['location']; }
 			if (!$post['employment_type'] == NULL || !$post['employment_type'] =="") {echo '  &middot;  ' . $post['employment_type'];}
 			if (!$post['experience_level'] == NULL || !$post['experience_level'] =="") {echo '  &middot;  ' . $post['experience_level'];}
 			echo '</div></li>';
