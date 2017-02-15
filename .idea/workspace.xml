@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="48334256-14f2-4252-a1cd-1f68abe72534" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/comeet.php" afterPath="$PROJECT_DIR$/comeet.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/includes/comeet-options.php" afterPath="$PROJECT_DIR$/includes/comeet-options.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/includes/lib/comeet-data.php" afterPath="$PROJECT_DIR$/includes/lib/comeet-data.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/comeet-careers.php" afterPath="$PROJECT_DIR$/templates/comeet-careers.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/comeet-position-page-custom.php" afterPath="$PROJECT_DIR$/templates/comeet-position-page-custom.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/comeet-position-page.php" afterPath="$PROJECT_DIR$/templates/comeet-position-page.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/comeet-sub-page-custom.php" afterPath="$PROJECT_DIR$/templates/comeet-sub-page-custom.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/comeet-sub-page.php" afterPath="$PROJECT_DIR$/templates/comeet-sub-page.php" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="comeet.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/comeet.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="541">
+              <caret line="637" column="84" lean-forward="false" selection-start-line="637" selection-start-column="84" selection-end-line="637" selection-end-column="84" />
+              <folding>
+                <element signature="e#6#217#0#PHP" expanded="true" />
+                <element signature="e#1120#2192#0#PHP" expanded="true" />
+                <element signature="e#2202#2839#0#PHP" expanded="true" />
+                <element signature="e#2850#2988#0#PHP" expanded="true" />
+                <element signature="e#2999#3627#0#PHP" expanded="true" />
+                <element signature="e#3637#3708#0#PHP" expanded="true" />
+                <element signature="e#3718#3759#0#PHP" expanded="true" />
+                <element signature="e#3769#4060#0#PHP" expanded="true" />
+                <element signature="e#4069#4495#0#PHP" expanded="true" />
+                <element signature="e#4505#4926#0#PHP" expanded="true" />
+                <element signature="e#4935#5216#0#PHP" expanded="true" />
+                <element signature="e#5226#6979#0#PHP" expanded="true" />
+                <element signature="e#6989#8681#0#PHP" expanded="true" />
+                <element signature="e#8815#9696#0#PHP" expanded="true" />
+                <element signature="e#9769#9923#0#PHP" expanded="true" />
+                <element signature="e#9933#10298#0#PHP" expanded="true" />
+                <element signature="e#10308#15801#0#PHP" expanded="true" />
+                <element signature="e#15811#16193#0#PHP" expanded="true" />
+                <element signature="e#16202#16639#0#PHP" expanded="true" />
+                <element signature="e#16649#16715#0#PHP" expanded="true" />
+                <element signature="e#16724#16796#0#PHP" expanded="true" />
+                <element signature="e#16806#17067#0#PHP" expanded="true" />
+                <element signature="e#17077#17331#0#PHP" expanded="true" />
+                <element signature="e#17340#17408#0#PHP" expanded="true" />
+                <element signature="e#17417#17488#0#PHP" expanded="true" />
+                <element signature="e#17497#18450#0#PHP" expanded="true" />
+                <element signature="e#18460#18889#0#PHP" expanded="true" />
+                <element signature="e#18899#19230#0#PHP" expanded="true" />
+                <element signature="e#19240#19579#0#PHP" expanded="true" />
+                <element signature="e#19588#19956#0#PHP" expanded="true" />
+                <element signature="e#19965#20353#0#PHP" expanded="true" />
+                <element signature="e#20362#21115#0#PHP" expanded="true" />
+                <element signature="e#21243#22713#0#PHP" expanded="true" />
+                <element signature="e#22854#23015#0#PHP" expanded="true" />
+                <element signature="e#23176#23721#0#PHP" expanded="true" />
+                <element signature="e#23731#24061#0#PHP" expanded="true" />
+                <element signature="e#24070#24403#0#PHP" expanded="true" />
+                <element signature="e#24413#25129#0#PHP" expanded="true" />
+                <element signature="e#25139#25391#0#PHP" expanded="true" />
+                <element signature="e#26912#28843#0#PHP" expanded="true" />
+                <element signature="e#28995#29261#0#PHP" expanded="true" />
+                <marker date="1487180031000" expanded="true" signature="5637:6966" ph="..." />
+                <marker date="1487180031000" expanded="true" signature="6054:6396" ph="..." />
+                <marker date="1487180031000" expanded="true" signature="6463:6596" ph="..." />
+                <marker date="1487180031000" expanded="true" signature="6700:6790" ph="..." />
+                <marker date="1487180031000" expanded="true" signature="15888:15907" ph="..." />
+                <marker date="1487180031000" expanded="true" signature="16067:16072" ph="'" />
+                <marker date="1487180031000" expanded="true" signature="16279:16298" ph="..." />
+                <marker date="1487180031000" expanded="true" signature="16299:16626" ph="..." />
+                <marker date="1487180031000" expanded="true" signature="16302:16626" ph="..." />
+                <marker date="1487180031000" expanded="true" signature="18282:18293" ph="..." />
+                <marker date="1487180031000" expanded="true" signature="18641:18652" ph="..." />
+                <marker date="1487180031000" expanded="true" signature="26662:26669" ph="–" />
+                <marker date="1487180031000" expanded="true" signature="28574:28581" ph="–" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="comeet-options.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/includes/comeet-options.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="12" column="10" lean-forward="false" selection-start-line="12" selection-start-column="10" selection-end-line="12" selection-end-column="10" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="comeet-careers.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/comeet-careers.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="1" column="23" lean-forward="false" selection-start-line="1" selection-start-column="10" selection-end-line="1" selection-end-column="23" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="blank.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/blank.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="comeet-position-page.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/comeet-position-page.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="7" column="54" lean-forward="false" selection-start-line="7" selection-start-column="54" selection-end-line="7" selection-end-column="54" />
+              <folding>
+                <marker date="1487178897000" expanded="true" signature="680:705" ph="..." />
+                <marker date="1487178897000" expanded="true" signature="1049:1074" ph="..." />
+                <marker date="1487178897000" expanded="true" signature="1483:1592" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="comeet-position-page-custom.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/comeet-position-page-custom.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="5" column="4" lean-forward="false" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="comeet-sub-page.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/comeet-sub-page.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="comeet-sub-page-custom.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/comeet-sub-page-custom.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="comeet-thankyou-page.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/comeet-thankyou-page.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="comeet-data.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/includes/lib/comeet-data.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="395">
+              <caret line="102" column="74" lean-forward="false" selection-start-line="102" selection-start-column="63" selection-end-line="102" selection-end-column="74" />
+              <folding>
+                <element signature="n#comeet_get_data#0;n#ComeetData#0;n#!!top" expanded="true" />
+                <element signature="n#get_position_data#0;n#ComeetData#0;n#!!top" expanded="true" />
+                <element signature="e#3649#4170#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>[</find>
+      <find>add_frontend_css</find>
+      <find>comeet_data</find>
+      <find>the_posts</find>
+      <find>is_comeet_content_page</find>
+      <find>update_header</find>
+      <find>comeet_content</find>
+      <find>post_data</find>
+      <find>$wp_query</find>
+      <find>$this-&gt;comeet_post</find>
+      <find>comeet_post</find>
+      <find>comeet_pos</find>
+      <find>thankyou</find>
+      <find>sveder</find>
+      <find>$options</find>
+      <find>get_options</find>
+      <find>$options = $this-&gt;get_options();comee</find>
+      <find>$post_data</find>
+      <find>comeet_get_data</find>
+      <find>$comeetgroups</find>
+      <find>comeetdata</find>
+      <find>$group_element</find>
+      <find>$comeet_group</find>
+      <find>get_comeee</find>
+      <find>$comeet_cat</find>
+    </findStrings>
+    <dirStrings>
+      <dir>$PROJECT_DIR$/templates</dir>
+    </dirStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/includes/comeet-options.php" />
+        <option value="$PROJECT_DIR$/templates/comeet-sub-page-custom.php" />
+        <option value="$PROJECT_DIR$/templates/comeet-sub-page.php" />
+        <option value="$PROJECT_DIR$/templates/comeet-careers.php" />
+        <option value="$PROJECT_DIR$/templates/comeet-position-page-custom.php" />
+        <option value="$PROJECT_DIR$/templates/comeet-position-page.php" />
+        <option value="$PROJECT_DIR$/comeet.php" />
+        <option value="$PROJECT_DIR$/includes/lib/comeet-data.php" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
+  <component name="ProjectFrameBounds">
+    <option name="y" value="23" />
+    <option name="width" value="2560" />
+    <option name="height" value="1351" />
+  </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="comeet-wp-plugin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="comeet-wp-plugin" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="comeet-wp-plugin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="comeet-wp-plugin" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="comeet-wp-plugin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="comeet-wp-plugin" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="comeet-wp-plugin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="comeet-wp-plugin" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lib" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="settings.editor.selected.configurable" value="web.server" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="nodejs_interpreter_path" value="/usr/local/bin/node" />
+    <property name="js.eslint.eslintPackage" value="" />
+    <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JavaScriptTestRunnerProtractor" factoryName="Protractor">
+      <config-file value="" />
+      <node-interpreter value="project" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
+    <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="project" working-dir="">
+      <method />
+    </configuration>
+    <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpBehatConfigurationType" factoryName="Behat">
+      <BehatRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpSpecConfigurationType" factoryName="PHPSpec">
+      <PhpTestRunnerSettings />
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.npm" factoryName="npm">
+      <command value="run" />
+      <scripts />
+      <node-interpreter value="project" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="mocha-javascript-test-runner" factoryName="Mocha">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <working-directory />
+      <pass-parent-env>true</pass-parent-env>
+      <envs />
+      <ui />
+      <extra-mocha-options />
+      <test-kind>DIRECTORY</test-kind>
+      <test-directory />
+      <recursive>false</recursive>
+      <method />
+    </configuration>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="48334256-14f2-4252-a1cd-1f68abe72534" name="Default" comment="" />
+      <created>1487166667595</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1487166667595</updated>
+      <workItem from="1487166668777" duration="10764000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="10764000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="23" width="2560" height="1351" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32962668" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16123907" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24980143" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="processedProjectFiles" value="true" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/comeet-options.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="10" lean-forward="false" selection-start-line="12" selection-start-column="10" selection-end-line="12" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/comeet-thankyou-page.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/comeet-sub-page-custom.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/comeet-sub-page.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/blank.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/comeet-position-page-custom.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="4" lean-forward="false" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/comeet-position-page.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="54" lean-forward="false" selection-start-line="7" selection-start-column="54" selection-end-line="7" selection-end-column="54" />
+          <folding>
+            <marker date="1487178897000" expanded="true" signature="680:705" ph="..." />
+            <marker date="1487178897000" expanded="true" signature="1049:1074" ph="..." />
+            <marker date="1487178897000" expanded="true" signature="1483:1592" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/comeet-careers.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="23" lean-forward="false" selection-start-line="1" selection-start-column="10" selection-end-line="1" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/comeet.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="541">
+          <caret line="637" column="84" lean-forward="false" selection-start-line="637" selection-start-column="84" selection-end-line="637" selection-end-column="84" />
+          <folding>
+            <element signature="e#6#217#0#PHP" expanded="true" />
+            <element signature="e#1120#2192#0#PHP" expanded="true" />
+            <element signature="e#2202#2839#0#PHP" expanded="true" />
+            <element signature="e#2850#2988#0#PHP" expanded="true" />
+            <element signature="e#2999#3627#0#PHP" expanded="true" />
+            <element signature="e#3637#3708#0#PHP" expanded="true" />
+            <element signature="e#3718#3759#0#PHP" expanded="true" />
+            <element signature="e#3769#4060#0#PHP" expanded="true" />
+            <element signature="e#4069#4495#0#PHP" expanded="true" />
+            <element signature="e#4505#4926#0#PHP" expanded="true" />
+            <element signature="e#4935#5216#0#PHP" expanded="true" />
+            <element signature="e#5226#6979#0#PHP" expanded="true" />
+            <element signature="e#6989#8681#0#PHP" expanded="true" />
+            <element signature="e#8815#9696#0#PHP" expanded="true" />
+            <element signature="e#9769#9923#0#PHP" expanded="true" />
+            <element signature="e#9933#10298#0#PHP" expanded="true" />
+            <element signature="e#10308#15801#0#PHP" expanded="true" />
+            <element signature="e#15811#16193#0#PHP" expanded="true" />
+            <element signature="e#16202#16639#0#PHP" expanded="true" />
+            <element signature="e#16649#16715#0#PHP" expanded="true" />
+            <element signature="e#16724#16796#0#PHP" expanded="true" />
+            <element signature="e#16806#17067#0#PHP" expanded="true" />
+            <element signature="e#17077#17331#0#PHP" expanded="true" />
+            <element signature="e#17340#17408#0#PHP" expanded="true" />
+            <element signature="e#17417#17488#0#PHP" expanded="true" />
+            <element signature="e#17497#18450#0#PHP" expanded="true" />
+            <element signature="e#18460#18889#0#PHP" expanded="true" />
+            <element signature="e#18899#19230#0#PHP" expanded="true" />
+            <element signature="e#19240#19579#0#PHP" expanded="true" />
+            <element signature="e#19588#19956#0#PHP" expanded="true" />
+            <element signature="e#19965#20353#0#PHP" expanded="true" />
+            <element signature="e#20362#21115#0#PHP" expanded="true" />
+            <element signature="e#21243#22713#0#PHP" expanded="true" />
+            <element signature="e#22854#23015#0#PHP" expanded="true" />
+            <element signature="e#23176#23721#0#PHP" expanded="true" />
+            <element signature="e#23731#24061#0#PHP" expanded="true" />
+            <element signature="e#24070#24403#0#PHP" expanded="true" />
+            <element signature="e#24413#25129#0#PHP" expanded="true" />
+            <element signature="e#25139#25391#0#PHP" expanded="true" />
+            <element signature="e#26912#28843#0#PHP" expanded="true" />
+            <element signature="e#28995#29261#0#PHP" expanded="true" />
+            <marker date="1487180031000" expanded="true" signature="5637:6966" ph="..." />
+            <marker date="1487180031000" expanded="true" signature="6054:6396" ph="..." />
+            <marker date="1487180031000" expanded="true" signature="6463:6596" ph="..." />
+            <marker date="1487180031000" expanded="true" signature="6700:6790" ph="..." />
+            <marker date="1487180031000" expanded="true" signature="15888:15907" ph="..." />
+            <marker date="1487180031000" expanded="true" signature="16067:16072" ph="'" />
+            <marker date="1487180031000" expanded="true" signature="16279:16298" ph="..." />
+            <marker date="1487180031000" expanded="true" signature="16299:16626" ph="..." />
+            <marker date="1487180031000" expanded="true" signature="16302:16626" ph="..." />
+            <marker date="1487180031000" expanded="true" signature="18282:18293" ph="..." />
+            <marker date="1487180031000" expanded="true" signature="18641:18652" ph="..." />
+            <marker date="1487180031000" expanded="true" signature="26662:26669" ph="–" />
+            <marker date="1487180031000" expanded="true" signature="28574:28581" ph="–" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/lib/comeet-data.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="395">
+          <caret line="102" column="74" lean-forward="false" selection-start-line="102" selection-start-column="63" selection-end-line="102" selection-end-column="74" />
+          <folding>
+            <element signature="n#comeet_get_data#0;n#ComeetData#0;n#!!top" expanded="true" />
+            <element signature="n#get_position_data#0;n#ComeetData#0;n#!!top" expanded="true" />
+            <element signature="e#3649#4170#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

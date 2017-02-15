@@ -1,6 +1,3 @@
-<?php
-	require_once($this->plugin_dir . 'includes/lib/comeet-data.php');
-?>
 <div class="all-jobs-link">
 <?php
 	//$post = get_post(get_the_ID());

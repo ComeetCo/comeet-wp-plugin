@@ -27,15 +27,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+$plugin_dir = trailingslashit( plugin_dir_path(__FILE__) );
+require_once($plugin_dir . 'includes/lib/comeet-data.php');
+
+
 
 if(!class_exists('Comeet')) {
 
     class Comeet {
 
+
+
+
         var $plugin_url;
         var $plugin_dir;
 
         var $db_opt = 'Comeet_Options';
+
+
+        private $isComeetContentPage;
+        private $comeet_pos;
 
         public function __construct() {
             $this->plugin_url = trailingslashit( WP_PLUGIN_URL . '/' . dirname(plugin_basename(__FILE__)) );
@@ -51,7 +62,41 @@ if(!class_exists('Comeet')) {
                 add_shortcode('comeet_data',array($this, 'comeet_content'));
                 add_shortcode('comeet_page',array($this, 'comeet_custom_shortcode'));
             }
+
+            add_action('the_posts', array($this,'is_comeet_content_page'));
+            add_action('wp_head', array($this,'update_header'));
+            error_reporting(E_ALL);
+            ini_set('display_errors', 1);
+
+
         }
+
+        function is_comeet_content_page($posts) {
+            $this->isComeetContentPage = false;
+            for ($c = 0; $c < count($posts); $c++) {
+                if (has_shortcode($posts[$c]->post_content, 'comeet_data')) {
+                    $this->isComeetContentPage = true;
+                    break;
+                }
+            }
+            if ($this->isComeetContentPage) {
+                global $wp_query;
+                if (isset($wp_query->query_vars['comeet_pos'])) {
+                    $this->comeet_pos = urldecode($wp_query->query_vars['comeet_pos']);
+                }
+            }
+            return $posts;
+        }
+
+
+        function update_header() {
+            if ($this->isComeetContentPage) {
+                ?>
+
+                <?php
+            }
+        }
+
 
         function career_page_template( $template ) {
             $new_template = '';
@@ -68,6 +113,7 @@ if(!class_exists('Comeet')) {
 
             return $template;
         }
+
         public function install() {
             $this->get_options();
         }
@@ -534,6 +580,8 @@ if(!class_exists('Comeet')) {
         }
 
         function comeet_content($text) {
+
+
             $options = $this->get_options();
             if(get_the_ID() == $options['post_id']) {
 
@@ -555,7 +603,6 @@ if(!class_exists('Comeet')) {
         }
 
         protected function add_frontend_scripts() {
-
             wp_register_script( "comeet_script", ($this->plugin_url . 'js/comeet.js'));
             $options = $this->get_options();
             $post = get_post($options['post_id']);
@@ -575,17 +622,12 @@ if(!class_exists('Comeet')) {
         function comeet_add_template() {
             $comeet_cat = null;
             global $wp_query;
-            if(isset($wp_query->query_vars['comeet_pos'])) {
-                $comeet_pos = urldecode($wp_query->query_vars['comeet_pos']);
-            }
-            if(isset($wp_query->query_vars['comeet_cat'])) {
-                $comeet_cat = urldecode($wp_query->query_vars['comeet_cat']);
-            }
             $options = $this->get_options();
-            $comeet_group = $options['advanced_search'];
-            if(isset($comeet_pos)) {
+            if (isset($this->comeet_pos)) {
+                $post_data = ComeetData::get_position_data($options, $this->comeet_pos);
                 $template = 'comeet-position-page.php';
-            } elseif ($comeet_cat) {
+            } else if(isset($wp_query->query_vars['comeet_cat'])) {
+                $comeet_cat = urldecode($wp_query->query_vars['comeet_cat']);
                 if($comeet_cat == 'thankyou') {
                     $template = 'comeet-thankyou-page.php';
                 }
@@ -593,6 +635,7 @@ if(!class_exists('Comeet')) {
                     $template = 'comeet-sub-page.php';
                 }
             } else {
+                $comeetgroups = ComeetData::get_comeeet_groups($options, $comeet_cat);
                 $template = 'comeet-careers.php';
             }
 
