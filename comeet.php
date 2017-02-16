@@ -47,6 +47,9 @@ if(!class_exists('Comeet')) {
 
         private $isComeetContentPage;
         private $comeet_pos;
+        private $post_data;
+        private $socialGraphTitle;
+        private $socialGraphImage;
 
         public function __construct() {
             $this->plugin_url = trailingslashit( WP_PLUGIN_URL . '/' . dirname(plugin_basename(__FILE__)) );
@@ -61,17 +64,23 @@ if(!class_exists('Comeet')) {
                 add_filter( 'template_include', array($this, 'career_page_template'), 99 );
                 add_shortcode('comeet_data',array($this, 'comeet_content'));
                 add_shortcode('comeet_page',array($this, 'comeet_custom_shortcode'));
+
+
             }
 
-            add_action('the_posts', array($this,'is_comeet_content_page'));
-            add_action('wp_head', array($this,'update_header'));
+            add_action('the_posts', array($this,'is_comeet_content_page'), 10);
+
+            add_action('wp_head', array($this,'update_header'), 12);
+            add_filter('document_title_parts', array($this,'filter_title'));
             error_reporting(E_ALL);
             ini_set('display_errors', 1);
 
 
         }
 
+
         function is_comeet_content_page($posts) {
+
             $this->isComeetContentPage = false;
             for ($c = 0; $c < count($posts); $c++) {
                 if (has_shortcode($posts[$c]->post_content, 'comeet_data')) {
@@ -83,7 +92,10 @@ if(!class_exists('Comeet')) {
                 global $wp_query;
                 if (isset($wp_query->query_vars['comeet_pos'])) {
                     $this->comeet_pos = urldecode($wp_query->query_vars['comeet_pos']);
+                } else {
+                    $this->comeet_cat = (isset($wp_query->query_vars['comeet_cat'])) ? urldecode($wp_query->query_vars['comeet_cat']) : null;
                 }
+                $this->comeet_preload_data();
             }
             return $posts;
         }
@@ -91,9 +103,16 @@ if(!class_exists('Comeet')) {
 
         function update_header() {
             if ($this->isComeetContentPage) {
-                ?>
-
-                <?php
+                if (isset($this->socialGraphTitle)) {
+                    ?>
+                    <meta name="og:title" content="<?= $this->socialGraphTitle ?>"/>
+                    <?php
+                }
+                if (isset($this->socialGraphImage)) {
+                    ?>
+                    <meta property="og:image" content="<?= $this->socialGraphImage ?>"/>
+                    <?php
+                }
             }
         }
 
@@ -579,16 +598,37 @@ if(!class_exists('Comeet')) {
             return wp_insert_post($page);
         }
 
+        function comeet_preload_data() {
+            if ($this->isComeetContentPage) {
+                if (isset($this->comeet_pos)) {
+                    $this->post_data = ComeetData::get_position_data($this->get_options(), $this->comeet_pos);
+                    $this->title = $this->post_data['name'];
+                    $this->socialGraphTitle = $this->post_data['name'];
+                    $this->socialGraphImage = $this->post_data['picture_url'];
+                } else if (isset($this->comeet_cat)) {
+
+                    $options = $this->get_options();
+                    list($comeetgroups, $data, $group_element) = ComeetData::get_groups($options, $this->comeet_cat);
+                    foreach ( $data as $post ) {
+                        if(strtolower(clean($post[$group_element])) == $this->comeet_cat) {
+                            $this->title = $post[$group_element];
+                            break;
+                        }
+                    }
+
+                }
+            }
+
+        }
+
         function comeet_content($text) {
 
 
             $options = $this->get_options();
             if(get_the_ID() == $options['post_id']) {
-
                 $this->add_frontend_css();
                 $this->add_frontend_scripts();
                 $text .= $this->comeet_add_template();
-
             }
             return $text;
         }
@@ -619,23 +659,35 @@ if(!class_exists('Comeet')) {
             $css_url = 'css/' . $options['comeet_stylesheet'];
             wp_enqueue_style('comeet_style', $this->plugin_url . $css_url, null, null, 'all');
         }
+
+        function filter_title($title) {
+            if (isset($this->title)) {
+                return ["title" => $this->title];
+            } else {
+                return $title;
+            }
+        }
         function comeet_add_template() {
+
             $comeet_cat = null;
             global $wp_query;
             $options = $this->get_options();
             if (isset($this->comeet_pos)) {
-                $post_data = ComeetData::get_position_data($options, $this->comeet_pos);
+                $post_data = $this->post_data;
                 $template = 'comeet-position-page.php';
             } else if(isset($wp_query->query_vars['comeet_cat'])) {
-                $comeet_cat = urldecode($wp_query->query_vars['comeet_cat']);
-                if($comeet_cat == 'thankyou') {
+                if($this->comeet_cat == 'thankyou') {
                     $template = 'comeet-thankyou-page.php';
                 }
                 else {
+                    list($comeetgroups, $data, $group_element) = ComeetData::get_groups($options, $this->comeet_cat);
+                    $comeet_cat = $this->comeet_cat;
+                    $comeet_group = $options['advanced_search'];
                     $template = 'comeet-sub-page.php';
                 }
             } else {
-                $comeetgroups = ComeetData::get_comeeet_groups($options, $comeet_cat);
+                list($comeetgroups, $data, $group_element) = ComeetData::get_groups($options, $this->comeet_cat);
+                $comeet_group = $options['advanced_search'];
                 $template = 'comeet-careers.php';
             }
 

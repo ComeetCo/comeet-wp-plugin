@@ -34,12 +34,12 @@ class ComeetData {
     }
 
 
-    static public function get_comeeet_groups($options, $comeet_cat) {
+
+    static public function get_groups($options, $comeet_cat) {
         $comeet_group = $options['advanced_search'];
         $transient_key = 'comeet-careers-' . $options['comeet_uid'] . '-' . $options['comeet_token'];
         //delete_transient($transient_key);
         $data = get_transient($transient_key);
-        $data = '';
         if ($data == '') {
             //Read main data for all positions
             $cSession = curl_init();
@@ -83,21 +83,6 @@ class ComeetData {
                 $group_element = 'department';
             }
 
-            function comeet_search($array, $key, $value) {
-                $results = array();
-
-                if (is_array($array)) {
-                    if (isset($array[$key]) && strtolower(clean($array[$key])) == $value) {
-                        $results[] = $array;
-                    }
-
-                    foreach ($array as $subarray) {
-                        $results = array_merge($results, comeet_search($subarray, $key, $value));
-                    }
-                }
-
-                return $results;
-            }
 
             if ($group_element == 'location') {
                 if (count(comeet_search($data, $group_element, $comeet_cat)) > 0) {
@@ -126,9 +111,24 @@ class ComeetData {
             }
             $comeetgroups = array_unique($groupa);
             sort($comeetgroups);
-            return $comeetgroups;
+            return [$comeetgroups, $data, $group_element];
         }
     }
 }
 
+function comeet_search($array, $key, $value) {
+    $results = array();
+
+    if (is_array($array)) {
+        if (isset($array[$key]) && strtolower(clean($array[$key])) == $value) {
+            $results[] = $array;
+        }
+
+        foreach ($array as $subarray) {
+            $results = array_merge($results, comeet_search($subarray, $key, $value));
+        }
+    }
+
+    return $results;
+}
 ?>
