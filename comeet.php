@@ -336,16 +336,17 @@ if(!class_exists('Comeet')) {
             );
 
             add_settings_field(
-                'comeet_token',
-                'Token',
-                array($this, 'comeet_token_input'),
-                'comeet',
-                'comeet_api_settings'
-            );
-            add_settings_field(
                 'comeet_uid',
                 'Company UID',
                 array($this, 'comeet_uid_input'),
+                'comeet',
+                'comeet_api_settings'
+            );
+
+            add_settings_field(
+                'comeet_token',
+                'Token',
+                array($this, 'comeet_token_input'),
                 'comeet',
                 'comeet_api_settings'
             );
