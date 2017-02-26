@@ -718,7 +718,9 @@ if(!class_exists('Comeet')) {
             }
 
             //location is 0 and department is 1. Default is location
-            if($attr['type']=='department') {
+            if (!isset($attr['type'])) {
+                $comeet_group = 0;
+            } else if($attr['type']=='department') {
                 $comeet_group = 1;
             } elseif ($attr['type']=='location'){
                 $comeet_group = 0;
