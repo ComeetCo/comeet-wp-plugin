@@ -83,7 +83,7 @@ if(!class_exists('Comeet')) {
 
             $this->isComeetContentPage = false;
             for ($c = 0; $c < count($posts); $c++) {
-                if (has_shortcode($posts[$c]->post_content, 'comeet_data')) {
+                if (has_shortcode($posts[$c]->post_content, 'comeet_data') || has_shortcode($posts[$c]->post_content, 'comeet_page')) {
                     $this->isComeetContentPage = true;
                     break;
                 }
@@ -716,7 +716,6 @@ if(!class_exists('Comeet')) {
             if(isset($attr['name'])) {
                 $comeet_cat = strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $attr['name'])));
             }
-
             //location is 0 and department is 1. Default is location
             if (!isset($attr['type'])) {
                 $comeet_group = 0;
@@ -729,7 +728,7 @@ if(!class_exists('Comeet')) {
             //print_r($comeet_group);
             if(isset($comeet_pos)) {
                 $template = 'comeet-position-page-custom.php';
-            } elseif ($comeet_cat) {
+            } elseif (isset($comeet_cat)) {
                 if($comeet_cat == 'thankyou') {
                     $template = 'comeet-thankyou-page.php';
                 }
