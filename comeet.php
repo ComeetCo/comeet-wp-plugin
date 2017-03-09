@@ -51,6 +51,10 @@ if (!class_exists('Comeet')) {
         private $post_data;
         private $socialGraphTitle;
         private $socialGraphImage;
+        private $socialGraphDescription;
+        private $socialGraphDefaultDescription = 'Job Opportunities';
+
+
 
         public function __construct() {
             $this->plugin_url = trailingslashit(WP_PLUGIN_URL . '/' . dirname(plugin_basename(__FILE__)));
@@ -69,32 +73,42 @@ if (!class_exists('Comeet')) {
 
             }
 
-            add_action('the_posts', array($this, 'is_comeet_content_page'), 10);
-
-
+            add_action('the_posts', array($this, 'set_is_comeet_content_page'), 10);
             add_filter('wpseo_og_og_title', array($this, 'filter_og_title'));
-
             add_action('wp_head', array($this, 'update_header'), 12);
             //add_filter('document_title_parts', array($this,'filter_title'));
             add_filter('wpseo_title', array($this, 'filter_title_simple'));
             add_filter('wpseo_opengraph_image', array($this, 'filter_image'));
             add_filter('wpseo_canonical', array($this, 'filter_url'));
+            add_filter('wpseo_metadesc', array($this, 'getSocialGraphDescription'));
+            add_filter('wpseo_opengraph_desc', array($this, 'getSocialGraphDescription'));
 
 
 
         }
 
+        public function getSocialGraphDescription($pageSetDescription = null) {
+            if (!$this->isComeetContentPage) {
+                $res = $pageSetDescription;
+            } else if ($this->socialGraphDescription) {
+                $res = $this->socialGraphDescription;
+            } else if ($pageSetDescription != null) {
+                $res = $pageSetDescription;
+            } else {
+                $res = $this->socialGraphDefaultDescription;
+            }
+
+            return $res;
+        }
 
         function filter_image($imageUrl) {
             if (isset($this->socialGraphImage)) {
                 $imageUrl = $this->socialGraphImage;
             }
-
-
             return $imageUrl;
         }
 
-        function is_comeet_content_page($posts) {
+        function set_is_comeet_content_page($posts) {
 
             $this->isComeetContentPage = false;
             for ($c = 0; $c < count($posts); $c++) {
@@ -118,24 +132,20 @@ if (!class_exists('Comeet')) {
 
         function update_header() {
 
-            if ($this->isComeetContentPage && (is_plugin_active('wordpress-seo'))) {
+            if ($this->isComeetContentPage && (!is_plugin_active('wordpress-seo/wp-seo.php'))) {
                 ?>
 
                 <!-- COMEET PLUGIN -->
                 <?php
-                if (isset($this->socialGraphTitle)) {
-                    ?>
-
-                    <meta name="og:title" content="<?= $this->socialGraphTitle ?>"/>
+                if (isset($this->title)) {
+                    ?><meta name="og:title" content="<?= $this->title ?>"/>
                     <?php
                 }
                 if (isset($this->socialGraphImage)) {
-                    ?>
+                    ?><meta property="og:image" content="<?= $this->socialGraphImage ?>"/><?php
 
-                    <meta property="og:image" content="<?= $this->socialGraphImage ?>"/>
-                    <?php
                 }
-                ?>
+                ?><meta property="og:description" content="<?= $this->getSocialGraphDescription() ?>">
                 <meta property="og:url" content="<?= $this->get_current_url(); ?>"/>
                 <meta property="og:type" content="article" />
 
@@ -641,16 +651,17 @@ if (!class_exists('Comeet')) {
             if ($this->isComeetContentPage) {
                 if (isset($this->comeet_pos)) {
                     $this->post_data = ComeetData::get_position_data($this->get_options(), $this->comeet_pos);
+                    $this->socialGraphDescription = $this->post_data['description'];
                     $this->title = 'Job opportunity: '.$this->post_data['name'];
                     $this->socialGraphTitle = $this->title;
                     $this->socialGraphImage = $this->post_data['picture_url'];
                 } else if (isset($this->comeet_cat)) {
-
                     $options = $this->get_options();
                     list($comeetgroups, $data, $group_element) = ComeetData::get_groups($options, $this->comeet_cat);
                     foreach ($data as $post) {
                         if (strtolower(clean($post[$group_element])) == $this->comeet_cat) {
                             $this->title = $post[$group_element];
+                            $this->socialGraphDescription = $this->socialGraphDefaultDescription.' - '.$post[$group_element];
                             break;
                         }
                     }
@@ -674,7 +685,6 @@ if (!class_exists('Comeet')) {
 
         function comeet_custom_shortcode($attr, $content = null) {
             $options = $this->get_options();
-            //print_r($text);
             $this->add_frontend_css();
             $this->add_frontend_scripts();
             $text = $this->comeet_add_template_custom_shortcode($attr, $content);
@@ -795,7 +805,6 @@ if (!class_exists('Comeet')) {
                 $comeet_group = 0;
             }
 
-            //print_r($comeet_group);
             if (isset($comeet_pos)) {
                 $template = 'comeet-position-page-custom.php';
             } elseif (isset($comeet_cat)) {
