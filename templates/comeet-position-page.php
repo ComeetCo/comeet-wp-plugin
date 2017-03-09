@@ -1,7 +1,3 @@
-<?php
-	require_once($this->plugin_dir . 'includes/lib/comeet-data.php');
-	
-?>
 <div class="all-jobs-link">
 <?php
 	$post = get_post(get_the_ID());
@@ -9,7 +5,7 @@
 <a href="<?php echo site_url() . '/' . $post->post_name; ?>">&larr; All Jobs</a>
 </div>
 <div><?php
-if (isset($post_data) && ($post_data['status'] == 404)) {
+if (isset($post_data) && (isset($post_data['status'])) && ($post_data['status'] == 404)) {
 	$careerurl=site_url() . '/' . $post->post_name;;
 	echo '<meta http-equiv="refresh" content="1; url=' . $careerurl .'" />';
   echo 'This position was not found. You will be redirected to careers home. If not, click <a href="' . $careerurl .'">here</a>.';

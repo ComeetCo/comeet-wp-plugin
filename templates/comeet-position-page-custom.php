@@ -3,7 +3,7 @@
 
 ?>
 <div><?php
-if (if (isset($post_data) && ($post_data['status'] == 404)) {
+if ((isset($post_data) && ($post_data['status'] == 404)) {
 
 	$careerurl=site_url();
 	if (isset($post)) {

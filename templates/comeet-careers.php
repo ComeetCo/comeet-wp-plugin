@@ -1,7 +1,4 @@
 <?php
-	require_once($this->plugin_dir . 'includes/lib/comeet-data.php');
-?>
-<?php 
 if (isset($comeetgroups)) {
 ?>
     <div id="d" class="comeet-groups-list">

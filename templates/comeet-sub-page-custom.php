@@ -1,7 +1,4 @@
 <?php
-	require_once($this->plugin_dir . 'includes/lib/comeet-data.php');
-?>
-<?php
 if (isset($comeetgroups) && count(comeet_search($data, $group_element, $comeet_cat)) >0) {
 
 ?>

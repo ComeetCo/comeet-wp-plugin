@@ -7,7 +7,7 @@
     <?php $options = $this->get_options(); 
     $post = get_post($options['post_id']);
 
-    ?>    
+    ?>
 	<?php
 	if (isset($post->post_name)) { ?>
 		<a class="button" href="<?php echo get_permalink( $post->ID );?>" target="_blank" style="float: right;"/>Open &#8599;</a>
