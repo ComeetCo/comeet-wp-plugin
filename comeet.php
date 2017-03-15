@@ -29,8 +29,8 @@ limitations under the License.
 */
 
 include_once(ABSPATH . 'wp-admin/includes/plugin.php');
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+//error_reporting(E_ALL);
+//ini_set('display_errors', 1);
 $plugin_dir = trailingslashit(plugin_dir_path(__FILE__));
 require_once($plugin_dir . 'includes/lib/comeet-data.php');
 
