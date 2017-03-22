@@ -98,7 +98,7 @@ if (!class_exists('Comeet')) {
                 $res = $this->socialGraphDefaultDescription;
             }
 
-            return $res;
+            return strip_tags($res);
         }
 
         function filter_image($imageUrl) {
