@@ -45,7 +45,6 @@ if (!class_exists('Comeet')) {
 
         var $db_opt = 'Comeet_Options';
 
-
         private $isComeetContentPage;
         private $comeet_pos;
         private $post_data;
@@ -57,6 +56,8 @@ if (!class_exists('Comeet')) {
 
 
         public function __construct() {
+
+
             $this->plugin_url = trailingslashit(WP_PLUGIN_URL . '/' . dirname(plugin_basename(__FILE__)));
             $this->plugin_dir = trailingslashit(plugin_dir_path(__FILE__));
 
@@ -796,6 +797,7 @@ if (!class_exists('Comeet')) {
             if (isset($attr['name'])) {
                 $comeet_cat = strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $attr['name'])));
             }
+
             //location is 0 and department is 1. Default is location
             if (!isset($attr['type'])) {
                 $comeet_group = 0;
@@ -804,13 +806,13 @@ if (!class_exists('Comeet')) {
             } elseif ($attr['type'] == 'location') {
                 $comeet_group = 0;
             }
-
             if (isset($comeet_pos)) {
                 $template = 'comeet-position-page-custom.php';
             } elseif (isset($comeet_cat)) {
                 if ($comeet_cat == 'thankyou') {
                     $template = 'comeet-thankyou-page.php';
                 } else {
+                    list($comeetgroups, $data, $group_element) = ComeetData::get_groups($options, $comeet_cat);
                     $template = 'comeet-sub-page-custom.php';
                 }
             } else {
