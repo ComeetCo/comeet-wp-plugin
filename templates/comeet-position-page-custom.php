@@ -1,9 +1,10 @@
 <?php
+
 	require_once($this->plugin_dir . 'includes/lib/comeet-data.php');
 
 ?>
 <div><?php
-if ((isset($post_data) && ($post_data['status'] == 404)) {
+if (isset($post_data) && ($post_data['status'] == 404)) {
 
 	$careerurl=site_url();
 	if (isset($post)) {
