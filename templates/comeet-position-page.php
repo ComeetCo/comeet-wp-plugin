@@ -8,7 +8,7 @@
 if (isset($post_data) && (isset($post_data['status'])) && ($post_data['status'] == 404)) {
 	$careerurl=site_url() . '/' . $post->post_name;;
 	echo '<meta http-equiv="refresh" content="1; url=' . $careerurl .'" />';
-  echo 'This position was not found, redirecting to the careers page. If nothing happens click <a href="' . $careerurl .'">here</a>.';
+  echo 'This position was not found, it may have been closed. You will be redirected to the careers page, if nothing happens click <a href="' . $careerurl .'">here</a>.';
 exit;
 	//wp_redirect( home_url() ); exit;
 }
