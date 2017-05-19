@@ -37,24 +37,13 @@ class ComeetData {
 
     static private function fetch_groups_data($options) {
         //Read main data for all positions
-        $cSession = curl_init();
-        curl_setopt($cSession, CURLOPT_URL, "https://www.comeet.co/careers-api/1.0/company/" . $options['comeet_uid'] . "/positions?token=" . $options['comeet_token']);
-        curl_setopt($cSession, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($cSession);
-        curl_close($cSession);
-        $result1 = json_decode($result, true);
+        $comeet_post_url = "https://www.comeet.co/careers-api/1.0/company/" . $options['comeet_uid'] . "/positions?token=" . $options['comeet_token'];
+        $result1 = self::comeet_get_data($comeet_post_url);
 
         if (!isset($result1['status']) || $result1['status'] != 400) {
             //Add description details for each post
             foreach ($result1 as $key => $job) {
-                $cSession = curl_init();
-                curl_setopt($cSession, CURLOPT_URL, $job['position_url']);
-                curl_setopt($cSession, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
-                $position = curl_exec($cSession);
-                $positiond = json_decode($position, true);
-                curl_close($cSession);
+                $positiond = self::comeet_get_data($job['position_url']);
 
                 if ($job['department'] === NULL || $job['department'] == "") {
                     $result1[$key]['department'] = 'Other';
@@ -107,7 +96,11 @@ class ComeetData {
         return $group_element;
     }
 
-    static public function get_groups($options, $comeet_cat) {
+    static public function opposite_group_element($group_element) {
+        return $group_element === 'department' ? 'location' : 'department';
+    }
+
+    static public function get_groups($options, $comeet_cat, $invert_group = false) {
         $data = self::fetch_groups_data($options);
         $transient_key = self::TRANSIENT_PREFIX . 'careers-' . $options['comeet_uid'] . '-' . $options['comeet_token'];
 
@@ -121,6 +114,10 @@ class ComeetData {
             //echo $data['status'];
         } else {
             $group_element = self::get_group_element($options, $comeet_cat, $data);
+
+            if ($invert_group) {
+                $group_element = self::opposite_group_element($group_element);
+            }
             $groupa = array();
 
             foreach ($data as $h) {

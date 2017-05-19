@@ -786,9 +786,10 @@ if (!class_exists('Comeet')) {
                 if ($this->comeet_cat == 'thankyou') {
                     $template = 'comeet-thankyou-page.php';
                 } else {
-                    list($comeetgroups, $data, $group_element) = ComeetData::get_groups($options, $this->comeet_cat);
+                    list($comeetgroups, $data, $group_element) = ComeetData::get_groups($options, $this->comeet_cat, true);
                     $comeet_cat = $this->comeet_cat;
                     $comeet_group = $options['advanced_search'];
+                    $sub_group = ComeetData::opposite_group_element($group_element);
                     $template = 'comeet-sub-page.php';
                 }
             } else {
@@ -837,7 +838,8 @@ if (!class_exists('Comeet')) {
                 if ($comeet_cat == 'thankyou') {
                     $template = 'comeet-thankyou-page.php';
                 } else {
-                    list($comeetgroups, $data, $group_element) = ComeetData::get_groups($options, $comeet_cat);
+                    list($comeetgroups, $data, $group_element) = ComeetData::get_groups($options, $comeet_cat, true);
+                    $sub_group = ComeetData::opposite_group_element($group_element);
                     $template = 'comeet-sub-page-custom.php';
                 }
             } else {
