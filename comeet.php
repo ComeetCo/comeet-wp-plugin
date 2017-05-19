@@ -119,8 +119,10 @@ if (!class_exists('Comeet')) {
                     break;
                 }
             }
+            
             if ($this->isComeetContentPage) {
                 global $wp_query;
+                
                 if (isset($wp_query->query_vars['comeet_pos'])) {
                     $this->comeet_pos = urldecode($wp_query->query_vars['comeet_pos']);
                 } else {
@@ -362,10 +364,10 @@ if (!class_exists('Comeet')) {
 
             if (!empty($parent_posts_slug)) {
                 $page_parents = (count($parent_posts_slug) > 1 ? implode('/', array_reverse($parent_posts_slug)) : reset($parent_posts_slug));
-                add_rewrite_rule($page_parents . '/' . $post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?pagename=' . $page_parents . '/' . $post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]', 'top');
+                add_rewrite_rule($page_parents . '/' . $post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?(/all)?$', 'index.php?pagename=' . $page_parents . '/' . $post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]&comeet_all=$matches[4]', 'top');
                 add_rewrite_rule($page_parents . '/' . $post->post_name . '/([^/]+)/?$', 'index.php?pagename=' . $page_parents . '/' . $post->post_name . '&comeet_cat=$matches[1]', 'top');
             } else {
-                add_rewrite_rule($post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]', 'top');
+                add_rewrite_rule($post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?(/all)?$', 'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]&comeet_all=$matches[4]', 'top');
                 add_rewrite_rule($post->post_name . '/([^/]+)/?$', 'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]', 'top');
             }
 
@@ -781,6 +783,7 @@ if (!class_exists('Comeet')) {
             $options = $this->get_options();
             if (isset($this->comeet_pos)) {
                 $post_data = $this->post_data;
+                $show_all_link = !empty($wp_query->query_vars['comeet_all']);
                 $template = 'comeet-position-page.php';
             } else if (isset($wp_query->query_vars['comeet_cat'])) {
                 if ($this->comeet_cat == 'thankyou') {
@@ -875,6 +878,7 @@ if (!class_exists('Comeet')) {
         function comeet_add_query_vars($aVars) {
             $aVars[] = "comeet_cat"; // represents the name of the department or location in URL
             $aVars[] = "comeet_pos"; // represents the name of the position as shown in URL
+            $aVars[] = "comeet_all"; // whether to show all link
             return $aVars;
         }
 

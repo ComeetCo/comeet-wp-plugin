@@ -20,7 +20,7 @@ if (isset($comeetgroups)) {
                                 if (isset($group_element)) {
                                     if ($post[$group_element] == $category) {
                                         echo '<li class="comeet-position">';
-                                        echo '<div class="comeet-position-name"><a href="' . get_the_permalink() . strtolower(clean($category)) . '/' . $post['position_uid'] . '/' . strtolower(clean($post['name'])) . '">' . $post['name'] . '</a></div>';
+                                        echo '<div class="comeet-position-name"><a href="' . get_the_permalink() . strtolower(clean($category)) . '/' . $post['position_uid'] . '/' . strtolower(clean($post['name'])) . '/all">' . $post['name'] . '</a></div>';
                                         echo '<div class="comeet-position-meta">';
                                         if ($comeet_group == 0) {
                                             echo $post['department'];

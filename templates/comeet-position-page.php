@@ -1,9 +1,11 @@
+<?php if ($show_all_link) : ?>
 <div class="all-jobs-link">
 <?php
 	$post = get_post(get_the_ID());
 ?>
 <a href="<?php echo site_url() . '/' . $post->post_name; ?>">&larr; All Jobs</a>
 </div>
+<?php endif; ?>
 <div><?php
 if (isset($post_data) && (isset($post_data['status'])) && ($post_data['status'] == 404)) {
 	$careerurl=site_url() . '/' . $post->post_name;;
