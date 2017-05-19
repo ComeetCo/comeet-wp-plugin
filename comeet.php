@@ -34,6 +34,23 @@ include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 $plugin_dir = trailingslashit(plugin_dir_path(__FILE__));
 require_once($plugin_dir . 'includes/lib/comeet-data.php');
 
+if (!function_exists('comeet_plugin_version')) {
+    function comeet_plugin_version() {
+        if (!function_exists('get_plugin_data')) {
+            require_once(ABSPATH . 'wp-admin/includes/plugin.php');
+
+        }
+        $plugin_data = get_plugin_data(__FILE__, false, false);
+
+        return $plugin_data['Version'];
+    }
+}
+
+if (!function_exists('comeet_plugin_version_arg')) {
+    function comeet_plugin_version_arg() {
+        return 'requestedby=wpplugin' . comeet_plugin_version();
+    }
+}
 
 if (!class_exists('Comeet')) {
 
@@ -259,7 +276,7 @@ if (!class_exists('Comeet')) {
         }
 
         public function admin_comeet_api_notice() {
-            $apiurl = 'https://www.comeet.co/careers-api/1.0/company/' . $this->comeet_uid . '/positions?token=' . $this->comeet_token;
+            $apiurl = 'https://www.comeet.co/careers-api/1.0/company/' . $this->comeet_uid . '/positions?token=' . $this->comeet_token . '&' . comeet_plugin_version_arg();
             $request = wp_remote_get($apiurl);
             $response = $request['response'];
             if ($response['code'] != 200) {
@@ -722,7 +739,7 @@ if (!class_exists('Comeet')) {
 
         protected function add_frontend_scripts() {
             $options = $this->get_options();
-            
+
             if (empty($options['comeet_token']) || empty($options['comeet_uid'])) {
                 return;
             }

@@ -10,8 +10,9 @@ class ComeetData {
     const TRANSIENT_PREFIX = 'comeet-';
 
     static private function comeet_get_data($comeeturl) {
+        $url = $comeeturl . '&' . comeet_plugin_version_arg();
         $cSession = curl_init();
-        curl_setopt($cSession, CURLOPT_URL, $comeeturl);
+        curl_setopt($cSession, CURLOPT_URL, $url);
         curl_setopt($cSession, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($cSession);
