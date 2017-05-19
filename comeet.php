@@ -65,6 +65,7 @@ if (!class_exists('Comeet')) {
                 add_action('admin_init', array($this, 'register_settings'));
                 add_action('admin_menu', array($this, 'options_page'));
                 add_action('admin_init', array($this, 'flush_permalinks'));
+                add_action('updated_option', array($this, 'check_option'), 10, 3);
             } else {
                 //add_filter('the_content', array($this, 'comeet_content'));
                 add_filter('template_include', array($this, 'career_page_template'), 99);
@@ -577,6 +578,33 @@ if (!class_exists('Comeet')) {
             echo '</select></div>';
         }
 
+        function clear_cache() {
+            global $wpdb;
+
+            $prefix  = esc_sql('_transient_' . ComeetData::TRANSIENT_PREFIX . '%');
+            $sql = $wpdb->prepare(
+                "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '%s'",
+                $prefix
+            );
+            $transients = $wpdb->get_col($sql);
+
+            foreach ($transients as $transient) {
+                $key = str_replace('_transient_', '', $transient);
+                delete_transient($key);
+            }
+        }
+
+        function check_option($option, $old_value, $new_value) {
+            if ($option !== 'Comeet_Options') {
+                return;
+            }
+
+            if ($old_value['comeet_token'] !== $new_value['comeet_token'] ||
+            $old_value['comeet_uid'] !== $new_value['comeet_uid']) {
+                $this->clear_cache();
+            }
+        }
+
         /**
          * Validates plugin settings form when submitted.
          *
@@ -609,9 +637,6 @@ if (!class_exists('Comeet')) {
             } else {
                 $valid['post_id'] = $input['post_id'];
             }
-
-            $transient_reset = 'comeet-careers-' . $valid['comeet_uid'] . '-' . $valid['comeet_token'];
-            delete_transient($transient_reset);
             return $valid;
         }
 

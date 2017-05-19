@@ -7,6 +7,8 @@ function clean($string) {
 
 class ComeetData {
 
+    const TRANSIENT_PREFIX = 'comeet-';
+
     static private function comeet_get_data($comeeturl) {
 
         $cSession = curl_init();
@@ -23,7 +25,7 @@ class ComeetData {
     static function get_position_data($options, $comeet_pos) {
         $comeet_post_url = 'https://www.comeet.co/careers-api/1.0/company/' . $options["comeet_uid"] . '/positions/' . $comeet_pos . '?token=' . $options["comeet_token"];
         $post_data = self::comeet_get_data($comeet_post_url);
-        $transient_key = $comeet_pos;
+        $transient_key = self::TRANSIENT_PREFIX . $comeet_pos;
 
         if (!empty($post_data)) {
             set_transient($transient_key, $post_data);
@@ -107,7 +109,7 @@ class ComeetData {
 
     static public function get_groups($options, $comeet_cat) {
         $data = self::fetch_groups_data($options);
-        $transient_key = 'comeet-careers-' . $options['comeet_uid'] . '-' . $options['comeet_token'];
+        $transient_key = self::TRANSIENT_PREFIX . 'careers-' . $options['comeet_uid'] . '-' . $options['comeet_token'];
 
         if (!empty($data)) {
             set_transient($transient_key, $data);
