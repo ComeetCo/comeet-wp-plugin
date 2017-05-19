@@ -7,7 +7,6 @@ function clean($string) {
 
 class ComeetData {
 
-
     static private function comeet_get_data($comeeturl) {
 
         $cSession = curl_init();
@@ -21,91 +20,107 @@ class ComeetData {
 
     }
 
-
     static function get_position_data($options, $comeet_pos) {
+        $comeet_post_url = 'https://www.comeet.co/careers-api/1.0/company/' . $options["comeet_uid"] . '/positions/' . $comeet_pos . '?token=' . $options["comeet_token"];
+        $post_data = self::comeet_get_data($comeet_post_url);
         $transient_key = $comeet_pos;
-        $post_data = get_transient($transient_key);
-        if ($post_data == '') {
-            $comeet_post_url = 'https://www.comeet.co/careers-api/1.0/company/' . $options["comeet_uid"] . '/positions/' . $comeet_pos . '?token=' . $options["comeet_token"];
-            $post_data = self::comeet_get_data($comeet_post_url);
-            set_transient($transient_key, $post_data, 60 * 5 * 1);
+
+        if (!empty($post_data)) {
+            set_transient($transient_key, $post_data);
+        } else {
+            $post_data = get_transient($transient_key);
         }
         return $post_data;
     }
 
+    static private function fetch_groups_data($options) {
+        //Read main data for all positions
+        $cSession = curl_init();
+        curl_setopt($cSession, CURLOPT_URL, "https://www.comeet.co/careers-api/1.0/company/" . $options['comeet_uid'] . "/positions?token=" . $options['comeet_token']);
+        curl_setopt($cSession, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($cSession);
+        curl_close($cSession);
+        $result1 = json_decode($result, true);
 
+        if (!isset($result1['status']) || $result1['status'] != 400) {
+            //Add description details for each post
+            foreach ($result1 as $key => $job) {
+                $cSession = curl_init();
+                curl_setopt($cSession, CURLOPT_URL, $job['position_url']);
+                curl_setopt($cSession, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
+                $position = curl_exec($cSession);
+                $positiond = json_decode($position, true);
+                curl_close($cSession);
 
-    static public function get_groups($options, $comeet_cat) {
-        $comeet_group = $options['advanced_search'];
-        $transient_key = 'comeet-careers-' . $options['comeet_uid'] . '-' . $options['comeet_token'];
-        //delete_transient($transient_key);
-        $data = get_transient($transient_key);
-        if ($data == '') {
-            //Read main data for all positions
-            $cSession = curl_init();
-            curl_setopt($cSession, CURLOPT_URL, "https://www.comeet.co/careers-api/1.0/company/" . $options['comeet_uid'] . "/positions?token=" . $options['comeet_token']);
-            curl_setopt($cSession, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
-            $result = curl_exec($cSession);
-            curl_close($cSession);
-            $result1 = json_decode($result, true);
-            if (!isset($result1['status']) || $result1['status'] != 400) {
-                //Add description details for each post
-                foreach ($result1 as $key => $job) {
-                    $cSession = curl_init();
-                    curl_setopt($cSession, CURLOPT_URL, $job['position_url']);
-                    curl_setopt($cSession, CURLOPT_SSL_VERIFYPEER, false);
-                    curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
-                    $position = curl_exec($cSession);
-                    $positiond = json_decode($position, true);
-                    curl_close($cSession);
-                    if ($job['department'] === NULL || $job['department'] == "") {
-                        $result1[$key]['department'] = 'Other';
-                    }
-                    if ($job['location'] === NULL || $job['location'] == "") {
-                        $result1[$key]['location'] = 'Other';
-                    }
-                    $result1[$key]['description'] = $positiond['description'];
-                    $result1[$key]['requirements'] = $positiond['requirements'];
+                if ($job['department'] === NULL || $job['department'] == "") {
+                    $result1[$key]['department'] = 'Other';
                 }
-            }
-            //Set transient data
-            set_transient($transient_key, $result1, 60 * 5 * 1);
-            $data = $result1;
 
+                if ($job['location'] === NULL || $job['location'] == "") {
+                    $result1[$key]['location'] = 'Other';
+                }
+                $result1[$key]['description'] = $positiond['description'];
+                $result1[$key]['requirements'] = $positiond['requirements'];
+            }
         }
-        if (isset($data['status']) && ($data['status'] == 400)) {
-            //echo $data['status'];
+        return $result1;
+    }
+
+    static private function get_group_element($options, $comeet_cat, $data) {
+        $comeet_group = $options['advanced_search'];
+
+        if ($comeet_group == 0) {
+            $group_element = 'location';
         } else {
-            if ($comeet_group == 0) {
+            $group_element = 'department';
+        }
+
+
+        if ($group_element == 'location') {
+            if (count(comeet_search($data, $group_element, $comeet_cat)) > 0) {
                 $group_element = 'location';
             } else {
-                $group_element = 'department';
-            }
+                $alt_element = 'department';
 
-
-            if ($group_element == 'location') {
-                if (count(comeet_search($data, $group_element, $comeet_cat)) > 0) {
-                    $group_element = 'location';
-                } else {
-                    $alt_element = 'department';
-                    if (count(comeet_search($data, $alt_element, $comeet_cat)) > 0) {
-                        $group_element = 'department';
-                    }
-                }
-            }
-            if ($group_element == 'department') {
-                if (count(comeet_search($data, $group_element, $comeet_cat)) > 0) {
+                if (count(comeet_search($data, $alt_element, $comeet_cat)) > 0) {
                     $group_element = 'department';
-                } else {
-                    $alt_element = 'location';
-                    if (count(comeet_search($data, $alt_element, $comeet_cat)) > 0) {
-                        $group_element = 'location';
-                    }
                 }
             }
+        }
 
+        if ($group_element == 'department') {
+            if (count(comeet_search($data, $group_element, $comeet_cat)) > 0) {
+                $group_element = 'department';
+            } else {
+                $alt_element = 'location';
+
+                if (count(comeet_search($data, $alt_element, $comeet_cat)) > 0) {
+                    $group_element = 'location';
+                }
+            }
+        }
+
+        return $group_element;
+    }
+
+    static public function get_groups($options, $comeet_cat) {
+        $data = self::fetch_groups_data($options);
+        $transient_key = 'comeet-careers-' . $options['comeet_uid'] . '-' . $options['comeet_token'];
+
+        if (!empty($data)) {
+            set_transient($transient_key, $data);
+        } else {
+            $data = get_transient($transient_key);
+        }
+
+        if (empty($data) || (isset($data['status']) && ($data['status'] == 400))) {
+            //echo $data['status'];
+        } else {
+            $group_element = self::get_group_element($options, $comeet_cat, $data);
             $groupa = array();
+
             foreach ($data as $h) {
                 $groupa[] = $h[$group_element];
             }
