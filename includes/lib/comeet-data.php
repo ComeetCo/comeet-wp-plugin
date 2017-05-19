@@ -10,7 +10,6 @@ class ComeetData {
     const TRANSIENT_PREFIX = 'comeet-';
 
     static private function comeet_get_data($comeeturl) {
-
         $cSession = curl_init();
         curl_setopt($cSession, CURLOPT_URL, $comeeturl);
         curl_setopt($cSession, CURLOPT_SSL_VERIFYPEER, false);
@@ -19,19 +18,22 @@ class ComeetData {
         curl_close($cSession);
         $result1 = json_decode($result, true);
         return $result1;
-
     }
 
     static function get_position_data($options, $comeet_pos) {
+        if (empty($options['comeet_token']) || empty($options['comeet_uid'])) {
+            return;
+        }
         $comeet_post_url = 'https://www.comeet.co/careers-api/1.0/company/' . $options["comeet_uid"] . '/positions/' . $comeet_pos . '?token=' . $options["comeet_token"];
         $post_data = self::comeet_get_data($comeet_post_url);
         $transient_key = self::TRANSIENT_PREFIX . $comeet_pos;
 
-        if (!empty($post_data)) {
-            set_transient($transient_key, $post_data);
-        } else {
+        if (empty($post_data) || (isset($post_data['status']) && $post_data['status'] === 400)) {
             $post_data = get_transient($transient_key);
+        } else {
+            set_transient($transient_key, $post_data);
         }
+        
         return $post_data;
     }
 
@@ -101,6 +103,9 @@ class ComeetData {
     }
 
     static public function get_groups($options, $comeet_cat, $invert_group = false) {
+        if (empty($options['comeet_token']) || empty($options['comeet_uid'])) {
+            return [false, false, false];
+        }
         $data = self::fetch_groups_data($options);
         $transient_key = self::TRANSIENT_PREFIX . 'careers-' . $options['comeet_uid'] . '-' . $options['comeet_token'];
 

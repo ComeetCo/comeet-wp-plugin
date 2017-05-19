@@ -1,5 +1,5 @@
 <?php
-if (isset($comeetgroups)) {
+if (isset($comeetgroups) && !empty($comeetgroups)) {
 ?>
     <div id="d" class="comeet-groups-list">
 <?php

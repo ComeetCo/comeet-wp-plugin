@@ -721,8 +721,12 @@ if (!class_exists('Comeet')) {
         }
 
         protected function add_frontend_scripts() {
-            wp_register_script("comeet_script", ($this->plugin_url . 'js/comeet.js'));
             $options = $this->get_options();
+            
+            if (empty($options['comeet_token']) || empty($options['comeet_uid'])) {
+                return;
+            }
+            wp_register_script("comeet_script", ($this->plugin_url . 'js/comeet.js'));
             $post = get_post($options['post_id']);
             //echo $post->post_name;
             $comeet_thankyou_url = site_url() . '/' . $post->post_name . '/thankyou';
