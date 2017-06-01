@@ -23,7 +23,7 @@
         <div class="comeet-g-r">
             <div class="comeet-u-1-2">
                 <div class="comeet-list comeet-group-name">
-                    <?php echo '<a href="' . get_the_permalink($options['post_id']) . strtolower(clean($category)) . '">' . $category . '</a>'; ?>
+                    <?php echo '<a href="' . get_the_permalink($options['post_id']) . strtolower(clean($category)) . ($show_all_link ? '/all' : '') . '">' . $category . '</a>'; ?>
                 </div>
             </div>
             <div class="comeet-u-1-2">
