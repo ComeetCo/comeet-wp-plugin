@@ -382,10 +382,10 @@ if (!class_exists('Comeet')) {
             if (!empty($parent_posts_slug)) {
                 $page_parents = (count($parent_posts_slug) > 1 ? implode('/', array_reverse($parent_posts_slug)) : reset($parent_posts_slug));
                 add_rewrite_rule($page_parents . '/' . $post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?(/all)?$', 'index.php?pagename=' . $page_parents . '/' . $post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]&comeet_all=$matches[4]', 'top');
-                add_rewrite_rule($page_parents . '/' . $post->post_name . '/([^/]+)/?$', 'index.php?pagename=' . $page_parents . '/' . $post->post_name . '&comeet_cat=$matches[1]', 'top');
+                add_rewrite_rule($page_parents . '/' . $post->post_name . '/([^/]+)/?(/all)?$', 'index.php?pagename=' . $page_parents . '/' . $post->post_name . '&comeet_cat=$matches[1]&comeet_all=$matches[2]', 'top');
             } else {
                 add_rewrite_rule($post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?(/all)?$', 'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]&comeet_all=$matches[4]', 'top');
-                add_rewrite_rule($post->post_name . '/([^/]+)/?$', 'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]', 'top');
+                add_rewrite_rule($post->post_name . '/([^/]+)/?(/all)?$', 'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]&comeet_all=$matches[2]', 'top');
             }
 
             // Comeet API required settings.
@@ -810,6 +810,7 @@ if (!class_exists('Comeet')) {
                 if ($this->comeet_cat == 'thankyou') {
                     $template = 'comeet-thankyou-page.php';
                 } else {
+                    $show_all_link = !empty($wp_query->query_vars['comeet_all']);
                     list($comeetgroups, $data, $group_element) = ComeetData::get_groups($options, $this->comeet_cat, true);
                     $comeet_cat = $this->comeet_cat;
                     $comeet_group = $options['advanced_search'];
