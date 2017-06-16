@@ -31,9 +31,9 @@ exit;
 		}
 	?>
 	<h4>About The Position</h4>
-	<div class="comeet-position-description"><?php echo $post_data['description'] ?></div>
+	<div class="comeet-position-description comeet-user-text"><?php echo $post_data['description'] ?></div>
 	<h4>Requirements</h4>
-	<div class="comeet-position-requirements"><?php echo $post_data['requirements'] ?></div>
+	<div class="comeet-position-requirements comeet-user-text"><?php echo $post_data['requirements'] ?></div>
 </div>
 <div class="comeet-apply">
 	<h4>Apply for this position</h4>

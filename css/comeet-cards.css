@@ -157,11 +157,9 @@ text-decoration:none;
     line-height: 150%;
 }
 
-.comeet-position-info ul, .comeet-position-info ol {
-    margin: 0;
-    padding: 5px 0 0 0;
-    margin-left: 5px;
-    padding-left: 20px;
+.comeet-user-text > ul,  .comeet-user-text > ol {
+    margin: 0 0 0 5px;
+    padding: 5px 0 0 20px;
 }
 
 .comeet-position-info h4, .comeet-apply h4 {
