@@ -55,11 +55,8 @@ if (!function_exists('comeet_plugin_version_arg')) {
 if (!class_exists('Comeet')) {
 
     class Comeet {
-
-
         var $plugin_url;
         var $plugin_dir;
-
         var $db_opt = 'Comeet_Options';
 
         private $isComeetContentPage;
@@ -70,11 +67,7 @@ if (!class_exists('Comeet')) {
         private $socialGraphDescription;
         private $socialGraphDefaultDescription = 'Job Opportunities';
 
-
-
         public function __construct() {
-
-
             $this->plugin_url = trailingslashit(WP_PLUGIN_URL . '/' . dirname(plugin_basename(__FILE__)));
             $this->plugin_dir = trailingslashit(plugin_dir_path(__FILE__));
 
@@ -84,25 +77,19 @@ if (!class_exists('Comeet')) {
                 add_action('admin_init', array($this, 'flush_permalinks'));
                 add_action('updated_option', array($this, 'check_option'), 10, 3);
             } else {
-                //add_filter('the_content', array($this, 'comeet_content'));
                 add_filter('template_include', array($this, 'career_page_template'), 99);
                 add_shortcode('comeet_data', array($this, 'comeet_content'));
                 add_shortcode('comeet_page', array($this, 'comeet_custom_shortcode'));
                 add_action('the_posts', array($this, 'process_posts'));
             }
-
             add_action('the_posts', array($this, 'set_is_comeet_content_page'), 10);
             add_filter('wpseo_og_og_title', array($this, 'filter_og_title'));
             add_action('wp_head', array($this, 'update_header'), 12);
-            //add_filter('document_title_parts', array($this,'filter_title'));
             add_filter('wpseo_title', array($this, 'filter_title_simple'));
             add_filter('wpseo_opengraph_image', array($this, 'filter_image'));
             add_filter('wpseo_canonical', array($this, 'filter_url'));
             add_filter('wpseo_metadesc', array($this, 'getSocialGraphDescription'));
             add_filter('wpseo_opengraph_desc', array($this, 'getSocialGraphDescription'));
-
-
-
         }
 
         public function add_careers_meta_tags() {
@@ -158,8 +145,8 @@ if (!class_exists('Comeet')) {
         }
 
         function set_is_comeet_content_page($posts) {
-
             $this->isComeetContentPage = false;
+
             for ($c = 0; $c < count($posts); $c++) {
                 if (has_shortcode($posts[$c]->post_content, 'comeet_data') || has_shortcode($posts[$c]->post_content, 'comeet_page')) {
                     $this->isComeetContentPage = true;
@@ -177,44 +164,38 @@ if (!class_exists('Comeet')) {
                 }
                 $this->comeet_preload_data();
             }
+
             return $posts;
         }
 
-
         function update_header() {
-
-            if ($this->isComeetContentPage && (!is_plugin_active('wordpress-seo/wp-seo.php'))) {
-                ?>
-
+            if ($this->isComeetContentPage && (!is_plugin_active('wordpress-seo/wp-seo.php'))) : ?>
                 <!-- COMEET PLUGIN -->
-                <?php
-                if (isset($this->title)) {
-                    ?><meta name="og:title" content="<?= $this->title ?>"/>
-                    <?php
-                }
-                if (isset($this->socialGraphImage)) {
-                    ?><meta property="og:image" content="<?= $this->socialGraphImage ?>"/><?php
-
-                }
-                ?><meta property="og:description" content="<?= $this->getSocialGraphDescription() ?>">
+                <?php if (isset($this->title)) : ?>
+                <meta name="og:title" content="<?= $this->title ?>"/>
+                <?php endif; ?>
+                <?php if (isset($this->socialGraphImage)) : ?>
+                <meta property="og:image" content="<?= $this->socialGraphImage ?>"/>
+                <?php endif; ?>
+                <meta property="og:description" content="<?= $this->getSocialGraphDescription() ?>">
                 <meta property="og:url" content="<?= $this->get_current_url(); ?>"/>
                 <meta property="og:type" content="article" />
-
                 <!-- COMEET PLUGIN -->
                 <?php
-            }
+            endif;
         }
 
-
         function career_page_template($template) {
-            $new_template = '';
             global $wp_query;
+            $new_template = '';
             $options = $this->get_options();
+
             if (isset($wp_query->query_vars['comeet_pos'])) {
                 $new_template = locate_template(array($options['comeet_positionpage_template']));
             } elseif (isset($wp_query->query_vars['comeet_cat'])) {
                 $new_template = locate_template(array($options['comeet_subpage_template']));
             }
+
             if ('' != $new_template) {
                 return $new_template;
             }
@@ -227,11 +208,9 @@ if (!class_exists('Comeet')) {
         }
 
         public function deactivate() {
-
         }
 
         public function check_for_keys() {
-
             if (is_admin()) {
                 if ((empty($this->comeet_token) || empty($this->comeet_uid)) && empty($_POST['save'])) {
                     add_action('admin_notices', array($this, 'admin_keys_notice'));
@@ -247,7 +226,6 @@ if (!class_exists('Comeet')) {
         }
 
         public function check_for_curl() {
-            //echo 'Curl: ', function_exists('curl_version') ? 'Enabled' : 'Disabled';
             if (is_admin()) {
                 if (!in_array('curl', get_loaded_extensions())) {
                     if ($_GET['page'] == 'comeet') {
@@ -258,9 +236,7 @@ if (!class_exists('Comeet')) {
         }
 
         public function check_for_comeetapi() {
-
             if (is_admin()) {
-
                 if ((!empty($this->comeet_token) && !empty($this->comeet_uid))) {
                     add_action('admin_notices', array($this, 'admin_comeet_api_notice'));
                 }
@@ -309,6 +285,7 @@ if (!class_exists('Comeet')) {
             $apiurl = 'https://www.comeet.co/careers-api/2.0/company/' . $this->comeet_uid . '/positions?token=' . $this->comeet_token . '&' . comeet_plugin_version_arg();
             $request = wp_remote_get($apiurl);
             $response = $request['response'];
+
             if ($response['code'] != 200) {
                 $jsonresponse = json_decode($request['body']);
                 $message = $jsonresponse->message;
@@ -323,10 +300,6 @@ if (!class_exists('Comeet')) {
                     echo '<div id="message" class="updated"><p>Your career pages are now ready. In case you are unable to view the career pages please open the Permalinks settings and click <i>Save</i>.</p></div>';
                 }
             }
-            /* 				if ($response['code'] == 500 || $response['code'] == 204) {
-                                $message = 'Comeet - Unexpected error retrieving positions data. If the problem persists please contact us at: <a href="mailto:support@comeet.co" target="_blank">support@comeet.co</a>';
-                                echo '<div class="error"><p>'.$message.'</p></div>';
-                            }; */
         }
 
         /**
@@ -379,45 +352,58 @@ if (!class_exists('Comeet')) {
         }
 
         function register_settings() {
-
             register_setting('comeet_options', $this->db_opt, array($this, 'validate_options'));
             $options = $this->get_options();
             // Fetch the integration settings
             $this->comeet_token = $options['comeet_token'];
             $this->comeet_uid = $options['comeet_uid'];
-
-            // check if token and UID are both entered
             $this->check_for_keys();
-
-            // check if cURL is installed on the server
             $this->check_for_curl();
-
-
-            // check if API returns a proper response
             $this->check_for_comeetapi();
+            $this->add_rewrite_rules();
+            $this->add_settings_sections();
+        }
 
+        function add_rewrite_rules() {
             $post = get_post($options['post_id']);
-
             $post_parents = get_post_ancestors($post);
 
             if (!empty($post_parents)) {
                 $parent_posts_slug = array();
 
-                foreach ($post_parents as $parent_id) :
+                foreach ($post_parents as $parent_id) {
                     $parent = get_post($parent_id);
                     $parent_posts_slug[] = $parent->post_name;
-                endforeach;
+                }
             }
 
             if (!empty($parent_posts_slug)) {
                 $page_parents = (count($parent_posts_slug) > 1 ? implode('/', array_reverse($parent_posts_slug)) : reset($parent_posts_slug));
-                add_rewrite_rule($page_parents . '/' . $post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?(/all)?$', 'index.php?pagename=' . $page_parents . '/' . $post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]&comeet_all=$matches[4]', 'top');
-                add_rewrite_rule($page_parents . '/' . $post->post_name . '/([^/]+)/?(/all)?$', 'index.php?pagename=' . $page_parents . '/' . $post->post_name . '&comeet_cat=$matches[1]&comeet_all=$matches[2]', 'top');
+                add_rewrite_rule(
+                    $page_parents . '/' . $post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?(/all)?$',
+                    'index.php?pagename=' . $page_parents . '/' . $post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]&comeet_all=$matches[4]',
+                    'top'
+                );
+                add_rewrite_rule(
+                    $page_parents . '/' . $post->post_name . '/([^/]+)/?(/all)?$',
+                    'index.php?pagename=' . $page_parents . '/' . $post->post_name . '&comeet_cat=$matches[1]&comeet_all=$matches[2]',
+                    'top'
+                );
             } else {
-                add_rewrite_rule($post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?(/all)?$', 'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]&comeet_all=$matches[4]', 'top');
-                add_rewrite_rule($post->post_name . '/([^/]+)/?(/all)?$', 'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]&comeet_all=$matches[2]', 'top');
+                add_rewrite_rule(
+                    $post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?(/all)?$',
+                    'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]&comeet_all=$matches[4]',
+                    'top'
+                );
+                add_rewrite_rule(
+                    $post->post_name . '/([^/]+)/?(/all)?$',
+                    'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]&comeet_all=$matches[2]',
+                    'top'
+                );
             }
+        }
 
+        function add_settings_sections() {
             // Comeet API required settings.
             add_settings_section(
                 'comeet_api_settings',
@@ -449,7 +435,6 @@ if (!class_exists('Comeet')) {
                 'comeet'
             );
             // Other fields as needed.
-
             add_settings_section(
                 'comeet_other_settings',
                 'Settings',
@@ -527,7 +512,6 @@ if (!class_exists('Comeet')) {
                 array($this, 'comeet_advanced_blank'),
                 'comeet'
             );
-//flush_rewrite_rules( true );
         }
 
         function api_credentials_text() {
@@ -649,7 +633,8 @@ if (!class_exists('Comeet')) {
             }
 
             if ($old_value['comeet_token'] !== $new_value['comeet_token'] ||
-            $old_value['comeet_uid'] !== $new_value['comeet_uid']) {
+                $old_value['comeet_uid'] !== $new_value['comeet_uid']
+            ) {
                 $this->clear_cache();
             }
         }
@@ -747,14 +732,11 @@ if (!class_exists('Comeet')) {
         }
 
         function comeet_content($text) {
-
-
             $options = $this->get_options();
-            if (get_the_ID() == $options['post_id']) {
-                $this->add_frontend_css();
-                $this->add_frontend_scripts();
-                $text .= $this->comeet_add_template();
-            }
+            $this->add_frontend_css();
+            $this->add_frontend_scripts();
+            $text .= $this->comeet_add_template();
+
             return $text;
         }
 
@@ -775,12 +757,16 @@ if (!class_exists('Comeet')) {
             }
             wp_register_script("comeet_script", ($this->plugin_url . 'js/comeet.js'));
             $post = get_post($options['post_id']);
-            //echo $post->post_name;
             $comeet_thankyou_url = site_url() . '/' . $post->post_name . '/thankyou';
-            $data = array("comeet_token" => $options['comeet_token'], "comeet_uid" => $options['comeet_uid'], "comeet_color" => $options['comeet_color'], "comeet_bgcolor" => $options['comeet_bgcolor'], "comeet_thankyou_url" => $comeet_thankyou_url);
+            $data = array(
+                "comeet_token" => $options['comeet_token'],
+                "comeet_uid" => $options['comeet_uid'],
+                "comeet_color" => $options['comeet_color'],
+                "comeet_bgcolor" => $options['comeet_bgcolor'],
+                "comeet_thankyou_url" => $comeet_thankyou_url
+            );
             wp_localize_script("comeet_script", "comeetvar", $data);
             wp_enqueue_script("comeet_script");
-
         }
 
         protected function add_frontend_css() {
@@ -788,7 +774,6 @@ if (!class_exists('Comeet')) {
             $css_url = 'css/' . $options['comeet_stylesheet'];
             wp_enqueue_style('comeet_style', $this->plugin_url . $css_url, null, null, 'all');
         }
-
 
         function filter_title_simple($title) {
             if (isset($this->title)) {
@@ -828,10 +813,11 @@ if (!class_exists('Comeet')) {
         }
 
         function comeet_add_template() {
+            global $wp_query;
 
             $comeet_cat = null;
-            global $wp_query;
             $options = $this->get_options();
+
             if (isset($this->comeet_pos)) {
                 $post_data = $this->post_data;
                 $show_all_link = !empty($wp_query->query_vars['comeet_all']);
@@ -870,11 +856,13 @@ if (!class_exists('Comeet')) {
         }
 
         function comeet_add_template_custom_shortcode($attr, $content) {
-            $options = $this->get_options();
             global $wp_query;
+            $options = $this->get_options();
+
             if (isset($wp_query->query_vars['comeet_pos'])) {
                 $comeet_pos = urldecode($wp_query->query_vars['comeet_pos']);
             }
+
             if (isset($attr['name'])) {
                 $comeet_cat = strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $attr['name'])));
             }
@@ -887,6 +875,7 @@ if (!class_exists('Comeet')) {
             } elseif ($attr['type'] == 'location') {
                 $comeet_group = 0;
             }
+
             if (isset($comeet_pos)) {
                 $template = 'comeet-position-page-custom.php';
             } elseif (isset($comeet_cat)) {
@@ -901,7 +890,6 @@ if (!class_exists('Comeet')) {
                 $template = 'blank.php';
             }
 
-            //if(isset($comeet_group))
             //set the template file
             if (file_exists(get_template_directory() . '/' . $template)) {
                 $template = get_template_directory() . '/' . $template;
@@ -917,6 +905,7 @@ if (!class_exists('Comeet')) {
             include_once($template);
             $output = ob_get_contents();
             ob_end_clean();
+
             return $output;
         }
 
@@ -936,7 +925,6 @@ if (!class_exists('Comeet')) {
 
         // hook add_query_vars function into query_vars
         add_filter('query_vars', 'comeet_add_query_vars');
-
     }
 }
 
