@@ -163,6 +163,57 @@ class ComeetData {
         }
         return $category === $value;
     }
+
+    /* http://schema.org/JobPosting */
+    static public function get_schema_prop($name) {
+        $props = array(
+            'basesalary' => 'baseSalary',
+            'salary' => 'baseSalary',
+            'dateposted' => 'datePosted',
+            'date' => 'datePosted',
+            'educationrequirements' => 'educationRequirements',
+            'education' => 'educationRequirements',
+            'employmenttype' => 'employmentType',
+            'experiencerequirements' => 'experienceRequirements',
+            'requirements' => 'experienceRequirements',
+            'hiringorganization' => 'hiringOrganization',
+            'organization' => 'hiringOrganization',
+            'incentivecompensation' => 'incentiveCompensation',
+            'compensation' => 'incentiveCompensation',
+            'industry' => 'industry',
+            'jobbenefits' => 'jobBenefits',
+            'benefits' => 'jobBenefits',
+            'jobLocation' => 'jobLocation',
+            'location' => 'jobLocation',
+            'occupationalcategory' => 'occupationalCategory',
+            'qualifications' => 'qualifications',
+            'responsibilities' => 'responsibilities',
+            'skills' => 'skills',
+            'specialcommitments' => 'specialCommitments',
+            'title' => 'title',
+            'validthrough' => 'validThrough',
+            'workhours' => 'workHours',
+            'additionalType' => 'additionalType',
+            'alternatename' => 'alternateName',
+            'description' => 'description',
+            'disambiguatingdescription' => 'disambiguatingDescription',
+            'identifier' => 'identifier',
+            'id' => 'identifier',
+            'image' => 'image',
+            'mainentityofpage' => 'mainEntityOfPage',
+            'name' => 'name',
+            'potentialaction' => 'potentialAction',
+            'sameas' => 'sameAs',
+            'url' => 'url'
+        );
+        $clean = preg_replace('/\W+/', '', strtolower(strip_tags($name)));
+
+        if (isset($props[$clean])) {
+            return $props[$clean];
+        }
+
+        return '';
+    }
 }
 
 function comeet_search($array, $key, $value) {
