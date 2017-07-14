@@ -25,7 +25,7 @@ class ComeetData {
         if (empty($options['comeet_token']) || empty($options['comeet_uid'])) {
             return;
         }
-        $comeet_post_url = 'https://www.comeet.co/careers-api/1.0/company/' . $options["comeet_uid"] . '/positions/' . $comeet_pos . '?token=' . $options["comeet_token"];
+        $comeet_post_url = 'https://www.comeet.co/careers-api/2.0/company/' . $options["comeet_uid"] . '/positions/' . $comeet_pos . '?token=' . $options["comeet_token"];
         $post_data = self::comeet_get_data($comeet_post_url);
         $transient_key = self::TRANSIENT_PREFIX . $comeet_pos;
 
@@ -40,7 +40,7 @@ class ComeetData {
 
     static private function fetch_groups_data($options) {
         //Read main data for all positions
-        $comeet_post_url = "https://www.comeet.co/careers-api/1.0/company/" . $options['comeet_uid'] . "/positions?token=" . $options['comeet_token'];
+        $comeet_post_url = "https://www.comeet.co/careers-api/2.0/company/" . $options['comeet_uid'] . "/positions?token=" . $options['comeet_token'];
         $result1 = self::comeet_get_data($comeet_post_url);
 
         if (!isset($result1['status']) || $result1['status'] != 400) {

@@ -276,7 +276,7 @@ if (!class_exists('Comeet')) {
         }
 
         public function admin_comeet_api_notice() {
-            $apiurl = 'https://www.comeet.co/careers-api/1.0/company/' . $this->comeet_uid . '/positions?token=' . $this->comeet_token . '&' . comeet_plugin_version_arg();
+            $apiurl = 'https://www.comeet.co/careers-api/2.0/company/' . $this->comeet_uid . '/positions?token=' . $this->comeet_token . '&' . comeet_plugin_version_arg();
             $request = wp_remote_get($apiurl);
             $response = $request['response'];
             if ($response['code'] != 200) {
