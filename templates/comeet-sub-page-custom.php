@@ -1,8 +1,8 @@
 <?php if (isset($comeetgroups) && !empty($comeetgroups) && count(comeet_search($data, $sub_group, $comeet_cat)) >0) { ?>
     <h2 class="comeet-group-name">
         <?php foreach ( $data as $post ) {
-            if(strtolower(clean($post[$sub_group])) == $comeet_cat) {
-                echo $post[$sub_group];
+            if(ComeetData::is_category($post, $sub_group, $comeet_cat, true)) {
+                echo ComeetData::get_group_value($post, $sub_group);
                 break;
             }
         } ?>
@@ -13,7 +13,9 @@
     <?php
         $hasGroup = false;
         foreach ($data as $post) {
-            if ($post[$group_element] === $category && strtolower(clean($post[$sub_group])) === $comeet_cat) {
+            if (ComeetData::is_category($post, $group_element, $category) &&
+                ComeetData::is_category($post, $sub_group, $comeet_cat, true))
+            {
                 $hasGroup = true;
                 break;
             }
@@ -31,15 +33,16 @@
                     <ul class="comeet-positions-list">
                     <?php
                     foreach ($data as $post) {
-                        if ($post[$group_element] === $category && strtolower(clean($post[$sub_group])) === $comeet_cat) {
+                        if (ComeetData::is_category($post, $group_element, $category) &&
+                            ComeetData::is_category($post, $sub_group, $comeet_cat, true))
+                        {
                             echo '<li class="comeet-position">';
-                            //echo '<div class="comeet-position-name"><a href="' . get_the_permalink($options['post_id']) . $comeet_cat . '/' . $post['position_uid'] . '/' . strtolower(clean($post['name'])) . '">' . $post['name'] . '</a></div>';
-                            echo '<div class="comeet-position-name"><a href="' . get_the_permalink($options['post_id']) . strtolower(clean($category)) . '/' . $post['position_uid'] . '/' . strtolower(clean($post['name'])) . '">' . $post['name'] . '</a></div>';
+                            echo '<div class="comeet-position-name"><a href="' . get_the_permalink($options['post_id']) . strtolower(clean($category)) . '/' . $post['uid'] . '/' . strtolower(clean($post['name'])) . '">' . $post['name'] . '</a></div>';
                             echo '<div class="comeet-position-meta">';
                             if ($comeet_group == 0) {
                                 echo $post['department'];
                             } else {
-                                echo $post['location'];
+                                echo $post['location']['name'];
                             }
                             if (!$post['employment_type'] == NULL || !$post['employment_type'] == "") {
                                 echo '  &middot;  ' . $post['employment_type'];

@@ -25,7 +25,10 @@ class ComeetData {
         if (empty($options['comeet_token']) || empty($options['comeet_uid'])) {
             return;
         }
-        $comeet_post_url = 'https://www.comeet.co/careers-api/2.0/company/' . $options["comeet_uid"] . '/positions/' . $comeet_pos . '?token=' . $options["comeet_token"];
+        $comeet_post_url = 'https://www.comeet.co/careers-api/2.0/company/' . $options["comeet_uid"] .
+            '/positions/' . $comeet_pos .
+            '?token=' . $options["comeet_token"] .
+            '&details=true';
         $post_data = self::comeet_get_data($comeet_post_url);
         $transient_key = self::TRANSIENT_PREFIX . $comeet_pos;
 
@@ -40,23 +43,24 @@ class ComeetData {
 
     static private function fetch_groups_data($options) {
         //Read main data for all positions
-        $comeet_post_url = "https://www.comeet.co/careers-api/2.0/company/" . $options['comeet_uid'] . "/positions?token=" . $options['comeet_token'];
+        $comeet_post_url = "https://www.comeet.co/careers-api/2.0/company/" . $options['comeet_uid'] .
+            "/positions?token=" . $options['comeet_token'] .
+            '&details=true';
         $result1 = self::comeet_get_data($comeet_post_url);
 
         if (!isset($result1['status']) || $result1['status'] != 400) {
             //Add description details for each post
             foreach ($result1 as $key => $job) {
-                $positiond = self::comeet_get_data($job['position_url']);
-
-                if ($job['department'] === NULL || $job['department'] == "") {
+                if (empty($job['department'])) {
                     $result1[$key]['department'] = 'Other';
                 }
 
-                if ($job['location'] === NULL || $job['location'] == "") {
-                    $result1[$key]['location'] = 'Other';
+                if (empty($job['location']) || empty($job['location']['name'])) {
+                    if (empty($result1[$key]['location'])) {
+                        $result1[$key]['location'] = array();
+                    }
+                    $result1[$key]['location']['name'] = 'Other';
                 }
-                $result1[$key]['description'] = $positiond['description'];
-                $result1[$key]['requirements'] = $positiond['requirements'];
             }
         }
         return $result1;
@@ -127,12 +131,37 @@ class ComeetData {
             $groupa = array();
 
             foreach ($data as $h) {
-                $groupa[] = $h[$group_element];
+                $groupa[] = self::get_group_value($h, $group_element);
             }
             $comeetgroups = array_unique($groupa);
             sort($comeetgroups);
             return [$comeetgroups, $data, $group_element];
         }
+    }
+
+    static public function get_group_value($item, $key) {
+        if ($key === 'location') {
+            if (isset($item['location']) && isset($item['location']['name'])) {
+                return $item['location']['name'];
+            }
+
+            return '';
+        }
+        
+        if (isset($item[$key])) {
+            return $item[$key];
+        }
+
+        return '';
+    }
+
+    static public function is_category($item, $key, $category, $cleanCompare = false) {
+        $value = self::get_group_value($item, $key);
+
+        if ($cleanCompare) {
+            $value = strtolower(clean($value));
+        }
+        return $category === $value;
     }
 }
 
@@ -140,7 +169,9 @@ function comeet_search($array, $key, $value) {
     $results = array();
 
     if (is_array($array)) {
-        if (isset($array[$key]) && strtolower(clean($array[$key])) == $value) {
+        $array_value = ComeetData::get_group_value($array, $key);
+
+        if (isset($array_value) && strtolower(clean($array_value)) == $value) {
             $results[] = $array;
         }
 
