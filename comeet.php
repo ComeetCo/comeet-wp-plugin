@@ -88,8 +88,7 @@ if (!class_exists('Comeet')) {
                 add_filter('template_include', array($this, 'career_page_template'), 99);
                 add_shortcode('comeet_data', array($this, 'comeet_content'));
                 add_shortcode('comeet_page', array($this, 'comeet_custom_shortcode'));
-
-
+                add_action('the_posts', array($this, 'process_posts'));
             }
 
             add_action('the_posts', array($this, 'set_is_comeet_content_page'), 10);
@@ -104,6 +103,37 @@ if (!class_exists('Comeet')) {
 
 
 
+        }
+
+        public function add_careers_meta_tags() {
+            echo '<meta name="application-name" itemprop="name" content="Comeet Jobs" />' . PHP_EOL;
+            $options = $this->get_options(); 
+            $post = get_post($options['post_id']);
+            $url = get_permalink($post->ID);
+            echo '<meta name="application-url" itemprop="url" content="' . $url . '" />' . PHP_EOL;
+        }
+
+        // see https://stackoverflow.com/a/9558692/938389
+        public function process_posts($posts) {
+            if (empty($posts)) {
+                return $posts;
+            }
+            $found = false;
+
+            foreach ($posts as $post) {
+                if (stripos($post->post_content, '[comeet_data') !== false ||
+                    stripos($post->post_content, '[comeet_page') !== false
+                ) {
+                    $found = true;
+                    break;
+                }
+            }
+
+            if ($found) {
+                add_action('wp_head', array($this, 'add_careers_meta_tags'));
+            }
+
+            return $posts;
         }
 
         public function getSocialGraphDescription($pageSetDescription = null) {
