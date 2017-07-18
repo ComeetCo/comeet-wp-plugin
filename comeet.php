@@ -80,9 +80,8 @@ if (!class_exists('Comeet')) {
                 add_filter('template_include', array($this, 'career_page_template'), 99);
                 add_shortcode('comeet_data', array($this, 'comeet_content'));
                 add_shortcode('comeet_page', array($this, 'comeet_custom_shortcode'));
-                add_action('the_posts', array($this, 'process_posts'));
             }
-            add_action('the_posts', array($this, 'set_is_comeet_content_page'), 10);
+            add_action('the_posts', array($this, 'process_posts'), 10);
             add_filter('wpseo_og_og_title', array($this, 'filter_og_title'));
             add_action('wp_head', array($this, 'update_header'), 12);
             add_filter('wpseo_title', array($this, 'filter_title_simple'));
@@ -100,24 +99,26 @@ if (!class_exists('Comeet')) {
             echo '<meta name="application-url" itemprop="url" content="' . $url . '" />' . PHP_EOL;
         }
 
-        // see https://stackoverflow.com/a/9558692/938389
-        public function process_posts($posts) {
-            if (empty($posts)) {
-                return $posts;
-            }
-            $found = false;
-
+        public function has_shortcode($posts) {
             foreach ($posts as $post) {
                 if (stripos($post->post_content, '[comeet_data') !== false ||
                     stripos($post->post_content, '[comeet_page') !== false
                 ) {
-                    $found = true;
-                    break;
+                    return true;
                 }
             }
 
-            if ($found) {
-                add_action('wp_head', array($this, 'add_careers_meta_tags'));
+            return false;
+        }
+
+        // see https://stackoverflow.com/a/9558692/938389
+        public function process_posts($posts) {
+            $this->set_is_comeet_content_page($posts);
+
+            if (!is_admin()) {
+                if ($this->has_shortcode($posts)) {
+                    add_action('wp_head', array($this, 'add_careers_meta_tags'));
+                }
             }
 
             return $posts;
@@ -376,31 +377,27 @@ if (!class_exists('Comeet')) {
                     $parent_posts_slug[] = $parent->post_name;
                 }
             }
+            $regex = '/([^/]+)/?(/all)?$';
+            $query = '&comeet_cat=$matches[1]&comeet_all=$matches[2]';
+            $query_all = '&comeet_cat=$matches[1]&comeet_pos=$matches[2]&comeet_all=$matches[4]';
+            $regex_all = '/([^/]+)/([^/]+)/([^/]+)/?(/all)?$';
 
             if (!empty($parent_posts_slug)) {
                 $page_parents = (count($parent_posts_slug) > 1 ? implode('/', array_reverse($parent_posts_slug)) : reset($parent_posts_slug));
-                add_rewrite_rule(
-                    $page_parents . '/' . $post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?(/all)?$',
-                    'index.php?pagename=' . $page_parents . '/' . $post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]&comeet_all=$matches[4]',
-                    'top'
-                );
-                add_rewrite_rule(
-                    $page_parents . '/' . $post->post_name . '/([^/]+)/?(/all)?$',
-                    'index.php?pagename=' . $page_parents . '/' . $post->post_name . '&comeet_cat=$matches[1]&comeet_all=$matches[2]',
-                    'top'
-                );
+                $base = $page_parents . '/' . $post->post_name;
             } else {
-                add_rewrite_rule(
-                    $post->post_name . '/([^/]+)/([^/]+)/([^/]+)/?(/all)?$',
-                    'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]&comeet_pos=$matches[2]&comeet_all=$matches[4]',
-                    'top'
-                );
-                add_rewrite_rule(
-                    $post->post_name . '/([^/]+)/?(/all)?$',
-                    'index.php?pagename=' . $post->post_name . '&comeet_cat=$matches[1]&comeet_all=$matches[2]',
-                    'top'
-                );
+                $base = $post->post_name;
             }
+            add_rewrite_rule(
+                $base . $regex_all,
+                'index.php?pagename=' . $base . $query_all,
+                'top'
+            );
+            add_rewrite_rule(
+                $base . $regex,
+                'index.php?pagename=' . $base . $query,
+                'top'
+            );
         }
 
         function add_settings_sections() {
@@ -790,7 +787,6 @@ if (!class_exists('Comeet')) {
                 return $title;
             }
         }
-
 
         function get_current_url() {
             $url = is_ssl() ? "https://" : "http://";
