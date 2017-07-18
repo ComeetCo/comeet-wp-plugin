@@ -80,6 +80,7 @@ if (!class_exists('Comeet')) {
                 add_filter('template_include', array($this, 'career_page_template'), 99);
                 add_shortcode('comeet_data', array($this, 'comeet_content'));
                 add_shortcode('comeet_page', array($this, 'comeet_custom_shortcode'));
+                add_filter('the_content', array($this, 'filter_the_content'), 10);
             }
             add_action('the_posts', array($this, 'process_posts'), 10);
             add_filter('wpseo_og_og_title', array($this, 'filter_og_title'));
@@ -99,11 +100,14 @@ if (!class_exists('Comeet')) {
             echo '<meta name="application-url" itemprop="url" content="' . $url . '" />' . PHP_EOL;
         }
 
-        public function has_shortcode($posts) {
+        public function has_shortcode($content) {
+            return stripos($content, '[comeet_data') !== false ||
+                stripos($content, '[comeet_page') !== false;
+        }
+
+        public function posts_has_shortcode($posts) {
             foreach ($posts as $post) {
-                if (stripos($post->post_content, '[comeet_data') !== false ||
-                    stripos($post->post_content, '[comeet_page') !== false
-                ) {
+                if ($this->has_shortcode($post->post_content)) {
                     return true;
                 }
             }
@@ -111,12 +115,12 @@ if (!class_exists('Comeet')) {
             return false;
         }
 
-        // see https://stackoverflow.com/a/9558692/938389
         public function process_posts($posts) {
             $this->set_is_comeet_content_page($posts);
 
             if (!is_admin()) {
-                if ($this->has_shortcode($posts)) {
+                // see https://stackoverflow.com/a/9558692/938389
+                if ($this->posts_has_shortcode($posts)) {
                     add_action('wp_head', array($this, 'add_careers_meta_tags'));
                 }
             }
@@ -366,6 +370,7 @@ if (!class_exists('Comeet')) {
         }
 
         function add_rewrite_rules() {
+            $options = $this->get_options();
             $post = get_post($options['post_id']);
             $post_parents = get_post_ancestors($post);
 
@@ -744,6 +749,35 @@ if (!class_exists('Comeet')) {
             $text = $this->comeet_add_template_custom_shortcode($attr, $content);
 
             return $text;
+        }
+
+        function extract_shortcode($content) {
+            $start = stripos($content, '[comeet_');
+
+            if ($start === false) {
+                return '';
+            }
+            $end = stripos($content, ']', $start);
+
+            if ($end === false) {
+                return '';
+            }
+            return substr($content, $start, $end - $start + 1);
+        }
+
+        function filter_the_content($content) {
+            global $wp_query;
+
+            if ((is_single() || is_page()) &&
+                in_the_loop() &&
+                is_main_query() &&
+                $this->has_shortcode($content) &&
+                (isset($wp_query->query_vars['comeet_pos']) || isset($wp_query->query_vars['comeet_cat']))
+            ) {
+                return $this->extract_shortcode($content);
+            }
+
+            return $content;
         }
 
         protected function add_frontend_scripts() {
