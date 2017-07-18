@@ -866,6 +866,8 @@ if (!class_exists('Comeet')) {
             } else {
                 list($comeetgroups, $data, $group_element) = ComeetData::get_groups($options, $this->comeet_cat);
                 $comeet_group = $options['advanced_search'];
+                $post = get_post($options['post_id']);
+                $base = get_the_permalink($post->ID);
                 $template = 'comeet-careers.php';
             }
 
