@@ -36,14 +36,16 @@ if (empty($post_data) || (isset($post_data) && (isset($post_data['status'])) && 
 			<?php endif; ?>
 			<?php if (isset($post_data['details'])) : ?>
 			<?php foreach ($post_data['details'] as $details): ?>
-				<?php $title = $details['name'] === 'Description' ? 'About The Position' : $details['name']; ?>
-				<?php $css = preg_replace('/\W+/', '', strtolower(strip_tags($details['name']))); ?>
-				<?php $prop = ComeetData::get_schema_prop($details['name']); ?>
-				<?php $prop = empty($prop) ? '' : 'itemprop="' . $prop . '"'; ?>
-				<h4><?php echo $title; ?></h4>
-				<div class="comeet-position-<?php echo $css; ?> comeet-user-text" <?php echo $prop; ?>>
-					<?php echo $details['value'] ?>
-				</div>
+				<?php if (isset($details['value']) && !empty($details['value']) && !empty(trim($details['value']))) : ?>
+					<?php $title = $details['name'] === 'Description' ? 'About The Position' : $details['name']; ?>
+					<?php $css = preg_replace('/\W+/', '', strtolower(strip_tags($details['name']))); ?>
+					<?php $prop = ComeetData::get_schema_prop($details['name']); ?>
+					<?php $prop = empty($prop) ? '' : 'itemprop="' . $prop . '"'; ?>
+					<h4><?php echo $title; ?></h4>
+					<div class="comeet-position-<?php echo $css; ?> comeet-user-text" <?php echo $prop; ?>>
+						<?php echo $details['value'] ?>
+					</div>
+				<?php endif; ?>
 			<?php endforeach; ?>
 			<?php endif; ?>
 		</div>
