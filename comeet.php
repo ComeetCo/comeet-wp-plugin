@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://www.comeet.co
  * Description: Job listing page using the Comeet API.
- * Version: 1.3.1
+ * Version: 1.4
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
