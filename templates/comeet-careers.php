@@ -55,6 +55,6 @@ if (isset($comeetgroups) && !empty($comeetgroups)) {
 </div>
 <?php
 } else {
-	echo "No Data Found";
+	echo "We don't have any open positions at this time. Please visit again soon.";
 }
 ?>

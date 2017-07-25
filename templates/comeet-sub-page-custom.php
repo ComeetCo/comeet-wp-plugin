@@ -67,6 +67,6 @@
     </div>
 <?php
 } else {
-    echo "No Data Found";
+    echo "Sorry, no open positions here at this time. Please visit again soon.";
 }
 ?>
