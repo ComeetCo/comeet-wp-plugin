@@ -183,6 +183,7 @@ if (!class_exists('Comeet')) {
                 <meta property="og:image" content="<?= $this->socialGraphImage ?>"/>
                 <?php endif; ?>
                 <meta property="og:description" content="<?= $this->getSocialGraphDescription() ?>">
+                <meta name="description" content="<?= $this->getSocialGraphDescription() ?>">
                 <meta property="og:url" content="<?= $this->get_current_url(); ?>"/>
                 <meta property="og:type" content="article" />
                 <!-- COMEET PLUGIN -->
