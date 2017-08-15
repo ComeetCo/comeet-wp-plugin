@@ -843,6 +843,23 @@ if (!class_exists('Comeet')) {
 
         }
 
+        function get_template_path_or_die($template) {
+            $paths = array(
+                get_template_directory(),
+                $this->plugin_dir . 'templates'
+            );
+
+            foreach ($paths as $path) {
+                $fullpath = "$path/$template";
+
+                if (file_exists($fullpath)) {
+                    return $fullpath;
+                }
+            }
+            echo '<div class="error">Error: Can not render page &ndash; no template found.</div>';
+            die();
+        }
+
         function comeet_add_template() {
             global $wp_query;
 
@@ -871,15 +888,7 @@ if (!class_exists('Comeet')) {
                 $base = get_the_permalink($post->ID);
                 $template = 'comeet-careers.php';
             }
-
-            if (file_exists(get_template_directory() . '/' . $template)) {
-                $template = get_template_directory() . '/' . $template;
-            } elseif (file_exists($this->plugin_dir . 'templates/' . $template)) {
-                $template = $this->plugin_dir . 'templates/' . $template;
-            } else {
-                echo '<div class="error">Error: Can not render page &ndash; no template found.</div>';
-                die();
-            }
+            $template = $this->get_template_path_or_die($template);
 
             ob_start();
             include_once($template);
@@ -922,16 +931,7 @@ if (!class_exists('Comeet')) {
             } else {
                 $template = 'blank.php';
             }
-
-            //set the template file
-            if (file_exists(get_template_directory() . '/' . $template)) {
-                $template = get_template_directory() . '/' . $template;
-            } elseif (file_exists($this->plugin_dir . 'templates/' . $template)) {
-                $template = $this->plugin_dir . 'templates/' . $template;
-            } else {
-                echo '<div class="error">Error: Can not render page &ndash; no template found.</div>';
-                die();
-            }
+            $template = $this->get_template_path_or_die($template);
 
             //set the output
             ob_start();
