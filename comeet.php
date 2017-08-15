@@ -714,7 +714,7 @@ if (!class_exists('Comeet')) {
             if ($this->isComeetContentPage) {
                 if (isset($this->comeet_pos)) {
                     $this->post_data = ComeetData::get_position_data($this->get_options(), $this->comeet_pos);
-                    $this->socialGraphDescription = isset($this->post_data['details']) && isset($this->post_data['details'][0]) ? $this->post_data['details'][0] : '';
+                    $this->socialGraphDescription = ComeetData::get_property_value($this->post_data['details'], 'Description');
                     $this->title = 'Job opportunity: '.$this->post_data['name'];
                     $this->socialGraphTitle = $this->title;
                     $this->socialGraphImage = $this->post_data['picture_url'];
@@ -724,7 +724,7 @@ if (!class_exists('Comeet')) {
                     foreach ($data as $post) {
                         if (ComeetData::is_category($post, $group_element, $this->comeet_cat)) {
                             $this->title = $post[$group_element];
-                            $this->socialGraphDescription = $this->socialGraphDefaultDescription.' - '. ComeetData::get_group_value($post, $group_element);
+                            $this->socialGraphDescription = $this->socialGraphDefaultDescription . ' - ' . ComeetData::get_group_value($post, $group_element);
                             break;
                         }
                     }

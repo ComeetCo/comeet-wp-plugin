@@ -5,6 +5,19 @@ function clean($string) {
     return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
 }
 
+if (!function_exists('is_iterable')) {
+    // from https://stackoverflow.com/a/15655476/938389
+    function is_iterable($var) {
+        return $var !== null &&
+            (
+                is_array($var) ||
+                $var instanceof Traversable ||
+                $var instanceof Iterator ||
+                $var instanceof IteratorAggregate
+            );
+    }
+}
+
 class ComeetData {
 
     const TRANSIENT_PREFIX = 'comeet-';
@@ -213,6 +226,18 @@ class ComeetData {
         }
 
         return '';
+    }
+
+    static public function get_property_value($data, $key) {
+        if (isset($data) && is_iterable($data)) {
+            foreach ($data as $details) {
+                if (isset($details['name']) && $details['name'] === $key) {
+                    return $details['value'];
+                }
+            }
+        }
+
+        return false;
     }
 }
 
