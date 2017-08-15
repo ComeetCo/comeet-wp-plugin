@@ -845,7 +845,7 @@ if (!class_exists('Comeet')) {
 
         function get_template_path_or_die($template) {
             $paths = array(
-                get_template_directory(),
+                get_stylesheet_directory(),
                 $this->plugin_dir . 'templates'
             );
 
