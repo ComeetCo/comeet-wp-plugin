@@ -197,9 +197,15 @@ if (!class_exists('Comeet')) {
             $options = $this->get_options();
 
             if (isset($wp_query->query_vars['comeet_pos'])) {
-                $new_template = locate_template(array($options['comeet_positionpage_template']));
+                $new_template = locate_template(array(
+                    $options['comeet_positionpage_template'],
+                    'comeet/' . $options['comeet_positionpage_template']
+                ));
             } elseif (isset($wp_query->query_vars['comeet_cat'])) {
-                $new_template = locate_template(array($options['comeet_subpage_template']));
+                $new_template = locate_template(array(
+                    $options['comeet_subpage_template'],
+                    'comeet/' . $options['comeet_subpage_template']
+                ));
             }
 
             if ('' != $new_template) {
@@ -846,6 +852,7 @@ if (!class_exists('Comeet')) {
         function get_template_path_or_die($template) {
             $paths = array(
                 get_stylesheet_directory(),
+                get_stylesheet_directory() . '/comeet',
                 $this->plugin_dir . 'templates'
             );
 
