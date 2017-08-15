@@ -1,10 +1,10 @@
    window.comeetInit = function() {
       COMEET.init({
-         "token":       comeetvar.comeet_token,
-         "company-uid": comeetvar.comeet_uid,
-         "color":       comeetvar.comeet_color,
-         "background-color":   comeetvar.comeet_bgcolor
-         //"thankyou-url": comeetvar.comeet_thankyou_url
+         "token":               comeetvar.comeet_token,
+         "company-uid":         comeetvar.comeet_uid,
+         "color":               comeetvar.comeet_color,
+         "background-color":    comeetvar.comeet_bgcolor,
+         "thankyou-url":        comeetvar.comeet_thankyou_url
       });
    };
 

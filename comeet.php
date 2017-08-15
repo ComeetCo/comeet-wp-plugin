@@ -467,6 +467,13 @@ if (!class_exists('Comeet')) {
                 'comeet_other_settings'
             );
             add_settings_field(
+                'thank_you_page',
+                'Thank you page',
+                array($this, 'thank_you_page_input'),
+                'comeet',
+                'comeet_other_settings'
+            );
+            add_settings_field(
                 'comeet_stylesheet',
                 'Style',
                 array($this, 'comeet_stylesheet_input'),
@@ -562,18 +569,36 @@ if (!class_exists('Comeet')) {
             echo '</div>';
         }
 
-        function job_page_input() {
-            // Get a listing of WP pages as candidates for the careers page.
+        function pages_input($post_id, $key, $select_text) {
+            $page_opts = array();
+            $page_opts[] = '<option value="-1"' .
+                (empty($post_id) ? ' selected="selected"' : '') . ' style="text-decoration:underline;">' .
+                $select_text .
+                '</option>';
             $pages = get_pages(array('sort_column' => 'sort_column'));
+
+            foreach ($pages as $page) {
+                $page_opts[] = '<option value="' . $page->ID . '"' . ($post_id == $page->ID ? ' selected="selected"' : '') . '>' . $page->post_title . '</option>';
+            }
+            return '<div><select ' .
+                'name="' . $this->db_opt . '[' . $key . ']" ' .
+                'id="' . $key . '" '.
+                'style="width:200px">' .
+                implode("\n", $page_opts) .
+                '</select></div>';
+        }
+
+        function job_page_input() {
             $options = $this->get_options();
             $post_id = trim($options['post_id']);
-            $page_opts = array();
-            $page_opts[] = '<option value="-1"' . (empty($options['post_id']) ? ' selected="selected"' : '') . ' style="text-decoration:underline;">Create new page</option>';
-            foreach ($pages as $page) {
-                $page_opts[] = '<option value="' . $page->ID . '"' . ($options['post_id'] == $page->ID ? ' selected="selected"' : '') . '>' . $page->post_title . '</option>';
-            }
-            echo '<div><select name="' . $this->db_opt . '[post_id]" id="post_id" style="width:200px">' . implode("\n", $page_opts) . '</select></div>';
+            echo $this->pages_input($post_id, 'post_id', 'Create new page');
             echo '<p class="description">Your careers website homepage will be at this page.</p>';
+        }
+        
+        function thank_you_page_input() {
+            $options = $this->get_options();
+            $post_id = isset($options['thank_you_id']) ? trim($options['thank_you_id']) : '';
+            echo $this->pages_input($post_id, 'thank_you_id', 'Select a Page');
         }
 
         function advanced_search_input() {
@@ -663,6 +688,7 @@ if (!class_exists('Comeet')) {
             $valid['comeet_stylesheet'] = $input['comeet_stylesheet'];
             $valid['comeet_subpage_template'] = $input['comeet_subpage_template'];
             $valid['comeet_positionpage_template'] = $input['comeet_positionpage_template'];
+            $valid['thank_you_id'] = $input['thank_you_id'];
 
 
             if ($input['post_id'] == '-1') {
@@ -787,6 +813,27 @@ if (!class_exists('Comeet')) {
             return $content;
         }
 
+        function get_thank_you_url($options, $careers_page) {
+            if (isset($options['thank_you_id']) && !empty($options['thank_you_id'])) {
+                $post_id = $options['thank_you_id'];
+                $post_id = trim($post_id);
+
+                if ($post_id !== '-1') {
+                    $post = get_post($post_id);
+
+                    if (!empty($post)) {
+                        return site_url() . '/' . $post->post_name;
+                    }
+                }
+            }
+
+            if (empty($careers_page)) {
+                return site_url();
+            }
+
+            return site_url() . '/' . $careers_page->post_name . '/thankyou';
+        }
+
         protected function add_frontend_scripts() {
             $options = $this->get_options();
 
@@ -795,7 +842,7 @@ if (!class_exists('Comeet')) {
             }
             wp_register_script("comeet_script", ($this->plugin_url . 'js/comeet.js'));
             $post = get_post($options['post_id']);
-            $comeet_thankyou_url = site_url() . '/' . $post->post_name . '/thankyou';
+            $comeet_thankyou_url = $this->get_thank_you_url($options, $post);
             $data = array(
                 "comeet_token" => $options['comeet_token'],
                 "comeet_uid" => $options['comeet_uid'],
