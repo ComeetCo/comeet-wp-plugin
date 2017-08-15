@@ -935,7 +935,7 @@ if (!class_exists('Comeet')) {
 
             //set the output
             ob_start();
-            include_once($template);
+            include($template);
             $output = ob_get_contents();
             ob_end_clean();
 
