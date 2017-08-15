@@ -1,8 +1,9 @@
 <?php
 
 function clean($string) {
-    $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
-    return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+    $fallback = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
+    $fallback = preg_replace('/[^A-Za-z0-9\-]/', '', $fallback); // Removes special chars.
+    return sanitize_title($string, $fallback);
 }
 
 if (!function_exists('is_iterable')) {
@@ -247,7 +248,7 @@ function comeet_search($array, $key, $value) {
     if (is_array($array)) {
         $array_value = ComeetData::get_group_value($array, $key);
 
-        if (isset($array_value) && strtolower(clean($array_value)) == $value) {
+        if (isset($array_value) && strtolower(clean($array_value)) == strtolower($value)) {
             $results[] = $array;
         }
 
