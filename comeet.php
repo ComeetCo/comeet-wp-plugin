@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://www.comeet.co
  * Description: Job listing page using the Comeet API.
- * Version: 1.4.2
+ * Version: 1.5
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -591,14 +591,14 @@ if (!class_exists('Comeet')) {
         function job_page_input() {
             $options = $this->get_options();
             $post_id = trim($options['post_id']);
-            echo $this->pages_input($post_id, 'post_id', 'Create new page');
+            echo $this->pages_input($post_id, 'post_id', '-- Create new page --');
             echo '<p class="description">Your careers website homepage will be at this page.</p>';
         }
         
         function thank_you_page_input() {
             $options = $this->get_options();
             $post_id = isset($options['thank_you_id']) ? trim($options['thank_you_id']) : '';
-            echo $this->pages_input($post_id, 'thank_you_id', 'Select a Page');
+            echo $this->pages_input($post_id, 'thank_you_id', '-- Select a page --');
         }
 
         function advanced_search_input() {
