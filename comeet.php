@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://www.comeet.co
  * Description: Job listing page using the Comeet API.
- * Version: 1.5
+ * Version: 1.6
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -70,17 +70,19 @@ if (!class_exists('Comeet')) {
         public function __construct() {
             $this->plugin_url = trailingslashit(WP_PLUGIN_URL . '/' . dirname(plugin_basename(__FILE__)));
             $this->plugin_dir = trailingslashit(plugin_dir_path(__FILE__));
-
+            $plugin = plugin_basename( __FILE__ );
             if (is_admin()) {
                 add_action('admin_init', array($this, 'register_settings'));
                 add_action('admin_menu', array($this, 'options_page'));
                 add_action('admin_init', array($this, 'flush_permalinks'));
                 add_action('updated_option', array($this, 'check_option'), 10, 3);
+                add_filter( "plugin_action_links_$plugin", array($this, 'plugin_add_settings_link') );
             } else {
                 add_filter('template_include', array($this, 'career_page_template'), 99);
                 add_shortcode('comeet_data', array($this, 'comeet_content'));
                 add_shortcode('comeet_page', array($this, 'comeet_custom_shortcode'));
                 add_filter('the_content', array($this, 'filter_the_content'), 10);
+                add_filter('template_redirect', array($this, 'override_404'), 10 );
             }
             add_action('the_posts', array($this, 'process_posts'), 10);
             add_filter('wpseo_og_og_title', array($this, 'filter_og_title'));
@@ -90,11 +92,13 @@ if (!class_exists('Comeet')) {
             add_filter('wpseo_canonical', array($this, 'filter_url'));
             add_filter('wpseo_metadesc', array($this, 'getSocialGraphDescription'));
             add_filter('wpseo_opengraph_desc', array($this, 'getSocialGraphDescription'));
+            register_deactivation_hook( $plugin, 'comeet_deactivation' );
         }
+
 
         public function add_careers_meta_tags() {
             echo '<meta name="application-name" itemprop="name" content="Comeet Jobs" />' . PHP_EOL;
-            $options = $this->get_options(); 
+            $options = $this->get_options();
             $post = get_post($options['post_id']);
             $url = get_permalink($post->ID);
             echo '<meta name="application-url" itemprop="url" content="' . $url . '" />' . PHP_EOL;
@@ -357,9 +361,8 @@ if (!class_exists('Comeet')) {
         }
 
         function flush_permalinks() {
-            if (isset($_GET['settings-updated'])) {
-                flush_rewrite_rules(false);
-                //echo '<div id="message" class="updated"><p><b>Settings have been saved.</b> In case you are unable to view the career pages please open the Permalinks settings and click <i>Save</i>.</p></div>';
+            if(isset($_GET['settings-updated'])){
+                flush_rewrite_rules(true);
             }
         }
 
@@ -398,7 +401,11 @@ if (!class_exists('Comeet')) {
                 $page_parents = (count($parent_posts_slug) > 1 ? implode('/', array_reverse($parent_posts_slug)) : reset($parent_posts_slug));
                 $base = $page_parents . '/' . $post->post_name;
             } else {
-                $base = $post->post_name;
+                if(isset($post)){
+                    $base = $post->post_name;
+                } else {
+                    $base = '/';
+                }
             }
             add_rewrite_rule(
                 $base . $regex_all,
@@ -411,6 +418,7 @@ if (!class_exists('Comeet')) {
                 'top'
             );
         }
+
 
         function add_settings_sections() {
             // Comeet API required settings.
@@ -996,6 +1004,49 @@ if (!class_exists('Comeet')) {
             return $output;
         }
 
+       //404 cases handling
+        function override_404() {
+            if (is_404()) {
+                //getting the plugin options
+                $options = get_option('Comeet_Options');
+                //getting the page used to display the jpbs
+                $post = get_post($options['post_id']);
+                //getting the page name
+                $post_name = $post->post_name;
+                //getting the complete current URL that returned an error 404
+                $complete_url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+                //checking that the current URL, that returned a 404, has the page slug of the page being used by the plugin
+                if(strstr($complete_url, '/'.$post_name.'/')){
+                    add_rewrite_rule($post_name.'/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?pagename=careers&comeetcat=$matches[1]&comeetpos=$matches[2]', 'top');
+                    add_rewrite_rule($post_name.'/([^/]+)/?$', 'index.php?pagename=careers&comeetcat=$matches[1]', 'top');
+                    //redirecting to the same page - adding param to the URL to avoid redirect loops
+
+                    if(!strstr($complete_url, '?rd') && !strstr($complete_url, '&rd')) {
+                        if(strstr($complete_url, '?')){
+                            header('Location: '.$complete_url . "&rd");
+                        } else {
+                            header('Location: '.$complete_url . "?rd");
+                        }
+
+                    }
+                } else {
+                    //do nothing as we don't care about other pages
+                }
+            }
+        }
+
+        //adding settings link to the plugin page
+        function plugin_add_settings_link( $links ) {
+            $settings_link = '<a href="options-general.php?page=comeet">' . __( 'Settings' ) . '</a>';
+            array_push( $links, $settings_link );
+            return $links;
+        }
+
+        //plugin deactivation
+        function comeet_deactivation() {
+            // clear the permalinks to remove our rewrite rules
+            flush_rewrite_rules();
+        }
     } //  End class
 
     $Comeet = new Comeet();

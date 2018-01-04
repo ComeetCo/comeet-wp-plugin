@@ -1,9 +1,7 @@
 <div class="wrap">
-  <?php screen_icon(); ?>
   <h2 style="min-width: 255px; max-width: 575px; margin-bottom: 2em;">
     <img src="<?php echo plugins_url('comeet-wp-plugin/img/comeet-logo.png') ?>" style="width:110px;margin-bottom:-5px;"/>
     Careers Website
-
     <?php $options = $this->get_options(); 
     $post = get_post($options['post_id']);
 
