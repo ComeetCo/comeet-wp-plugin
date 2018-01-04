@@ -21,7 +21,6 @@
       <p>For more information visit <a href="http://support.comeet.co/knowledgebase/wordpress-plug-in/" target="_blank">our guide</a> or <a href="mailto:support@comeet.co" target="_blank">contact us</a>.</p>
     </div>
     <div style="margin-top: 18px;">
-	<p style="font-style:italic;">After saving changes on this page, please save permalinks to make the new careers page available</p>
       <?php submit_button(); ?>
     </div>
     

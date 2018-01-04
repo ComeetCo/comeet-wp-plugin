@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: Comeet
- * Plugin URI: http://www.comeet.co
+ * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
  * Version: 1.6
  * Author: Comeet
@@ -310,10 +310,6 @@ if (!class_exists('Comeet')) {
                 } else {
                     $message = 'Comeet - Unexpected error retrieving positions data. If the problem persists please contact us at: <a href="mailto:support@comeet.co" target="_blank">support@comeet.co</a>';
                     echo '<div class="error"><p>' . $message . '</p></div>';
-                }
-            } else {
-                if (isset($_GET['settings-updated'])) {
-                    echo '<div id="message" class="updated"><p>Your career pages are now ready. In case you are unable to view the career pages please open the Permalinks settings and click <i>Save</i>.</p></div>';
                 }
             }
         }
