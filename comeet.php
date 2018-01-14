@@ -1013,6 +1013,7 @@ if (!class_exists('Comeet')) {
                 $complete_url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
                 //checking that the current URL, that returned a 404, has the page slug of the page being used by the plugin
                 if(strstr($complete_url, '/'.$post_name.'/')){
+                    flush_rewrite_rules(true);
                     add_rewrite_rule($post_name.'/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?pagename=careers&comeetcat=$matches[1]&comeetpos=$matches[2]', 'top');
                     add_rewrite_rule($post_name.'/([^/]+)/?$', 'index.php?pagename=careers&comeetcat=$matches[1]', 'top');
                     //redirecting to the same page - adding param to the URL to avoid redirect loops
