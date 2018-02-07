@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 1.6.1
+ * Version: 1.6.2
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -413,6 +413,8 @@ if (!class_exists('Comeet')) {
                 'index.php?pagename=' . $base . $query,
                 'top'
             );
+            //flushihg the rules, so they get rebuild and get added.
+            flush_rewrite_rules();
         }
 
 
@@ -709,6 +711,8 @@ if (!class_exists('Comeet')) {
                 }
             } else {
                 $valid['post_id'] = $input['post_id'];
+                global $wp_rewrite;
+                $wp_rewrite->flush_rules( true );
             }
             return $valid;
         }
@@ -1010,24 +1014,25 @@ if (!class_exists('Comeet')) {
                 //getting the page name
                 $post_name = $post->post_name;
                 //getting the complete current URL that returned an error 404
-                $complete_url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-                //checking that the current URL, that returned a 404, has the page slug of the page being used by the plugin
-                if(strstr($complete_url, '/'.$post_name.'/')){
-                    flush_rewrite_rules(true);
-                    add_rewrite_rule($post_name.'/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?pagename=careers&comeetcat=$matches[1]&comeetpos=$matches[2]', 'top');
-                    add_rewrite_rule($post_name.'/([^/]+)/?$', 'index.php?pagename=careers&comeetcat=$matches[1]', 'top');
-                    //redirecting to the same page - adding param to the URL to avoid redirect loops
-
-                    if(!strstr($complete_url, '?rd') && !strstr($complete_url, '&rd')) {
-                        if(strstr($complete_url, '?')){
-                            header('Location: '.$complete_url . "&rd");
-                        } else {
-                            header('Location: '.$complete_url . "?rd");
-                        }
-
-                    }
-                } else {
-                    //do nothing as we don't care about other pages
+                //$complete_url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+                global $wp;
+                $request = $wp->request;
+                //echo "Request is: " . $request;
+                //if(preg_match('/([^/]+)/([^/]+)/([^/]+)/?(/all)?$/', home_url($request))){
+                if (preg_match("/\/([^\/]+)\/([^\/]+)\/([^\/]+)\/?\/all?$/", home_url($request), $output_array)) {
+                    //we found a match, so we can assume this error 404 was on a Careers page
+                    //getting all the parts of the requested URL
+                    $request_parts = explode('/', $request);
+                    //checking if the first part matches the slug for the careers page
+                    if ($request_parts[0] != $post_name) {
+                        //if no match is found, we replace it and redirect to the correct page
+                        $fixed_request = str_replace($request_parts[0], $post_name, $request);
+                        //generate the full URL
+                        $redirect_to = home_url($fixed_request);
+                        //redirect
+                        header('Location: ' . $redirect_to);
+                        die();
+                     }
                 }
             }
         }
@@ -1060,6 +1065,14 @@ if (!class_exists('Comeet')) {
 
         // hook add_query_vars function into query_vars
         add_filter('query_vars', 'comeet_add_query_vars');
+
+        function comeet_activation_redirect( $plugin ) {
+            if( $plugin == plugin_basename( __FILE__ )) {
+                exit( wp_redirect( admin_url( 'options-general.php?page=comeet' ) ) );
+            }
+        }
+        add_action( 'activated_plugin', 'comeet_activation_redirect' );
+
     }
 }
 
