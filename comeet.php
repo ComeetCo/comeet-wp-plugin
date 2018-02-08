@@ -58,6 +58,14 @@ if (!class_exists('Comeet')) {
         var $plugin_url;
         var $plugin_dir;
         var $db_opt = 'Comeet_Options';
+        /*URL prefix.
+         * This Prefix appears after the page slug in the URL
+         * current URL structure: https://YOUR-URL.COM/CAREERS-PAGE/co/JOB-PARAMETERS
+         * By changing this parameter you can alter the way the URL will look
+         * Please take into account that once changed you will need to save the plugin settings again
+         * Also, for good measure re-save permalinks.
+        */
+        var $comeet_prefix = 'co';
 
         private $isComeetContentPage;
         private $comeet_pos;
@@ -388,10 +396,10 @@ if (!class_exists('Comeet')) {
                     $parent_posts_slug[] = $parent->post_name;
                 }
             }
-            $regex = '/([^/]+)/?(/all)?$';
+            $regex = '/'.$this->comeet_prefix.'/([^/]+)/?(/all)?$';
             $query = '&comeet_cat=$matches[1]&comeet_all=$matches[2]';
             $query_all = '&comeet_cat=$matches[1]&comeet_pos=$matches[2]&comeet_all=$matches[4]';
-            $regex_all = '/([^/]+)/([^/]+)/([^/]+)/?(/all)?$';
+            $regex_all = '/'.$this->comeet_prefix.'/([^/]+)/([^/]+)/([^/]+)/?(/all)?$';
 
             if (!empty($parent_posts_slug)) {
                 $page_parents = (count($parent_posts_slug) > 1 ? implode('/', array_reverse($parent_posts_slug)) : reset($parent_posts_slug));
@@ -994,7 +1002,6 @@ if (!class_exists('Comeet')) {
                 $template = 'blank.php';
             }
             $template = $this->get_template_path_or_die($template);
-
             //set the output
             ob_start();
             include($template);
@@ -1019,7 +1026,9 @@ if (!class_exists('Comeet')) {
                 $request = $wp->request;
                 //echo "Request is: " . $request;
                 //if(preg_match('/([^/]+)/([^/]+)/([^/]+)/?(/all)?$/', home_url($request))){
-                if (preg_match("/\/([^\/]+)\/([^\/]+)\/([^\/]+)\/?\/all?$/", home_url($request), $output_array)) {
+                //if (preg_match("/\/co\/([^\/]+)\/([^\/]+)\/([^\/]+)\/([^\/]+)?/", home_url($request), $output_array)) {
+                if (preg_match("/co\/([*]+)?/", home_url($request), $output_array)) {
+                    //echo "Match Found!";
                     //we found a match, so we can assume this error 404 was on a Careers page
                     //getting all the parts of the requested URL
                     $request_parts = explode('/', $request);

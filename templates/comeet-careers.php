@@ -8,7 +8,7 @@ if (isset($comeetgroups) && !empty($comeetgroups)) {
 			<div class="comeet-g-r">
 				<div class="comeet-u-1-2">
 					<div class="comeet-list comeet-group-name">
-						<?php echo '<a href="' . $base . strtolower(clean($category)) . '/all">' . $category . '</a>'; ?>
+						<?php echo '<a href="' . $base . $this->comeet_prefix . '/' . strtolower(clean($category)) . '/all">' . $category . '</a>'; ?>
 					</div>
 				</div>
 				<div class="comeet-u-1-2">
@@ -19,7 +19,7 @@ if (isset($comeetgroups) && !empty($comeetgroups)) {
                             foreach ($data as $post) {
                                 if (isset($group_element)) {
                                     if (ComeetData::is_category($post, $group_element, $category)) {
-                                        $href = $base . strtolower(clean($category)) . '/' . $post['uid'] . '/' . strtolower(clean($post['name'])) . '/all';
+                                        $href = $base . $this->comeet_prefix . '/' . strtolower(clean($category)) . '/' . $post['uid'] . '/' . strtolower(clean($post['name'])) . '/all';
                                         echo '<li class="comeet-position">';
                                         echo '<div class="comeet-position-name">';
                                         echo '<a href="' . $href . '">' . $post['name'] . '</a>';
