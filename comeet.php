@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 1.6.3
+ * Version: 1.6.4
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -79,6 +79,7 @@ if (!class_exists('Comeet')) {
             $this->plugin_url = trailingslashit(WP_PLUGIN_URL . '/' . dirname(plugin_basename(__FILE__)));
             $this->plugin_dir = trailingslashit(plugin_dir_path(__FILE__));
             $plugin = plugin_basename( __FILE__ );
+            add_action('init', array($this, 'add_rewrite_rules'));
             if (is_admin()) {
                 add_action('admin_init', array($this, 'register_settings'));
                 add_action('admin_menu', array($this, 'options_page'));
@@ -379,7 +380,6 @@ if (!class_exists('Comeet')) {
             $this->check_for_keys();
             $this->check_for_curl();
             $this->check_for_comeetapi();
-            $this->add_rewrite_rules();
             $this->add_settings_sections();
         }
 
