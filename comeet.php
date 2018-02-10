@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 1.6.4
+ * Version: 1.6.3
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -171,10 +171,10 @@ if (!class_exists('Comeet')) {
                     break;
                 }
             }
-            
+
             if ($this->isComeetContentPage) {
                 global $wp_query;
-                
+
                 if (isset($wp_query->query_vars['comeet_pos'])) {
                     $this->comeet_pos = urldecode($wp_query->query_vars['comeet_pos']);
                 } else {
@@ -190,17 +190,17 @@ if (!class_exists('Comeet')) {
             if ($this->isComeetContentPage && (!is_plugin_active('wordpress-seo/wp-seo.php'))) : ?>
                 <!-- COMEET PLUGIN -->
                 <?php if (isset($this->title)) : ?>
-                <meta name="og:title" content="<?= $this->title ?>"/>
+                    <meta name="og:title" content="<?= $this->title ?>"/>
                 <?php endif; ?>
                 <?php if (isset($this->socialGraphImage)) : ?>
-                <meta property="og:image" content="<?= $this->socialGraphImage ?>"/>
+                    <meta property="og:image" content="<?= $this->socialGraphImage ?>"/>
                 <?php endif; ?>
                 <meta property="og:description" content="<?= $this->getSocialGraphDescription() ?>">
                 <meta name="description" content="<?= $this->getSocialGraphDescription() ?>">
                 <meta property="og:url" content="<?= $this->get_current_url(); ?>"/>
                 <meta property="og:type" content="article" />
                 <!-- COMEET PLUGIN -->
-                <?php
+            <?php
             endif;
         }
 
@@ -608,7 +608,7 @@ if (!class_exists('Comeet')) {
             echo $this->pages_input($post_id, 'post_id', '-- Create new page --');
             echo '<p class="description">Your careers website homepage will be at this page.</p>';
         }
-        
+
         function thank_you_page_input() {
             $options = $this->get_options();
             $post_id = isset($options['thank_you_id']) ? trim($options['thank_you_id']) : '';
@@ -1011,7 +1011,7 @@ if (!class_exists('Comeet')) {
             return $output;
         }
 
-       //404 cases handling
+        //404 cases handling
         function override_404() {
             if (is_404()) {
                 //getting the plugin options
@@ -1024,11 +1024,8 @@ if (!class_exists('Comeet')) {
                 //$complete_url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
                 global $wp;
                 $request = $wp->request;
-                //echo "Request is: " . $request;
-                //if(preg_match('/([^/]+)/([^/]+)/([^/]+)/?(/all)?$/', home_url($request))){
-                //if (preg_match("/\/co\/([^\/]+)\/([^\/]+)\/([^\/]+)\/([^\/]+)?/", home_url($request), $output_array)) {
-                if (preg_match("/co\/([*]+)?/", home_url($request), $output_array)) {
-                    //echo "Match Found!";
+                if (preg_match("/".$this->comeet_prefix."\/([*]+)?/", home_url($request), $output_array)) {
+                    //redirecting
                     //we found a match, so we can assume this error 404 was on a Careers page
                     //getting all the parts of the requested URL
                     $request_parts = explode('/', $request);
@@ -1039,9 +1036,9 @@ if (!class_exists('Comeet')) {
                         //generate the full URL
                         $redirect_to = home_url($fixed_request);
                         //redirect
-                        header('Location: ' . $redirect_to);
+                        header('Location: ' . $redirect_to."?rd");
                         die();
-                     }
+                    }
                 }
             }
         }
@@ -1087,3 +1084,4 @@ if (!class_exists('Comeet')) {
 
 
 ?>
+
