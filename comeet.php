@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 1.6.5
+ * Version: 1.6.6
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -1013,6 +1013,19 @@ if (!class_exists('Comeet')) {
 
         //404 cases handling
         function override_404() {
+            if(isset($_GET['test_regex_values'])) {
+                echo "//{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+                echo "<br />";
+                print_r(get_query_var('pagename'));
+                echo "<br />";
+                print_r(get_query_var('comeet_cat'));
+                echo "<br />";
+                print_r(get_query_var('comeet_pos'));
+                echo "<br />";
+                print_r(get_query_var('comeet_all'));
+                echo "<br />";
+                die();
+            }
             if (is_404()) {
                 //getting the plugin options
                 $options = get_option('Comeet_Options');
@@ -1025,22 +1038,105 @@ if (!class_exists('Comeet')) {
                 global $wp;
                 $request = $wp->request;
                 if (preg_match("/".$this->comeet_prefix."\/([*]+)?/", home_url($request), $output_array)) {
-                    //redirecting
-                    //we found a match, so we can assume this error 404 was on a Careers page
-                    //getting all the parts of the requested URL
-                    $request_parts = explode('/', $request);
-                    //checking if the first part matches the slug for the careers page
-                    if ($request_parts[0] != $post_name) {
-                        //if no match is found, we replace it and redirect to the correct page
-                        $fixed_request = str_replace($request_parts[0], $post_name, $request);
-                        //generate the full URL
-                        $redirect_to = home_url($fixed_request);
-                        //redirect
-                        header('Location: ' . $redirect_to);
-                        die();
+                    //making sure the rewrite rules are added and flushing, just in case.
+                    $this->add_rewrite_rules();
+                    flush_rewrite_rules();
+                    //getting full current URL
+                    $url =  "//{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+                    //checking if we have redirected before, if yes, we should see ?rd in the URL
+                    if(!strstr($url, '?rd')){
+                        //this page has been redirected by this function before
+                        //trying to extract params from the URL
+                        $url_parts_start = explode('/co/', $url);
+                        $interesting_parts = $url_parts_start[1];
+                        $interesting_parts_array = explode('/', $interesting_parts);
+                        //checking how many parts are in the array to know if we have a job or department URL;
+                        if(count($interesting_parts_array) > 4){
+                            //specific job
+                            //additional verification, that we have what we should
+                            //The key item 1 should be the job id, so we check that it has a . in it (basic structure of the ID)
+                            if(strstr($interesting_parts_array[1], '.')){
+                                //the job id should have a . in it and one was detected
+                                //creating Ugly URL
+                                $build_url = '?pagename='.$post_name.'&comeet_cat='.$interesting_parts_array[0].'&comeet_pos='.$interesting_parts_array[1].'&comeet_all='.$interesting_parts_array[3];
+                                $redirect_to = home_url().$build_url;
+                                //redirecting
+                                header('Location: ' . $redirect_to . '?rd');
+                                die();
+                            } else {
+                                //no . detected in the job ID, one should be there...
+                                //we go over each one of the elements we detected looking for a . to locate the id
+                                $job_id_at = $this->check_for_id($interesting_parts_array);
+                                //if an ID was found we can rebuild the ugly URL for redirection
+                                if($job_id_at){
+                                    //we think job id was detected
+                                    //catrgory should always be before id so we get one before
+                                    $comeet_cat = $interesting_parts_array[$job_id_at - 1];
+                                    //getting the job ID
+                                    $comeet_pos = $interesting_parts_array[$job_id_at];
+                                    $comeet_all = '';
+                                    //only if this exists do we try and get it's value... trying to avoif key not set error
+                                    if(isset($interesting_parts_array[$job_id_at + 1]))
+                                        $comeet_all = $interesting_parts_array[$job_id_at + 1];
+                                    //build Ugly URL
+                                    $build_url = '?pagename='.$post_name.'&comeet_cat='.$comeet_cat.'&comeet_pos='.$comeet_pos.'&comeet_all='.$comeet_all;
+                                    $redirect_to = home_url().$build_url;
+                                    //echo "Job ID detected at array key: ".$job_id_at."<br />";
+                                    //echo $interesting_parts_array[$job_id_at];
+                                    //redirect to ugly URL
+                                    header('Location: ' . $redirect_to . '?rd');
+                                    die();
+                                } else {
+                                    //no job id detected - 404 (non of the array items had a . in them)
+                                    //So, 404 as we can't build an ugly URL
+                                }
+                            }
+                        } else {
+                            //depratment
+                            //we should have only 2 parameters in the array (3 if there was a trailig slash, but the last one will be empty)
+                            //if()
+                            $comeet_cat = $interesting_parts_array[0];
+                            $comeet_all = '';
+                            if(isset($interesting_parts_array[1]))
+                                $comeet_all = $interesting_parts_array[1];
+                            $build_url = '?pagename='.$post_name.'&comeet_cat='.$comeet_cat.'&comeet_all='.$comeet_all;
+                            $redirect_to = home_url().$build_url;
+                            header('Location: ' . $redirect_to . '?rd');
+                            die();
+                        }
+                    } else {
+
+                        //first redirect - no ?rd detected in URL
+                        //redirecting
+                        //we found a match, so we can assume this error 404 was on a Careers page
+                        //getting all the parts of the requested URL
+                        $request_parts = explode('/', $request);
+                        //checking if the first part matches the slug for the careers page
+                        if ($request_parts[0] != $post_name) {
+                            //if no match is found, we replace it and redirect to the correct page
+                            $fixed_request = str_replace($request_parts[0], $post_name, $request);
+                            //generate the full URL
+                            $redirect_to = home_url($fixed_request);
+                            //redirect - ?rd is added so we can detect a second redirect and stop issues from happening.
+                            header('Location: ' . $redirect_to . '?rd');
+                            die();
+                        }
                     }
                 }
             }
+        }
+
+        private function check_for_id($interesting_parts_array){
+            $counter = 0;
+            $job_id_at = false;
+            foreach($interesting_parts_array as $parts){
+                if(strstr($parts, '.')){
+                    //. detected so we can assume this is the job ID
+                    $job_id_at = $counter;
+                }
+                $counter++;
+            }
+            return $job_id_at;
         }
 
         //adding settings link to the plugin page
@@ -1081,6 +1177,4 @@ if (!class_exists('Comeet')) {
 
     }
 }
-
-
 ?>

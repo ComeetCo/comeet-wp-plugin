@@ -25,7 +25,7 @@
         <div class="comeet-g-r">
             <div class="comeet-u-1-2">
                 <div class="comeet-list comeet-group-name">
-                    <?php echo '<a href="' . get_the_permalink($options['post_id']) . $this->comeet_prefix . '/' . strtolower(clean($category)) . (isset($show_all_link) && $show_all_link ? '/all' : '') . '">' . $category . '</a>'; ?>
+                    <?php echo '<a href="' . rtrim(get_the_permalink($options['post_id']), '/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . (isset($show_all_link) && $show_all_link ? '/all' : '') . '">' . $category . '</a>'; ?>
                 </div>
             </div>
             <div class="comeet-u-1-2">
@@ -37,7 +37,7 @@
                             ComeetData::is_category($post, $sub_group, $comeet_cat, true))
                         {
                             echo '<li class="comeet-position">';
-                            echo '<div class="comeet-position-name"><a href="' . get_the_permalink($options['post_id']) . $this->comeet_prefix . '/' . strtolower(clean($category)) . '/' . $post['uid'] . '/' . strtolower(clean($post['name'])) . '">' . $post['name'] . '</a></div>';
+                            echo '<div class="comeet-position-name"><a href="' . rtrim(get_the_permalink($options['post_id']), '/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . '/' . $post['uid'] . '/' . strtolower(clean($post['name'])) . '">' . $post['name'] . '</a></div>';
                             echo '<div class="comeet-position-meta">';
                             if ($comeet_group == 0) {
                                 echo $post['department'];
