@@ -113,6 +113,47 @@ if (!class_exists('Comeet')) {
             echo '<meta name="application-url" itemprop="url" content="' . $url . '" />' . PHP_EOL;
         }
 
+        //function for adding json schema to header of page on individual job pages.
+        public function add_job_posting_js_schema(){
+            $positions_details = '';
+            foreach($this->post_data['details'] as $detail){
+                $positions_details .= "<b>".$detail['name']."</b><br />".$detail['value']."<br />";
+            }
+            ?>
+            <script type="application/ld+json">{
+                    "@context": "http://schema.org",
+                    "@type": "JobPosting",
+                    "title": "<?= $this->post_data['name']?>",
+                    "url": "<?= $this->post_data['url_active_page']?>",
+                    "datePosted": "<?= $this->post_data['time_updated']?>",
+                    "employmentType": "<?= $this->post_data['employment_type']?>",
+                    "hiringOrganization":
+                    {
+                        "@type": "Organization",
+                        "name": "<?= $this->post_data['company_name']?>"
+                    },
+                    "jobLocation":
+                    {
+                        "@type": "Place",
+                        "address":
+                        {
+                            "@type": "PostalAddress",
+                            "addressLocality": "<?= $this->post_data['location']['city']?>",
+                            "addressRegion": "<?= $this->post_data['location']['state']?>",
+                            "addressCountry":
+                            {
+                                "@type": "Country",
+                                "name": <?= $this->post_data['location']['country']?>
+                            }
+                        }
+                    },
+                    "image": "<?= $this->post_data['picture_url']?>",
+                    "description": "<?= $positions_details?>"
+                    }
+                </script>
+            <?php
+        }
+
         public function has_shortcode($content) {
             return stripos($content, '[comeet_data') !== false ||
                 stripos($content, '[comeet_page') !== false;
@@ -181,6 +222,10 @@ if (!class_exists('Comeet')) {
                     $this->comeet_cat = (isset($wp_query->query_vars['comeet_cat'])) ? urldecode($wp_query->query_vars['comeet_cat']) : null;
                 }
                 $this->comeet_preload_data();
+                //adding json schema to head ONLY if we are on individual job page.
+                if(isset($wp_query->query_vars['comeet_pos'])){
+                    add_action('wp_head', array($this, 'add_job_posting_js_schema'));
+                }
             }
 
             return $posts;
