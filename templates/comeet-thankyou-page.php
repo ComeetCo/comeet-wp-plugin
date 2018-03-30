@@ -4,3 +4,6 @@
 		We received the information and we'll be in touch if there is a good match. 
 	</p>
 </div>
+<?php
+include('version-comments.php')
+?>

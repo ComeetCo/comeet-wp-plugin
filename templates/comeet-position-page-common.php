@@ -39,6 +39,7 @@ if (empty($post_data) || (isset($post_data) && (isset($post_data['status'])) && 
 				<?php if (isset($details['value']) && !empty($details['value']) && !empty(trim($details['value']))) : ?>
 					<?php $title = $details['name'] === 'Description' ? 'About The Position' : $details['name']; ?>
 					<?php $css = preg_replace('/\W+/', '', strtolower(strip_tags($details['name']))); ?>
+					<?php $prop = ComeetData::get_schema_prop($details['name']); ?>
 					<h4><?php echo $title; ?></h4>
 					<div class="comeet-position-<?php echo $css; ?> comeet-user-text">
 						<?php echo $details['value'] ?>
@@ -56,3 +57,6 @@ if (empty($post_data) || (isset($post_data) && (isset($post_data['status'])) && 
 		<script type="comeet-social" data-position-uid="<?php echo $post_data['uid'] ?>"></script>
 	</div>
 </div>
+<?php
+include('version-comments.php');
+?>

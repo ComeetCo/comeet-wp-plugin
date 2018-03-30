@@ -58,3 +58,6 @@ if (isset($comeetgroups) && !empty($comeetgroups)) {
 	echo "We don't have any open positions at this time. Please visit again soon.";
 }
 ?>
+<?php
+include('version-comments.php');
+?>
