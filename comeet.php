@@ -739,17 +739,17 @@ if (!class_exists('Comeet')) {
          * @return array
          */
         function validate_options($input) {
-            $valid['comeet_token'] = $input['comeet_token'];
-            $valid['comeet_uid'] = trim($input['comeet_uid']);
-            $valid['location'] = trim($input['location']);
-            $valid['comeet_color'] = trim($input['comeet_color']);
-            $valid['comeet_bgcolor'] = trim($input['comeet_bgcolor']);
-            $valid['advanced_search'] = intval($input['advanced_search']);
-            $valid['comeet_stylesheet'] = $input['comeet_stylesheet'];
-            $valid['comeet_subpage_template'] = $input['comeet_subpage_template'];
-            $valid['comeet_positionpage_template'] = $input['comeet_positionpage_template'];
-            $valid['thank_you_id'] = $input['thank_you_id'];
 
+            $valid['comeet_token'] = (isset($input['comeet_token'])) ? $input['comeet_token'] : "";
+            $valid['comeet_uid'] = (isset($input['comeet_uid'])) ? $input['comeet_uid'] : "";
+            $valid['location'] = (isset($input['location'])) ? $input['location'] : "";
+            $valid['comeet_color'] = (isset($input['comeet_color'])) ? $input['comeet_color'] : "";
+            $valid['comeet_bgcolor'] = (isset($input['comeet_bgcolor'])) ? $input['comeet_bgcolor'] : "";
+            $valid['advanced_search'] = (isset($input['advanced_search'])) ? $input['advanced_search'] : "";
+            $valid['comeet_stylesheet'] = (isset($input['comeet_stylesheet'])) ? $input['comeet_stylesheet'] : "";
+            $valid['comeet_subpage_template'] = (isset($input['comeet_subpage_template'])) ? $input['comeet_subpage_template'] : "";
+            $valid['comeet_positionpage_template'] = (isset($input['comeet_positionpage_template'])) ? $input['comeet_positionpage_template'] : "";
+            $valid['thank_you_id'] = (isset($input['thank_you_id'])) ? $input['thank_you_id'] : "";
 
             if ($input['post_id'] == '-1') {
                 // Create a new page for the job posts to appear.
