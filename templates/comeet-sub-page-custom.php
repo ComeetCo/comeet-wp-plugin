@@ -26,27 +26,9 @@
             <div class="comeet-u-1-2">
                 <div class="comeet-list comeet-group-name">
                     <?php
-                    $options = $this->get_options();
-                    if($options['advanced_search'] == 1){
-                        //this means that the sub page (this page) is showing jobs grouped by location
-                        $check_option = 'comeet_auto_generate_location_pages';
-                    } else {
-                        //this means that the sub page (this page) is showing jobs grouped by department
-                        $check_option = 'comeet_auto_generate_department_pages';
-                    }
-                    //cheking if to create a link or now.
-                    if(isset($options[$check_option])){
-                        if($options[$check_option] == 1){
-                            $category_link = '<a href="' . rtrim(get_the_permalink($options['post_id']), '/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . (isset($show_all_link) && $show_all_link ? '/all' : '') . '">' . $category . '</a>';
-                        } else {
-                            $category_link = $category;
-                        }
-                    } else {
-                        //if this parameter isn't set, it will default to creating the link.
-                        $category_link = '<a href="' . rtrim(get_the_permalink($options['post_id']), '/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . (isset($show_all_link) && $show_all_link ? '/all' : '') . '">' . $category . '</a>';
-                    };
+                    (isset($show_all_link) && $show_all_link ?  $pass_show_all = $show_all_link : $pass_show_all = false);
+                    echo $this->generate_page_titles(true, $category, $pass_show_all);
                     ?>
-                    <?= $category_link; ?>
                 </div>
             </div>
             <div class="comeet-u-1-2">

@@ -8,26 +8,7 @@ if (isset($comeetgroups) && !empty($comeetgroups)) {
 			<div class="comeet-g-r">
 				<div class="comeet-u-1-2">
 					<div class="comeet-list comeet-group-name">
-                        <?php
-                        $options = $this->get_options();
-                        //checking how the jobs are grouped
-                        $check_option = 'comeet_auto_generate_location_pages';
-                        if($options['advanced_search'] == 1){
-                            $check_option = 'comeet_auto_generate_department_pages';
-                        }
-                        //cheking if to create a link or now.
-                        if(isset($options[$check_option])){
-                            if($options[$check_option] == 1){
-                                $category_link = '<a href="' . rtrim($base,'/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . '/all">' . $category . '</a>';
-                            } else {
-                                $category_link = $category;
-                            }
-                        } else {
-                            //if this parameter isn't set, it will default to creating the link.
-                            $category_link = '<a href="' . rtrim($base,'/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . '/all">' . $category . '</a>';
-                        };
-                        ?>
-						<?= $category_link ?>
+						<?= $this->generate_page_titles(false, $category, false, $base) ?>
 					</div>
 				</div>
 				<div class="comeet-u-1-2">

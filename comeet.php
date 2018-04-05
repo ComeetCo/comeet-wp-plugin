@@ -1242,6 +1242,47 @@ if (!class_exists('Comeet')) {
         public function get_version(){
             return $this->version;
         }
+
+        public function generate_page_titles($sub = false ,$category, $show_all_link = false, $base  = false){
+            $options = $this->get_options();
+            if($sub){
+                //this means that the sub page (this page) is showing jobs grouped by department
+                $check_option = 'comeet_auto_generate_department_pages';
+                if($options['advanced_search'] == 1){
+                    //this means that the sub page (this page) is showing jobs grouped by location
+                    $check_option = 'comeet_auto_generate_location_pages';
+                }
+                //cheking if to create a link or now.
+                if(isset($options[$check_option])){
+                    if($options[$check_option] == 1){
+                        $category_link = '<a href="' . rtrim(get_the_permalink($options['post_id']), '/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . (isset($show_all_link) && $show_all_link ? '/all' : '') . '">' . $category . '</a>';
+                    } else {
+                        $category_link = $category;
+                    }
+                } else {
+                    //if this parameter isn't set, it will default to creating the link.
+                    $category_link = '<a href="' . rtrim(get_the_permalink($options['post_id']), '/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . (isset($show_all_link) && $show_all_link ? '/all' : '') . '">' . $category . '</a>';
+
+                };
+            } else {
+                $check_option = 'comeet_auto_generate_location_pages';
+                if($options['advanced_search'] == 1){
+                    $check_option = 'comeet_auto_generate_department_pages';
+                }
+                //cheking if to create a link or now.
+                if(isset($options[$check_option])){
+                    if($options[$check_option] == 1){
+                        $category_link = '<a href="' . rtrim($base,'/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . '/all">' . $category . '</a>';
+                    } else {
+                        $category_link = $category;
+                    }
+                } else {
+                    //if this parameter isn't set, it will default to creating the link.
+                    $category_link = '<a href="' . rtrim($base,'/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . '/all">' . $category . '</a>';
+                };
+            }
+            return $category_link;
+        }
     } //  End class
 
     $Comeet = new Comeet();
