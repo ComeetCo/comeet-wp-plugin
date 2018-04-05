@@ -4,7 +4,8 @@
          "company-uid":         comeetvar.comeet_uid,
          "color":               comeetvar.comeet_color,
          "background-color":    comeetvar.comeet_bgcolor,
-         "thankyou-url":        comeetvar.comeet_thankyou_url
+         "thankyou-url":        comeetvar.comeet_thankyou_url,
+         "social-show-refer-button": false
       });
    };
 

@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 1.6.8
+ * Version: 1.6.9
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -55,7 +55,7 @@ if (!function_exists('comeet_plugin_version_arg')) {
 if (!class_exists('Comeet')) {
 
     class Comeet {
-        public $version = '1.6.8';
+        public $version = '1.6.9';
         var $plugin_url;
         var $plugin_dir;
         var $db_opt = 'Comeet_Options';
@@ -386,7 +386,9 @@ if (!class_exists('Comeet')) {
                 'comeet_bgcolor' => '',
                 'comeet_stylesheet' => 'comeet-cards.css',
                 'comeet_subpage_template' => 'page.php',
-                'comeet_positionpage_template' => 'page.php'
+                'comeet_positionpage_template' => 'page.php',
+                'comeet_auto_generate_location_pages' => '1',
+                'comeet_auto_generate_department_pages' => '1'
             );
 
             $saved = get_option($this->db_opt);
@@ -555,6 +557,14 @@ if (!class_exists('Comeet')) {
                 'comeet_other_settings'
             );
 
+            add_settings_field(
+                'comeet_auto_generate_pages',
+                'Auto-generate pages',
+                array($this, 'comeet_auto_generate_pages'),
+                'comeet',
+                'comeet_other_settings'
+            );
+
             add_settings_section(
                 'comeet_other_blank',
                 '',
@@ -680,6 +690,30 @@ if (!class_exists('Comeet')) {
             echo '<p class="description">Optional. e.g. eeeeee</p>';
         }
 
+        function comeet_auto_generate_pages() {
+            $options = $this->get_options();
+            echo '<input type="checkbox" id="comeet_auto_generate_posts_pages" name="' . $this->db_opt . '[comeet_auto_generate_posts_pages]" value="1" disabled="disabled" checked="checked" />&nbsp;';
+            echo '<label for="comeet_auto_generate_posts_pages">For each position</label><br /><br />';
+
+            if(isset($options['comeet_auto_generate_department_pages'])){
+                ($options['comeet_auto_generate_department_pages'] == 1) ? $department_checked = 'checked="checked"' : $department_checked = '';
+            } else {
+                $department_checked = 'checked="checked"';
+            }
+
+            if(isset($options['comeet_auto_generate_location_pages'])){
+                ($options['comeet_auto_generate_location_pages'] == 1) ? $locations_checked = 'checked="checked"' : $locations_checked = '';
+            } else {
+                $locations_checked = 'checked="checked"';
+            }
+
+            echo '<input type="checkbox" id="comeet_auto_generate_location_pages" name="' . $this->db_opt . '[comeet_auto_generate_location_pages]" value="1" '.$locations_checked.' />&nbsp;';
+            echo '<label for="comeet_auto_generate_posts_pages">For each location</label><br /><br />';
+
+            echo '<input type="checkbox" id="comeet_auto_generate_department_pages" name="' . $this->db_opt . '[comeet_auto_generate_department_pages]" value="1" '.$department_checked.' />&nbsp;';
+            echo '<label for="comeet_auto_generate_posts_pages">For each department</label><br /><br />';
+        }
+
         function comeet_subpage_input() {
             $options = $this->get_options();
 
@@ -750,6 +784,10 @@ if (!class_exists('Comeet')) {
             $valid['comeet_subpage_template'] = (isset($input['comeet_subpage_template'])) ? $input['comeet_subpage_template'] : "";
             $valid['comeet_positionpage_template'] = (isset($input['comeet_positionpage_template'])) ? $input['comeet_positionpage_template'] : "";
             $valid['thank_you_id'] = (isset($input['thank_you_id'])) ? $input['thank_you_id'] : "";
+
+            $valid['comeet_auto_generate_location_pages'] = (isset($input['comeet_auto_generate_location_pages'])) ? $input['comeet_auto_generate_location_pages'] : "";
+            $valid['comeet_auto_generate_department_pages'] = (isset($input['comeet_auto_generate_department_pages'])) ? $input['comeet_auto_generate_department_pages'] : "";
+
 
             if ($input['post_id'] == '-1') {
                 // Create a new page for the job posts to appear.
@@ -1171,6 +1209,8 @@ if (!class_exists('Comeet')) {
                 }
             }
         }
+
+
 
         private function check_for_id($interesting_parts_array){
             $counter = 0;
