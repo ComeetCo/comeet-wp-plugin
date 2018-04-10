@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 1.6.9.1
+ * Version: 1.6.9.2
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -55,7 +55,7 @@ if (!function_exists('comeet_plugin_version_arg')) {
 if (!class_exists('Comeet')) {
 
     class Comeet {
-        public $version = '1.6.9.1';
+        public $version = '1.6.9.2';
         var $plugin_url;
         var $plugin_dir;
         var $db_opt = 'Comeet_Options';
@@ -1128,14 +1128,14 @@ if (!class_exists('Comeet')) {
                     //getting full current URL
                     $url =  "//{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
                     //checking if we have redirected before, if yes, we should see ?rd in the URL
-                    if(!strstr($url, '?rd')){
+                    if(!strstr($url, '?rd') && !strstr($url, '?rd')){
                         //this page has been redirected by this function before
                         //trying to extract params from the URL
                         $url_parts_start = explode('/co/', $url);
                         $interesting_parts = $url_parts_start[1];
                         $interesting_parts_array = explode('/', $interesting_parts);
                         //checking how many parts are in the array to know if we have a job or department URL;
-                        if(count($interesting_parts_array) > 4){
+                        if(count($interesting_parts_array) >= 4){
                             //specific job
                             //additional verification, that we have what we should
                             //The key item 1 should be the job id, so we check that it has a . in it (basic structure of the ID)
@@ -1145,7 +1145,7 @@ if (!class_exists('Comeet')) {
                                 $build_url = '?pagename='.$post_name.'&comeet_cat='.$interesting_parts_array[0].'&comeet_pos='.$interesting_parts_array[1].'&comeet_all='.$interesting_parts_array[3];
                                 $redirect_to = home_url().$build_url;
                                 //redirecting
-                                header('Location: ' . $redirect_to . '?rd');
+                                header('Location: ' . $redirect_to . '&rd');
                                 die();
                             } else {
                                 //no . detected in the job ID, one should be there...
@@ -1168,7 +1168,7 @@ if (!class_exists('Comeet')) {
                                     //echo "Job ID detected at array key: ".$job_id_at."<br />";
                                     //echo $interesting_parts_array[$job_id_at];
                                     //redirect to ugly URL
-                                    header('Location: ' . $redirect_to . '?rd');
+                                    header('Location: ' . $redirect_to . '&rd');
                                     die();
                                 } else {
                                     //no job id detected - 404 (non of the array items had a . in them)
@@ -1185,7 +1185,7 @@ if (!class_exists('Comeet')) {
                                 $comeet_all = $interesting_parts_array[1];
                             $build_url = '?pagename='.$post_name.'&comeet_cat='.$comeet_cat.'&comeet_all='.$comeet_all;
                             $redirect_to = home_url().$build_url;
-                            header('Location: ' . $redirect_to . '?rd');
+                            header('Location: ' . $redirect_to . '&rd');
                             die();
                         }
                     } else {
