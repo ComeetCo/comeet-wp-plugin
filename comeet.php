@@ -356,7 +356,6 @@ if (!class_exists('Comeet')) {
             $apiurl = 'https://www.comeet.co/careers-api/2.0/company/' . $this->comeet_uid . '/positions?token=' . $this->comeet_token . '&' . comeet_plugin_version_arg();
             $request = wp_remote_get($apiurl);
             $response = $request['response'];
-
             if ($response['code'] != 200) {
                 $jsonresponse = json_decode($request['body']);
                 $message = $jsonresponse->message;
@@ -366,6 +365,8 @@ if (!class_exists('Comeet')) {
                     $message = 'Comeet - Unexpected error retrieving positions data. If the problem persists please contact us at: <a href="mailto:support@comeet.co" target="_blank">support@comeet.co</a>';
                     echo '<div class="error"><p>' . $message . '</p></div>';
                 }
+            } else {
+
             }
         }
 
@@ -1128,7 +1129,7 @@ if (!class_exists('Comeet')) {
                     //getting full current URL
                     $url =  "//{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
                     //checking if we have redirected before, if yes, we should see ?rd in the URL
-                    if(!strstr($url, '?rd') && !strstr($url, '?rd')){
+                    if(!strstr($url, '?rd') && !strstr($url, '&rd')){
                         //this page has been redirected by this function before
                         //trying to extract params from the URL
                         $url_parts_start = explode('/co/', $url);
@@ -1169,6 +1170,7 @@ if (!class_exists('Comeet')) {
                                     //echo $interesting_parts_array[$job_id_at];
                                     //redirect to ugly URL
                                     header('Location: ' . $redirect_to . '&rd');
+
                                     die();
                                 } else {
                                     //no job id detected - 404 (non of the array items had a . in them)

@@ -55,15 +55,17 @@ class ComeetData {
         return $post_data;
     }
 
+
     static private function fetch_groups_data($options) {
         //Read main data for all positions
         $comeet_post_url = "https://www.comeet.co/careers-api/2.0/company/" . $options['comeet_uid'] .
             "/positions?token=" . $options['comeet_token'] .
             '&details=true';
         $result1 = self::comeet_get_data($comeet_post_url);
-
-        if (!isset($result1['status']) || $result1['status'] != 400) {
-            //Add description details for each post
+        $transient_key = self::TRANSIENT_PREFIX . 'comeet-groups';
+        if (empty($result1) || (isset($result1['status']) && $result1['status'] === 400)) {
+            $result1 = get_transient($transient_key);
+        } else {
             foreach ($result1 as $key => $job) {
                 if (empty($job['department'])) {
                     $result1[$key]['department'] = 'Other';
@@ -76,7 +78,10 @@ class ComeetData {
                     $result1[$key]['location']['name'] = 'Other';
                 }
             }
+            //saving transient data
+            set_transient($transient_key, $result1);
         }
+
         return $result1;
     }
 
@@ -133,8 +138,7 @@ class ComeetData {
         } else {
             $data = get_transient($transient_key);
         }
-
-        if (empty($data) || (isset($data['status']) && ($data['status'] == 400))) {
+        if (empty($data)) {
             //echo $data['status'];
         } else {
             $group_element = self::get_group_element($options, $comeet_cat, $data);
