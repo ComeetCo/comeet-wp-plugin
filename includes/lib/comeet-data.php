@@ -46,7 +46,7 @@ class ComeetData {
         $post_data = self::comeet_get_data($comeet_post_url);
         $transient_key = self::TRANSIENT_PREFIX . $comeet_pos;
 
-        if (empty($post_data) || (isset($post_data['status']) && $post_data['status'] === 400)) {
+        if (empty($post_data) || (isset($post_data['status']) && $post_data['status'] != 200)) {
             $post_data = get_transient($transient_key);
         } else {
             set_transient($transient_key, $post_data);
@@ -63,7 +63,7 @@ class ComeetData {
             '&details=true';
         $result1 = self::comeet_get_data($comeet_post_url);
         $transient_key = self::TRANSIENT_PREFIX . 'comeet-groups';
-        if (empty($result1) || (isset($result1['status']) && $result1['status'] === 400)) {
+        if (empty($result1) || (isset($result1['status']) && $result1['status'] != 200)) {
             $result1 = get_transient($transient_key);
         } else {
             foreach ($result1 as $key => $job) {
