@@ -355,7 +355,7 @@ if (!class_exists('Comeet')) {
         public function admin_comeet_api_notice() {
             $apiurl = 'https://www.comeet.co/careers-api/2.0/company/' . $this->comeet_uid . '/positions?token=' . $this->comeet_token . '&' . comeet_plugin_version_arg();
             $request = wp_remote_get($apiurl);
-            $response = $request['response'];
+            $response = $request->response;
             if ($response['code'] != 200) {
                 $jsonresponse = json_decode($request['body']);
                 $message = $jsonresponse->message;
@@ -932,7 +932,7 @@ if (!class_exists('Comeet')) {
                 return site_url();
             }
 
-            return site_url() . '/' . $careers_page->post_name . '/thankyou';
+            return site_url() . '/' . $careers_page->post_name . '/'.$this->comeet_prefix.'/thankyou';
         }
 
         protected function add_frontend_scripts() {
