@@ -1,10 +1,11 @@
+<div class="comeet-outer-wrapper">
 <?php
 if (isset($comeetgroups) && !empty($comeetgroups)) {
 ?>
     <div id="d" class="comeet-groups-list">
 <?php
-	foreach ($comeetgroups as $category) { 
-	?>	
+	foreach ($comeetgroups as $category) {
+	?>
 			<div class="comeet-g-r">
 				<div class="comeet-u-1-2">
 					<div class="comeet-list comeet-group-name">
@@ -46,7 +47,7 @@ if (isset($comeetgroups) && !empty($comeetgroups)) {
 					</div>
 				</div>
 			</div>
-	<?php		
+	<?php
 	}
 ?>
 </div>
@@ -61,3 +62,4 @@ if (isset($comeetgroups) && !empty($comeetgroups)) {
 <?php
 include('version-comments.php');
 ?>
+</div>

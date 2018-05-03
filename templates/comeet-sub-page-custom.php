@@ -1,3 +1,4 @@
+<div class="comeet-outer-wrapper">
 <?php if (isset($comeetgroups) && !empty($comeetgroups) && count(comeet_search($data, $sub_group, $comeet_cat)) >0) { ?>
     <h2 class="comeet-group-name">
         <?php foreach ( $data as $post ) {
@@ -76,3 +77,4 @@
 <?php
 include('version-comments.php')
 ?>
+</div>

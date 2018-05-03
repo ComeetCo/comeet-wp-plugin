@@ -8,6 +8,7 @@ if (empty($post_data) || (isset($post_data) && (isset($post_data['status'])) && 
 }
 ?>
 </div>
+<div class="comeet-outer-wrapper">
 <div>
 	<div id="<?php echo $post_data['uid']; ?>">
 		<h2 class="comeet-position-name">
@@ -60,3 +61,4 @@ if (empty($post_data) || (isset($post_data) && (isset($post_data['status'])) && 
 <?php
 include('version-comments.php');
 ?>
+</div>
