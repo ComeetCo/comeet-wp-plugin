@@ -25,3 +25,22 @@
     font-size: 12px;
     margin: 0;
 }
+/*Position page css*/
+.comeet-outer-wrapper h2.comeet-position-name{
+    font-size: 30px;
+}
+.comeet-outer-wrapper .comeet-position-meta-single span.comeet-position-location{
+    font-size: 14px;
+}
+.comeet-outer-wrapper .comeet-position-info h4{
+    font-size: 18px;
+}
+.comeet-outer-wrapper .comeet-position-description p,
+.comeet-outer-wrapper .comeet-position-requirements p{
+    margin: 0;
+    padding: 0;
+    line-height: 150%;
+}
+.comeet-outer-wrapper .comeet-position-requirements ul{
+    list-style: disc;
+}
