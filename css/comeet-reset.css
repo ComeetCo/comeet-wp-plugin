@@ -1,0 +1,27 @@
+/* Targetting the location or department names*/
+.comeet-outer-wrapper .comeet-groups-list .comeet-group-name,
+.comeet-outer-wrapper .comeet-groups-list .comeet-group-name a{
+    font-size: 18px;
+    text-decoration: none;
+    color: #000;
+}
+.comeet-outer-wrapper .comeet-groups-list .comeet-list{
+    margin-left: 0px;
+}
+.comeet-outer-wrapper .comeet-groups-list .comeet-list .comeet-positions-list{
+    list-style-type: none;
+    margin-left: 0px;
+    padding-left: 0px;
+}
+.comeet-outer-wrapper .comeet-groups-list .comeet-list .comeet-positions-list .comeet-position .comeet-position-name a{
+    font-size: 16px;
+    text-decoration: none;
+}
+.comeet-outer-wrapper .comeet-groups-list .comeet-list .comeet-positions-list .comeet-position .comeet-position-name a:hover{
+    text-decoration: underline;
+}
+.comeet-outer-wrapper .comeet-groups-list .comeet-list .comeet-positions-list .comeet-position .comeet-position-meta{
+    color: #898787;
+    font-size: 12px;
+    margin: 0;
+}
