@@ -9,3 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - Added this changelog file
 ### Fixed
  - Fixed issue with Thank you page when thank you page was not set in the plugin settings.
+
+## [1.6.9.5] - 2018-05-03
+### Added
+ - Added comeet-reset.css file with basic css rules to allow for a good display regardless of the theme being used.
+### Changed
+ - comeet.php, enqueing the new css file.
