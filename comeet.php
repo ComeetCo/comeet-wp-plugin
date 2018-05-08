@@ -1286,6 +1286,71 @@ if (!class_exists('Comeet')) {
             }
             return $category_link;
         }
+
+        public function sub_page_logic($data, $sub_group, $comeet_cat){
+            foreach ( $data as $post ) {
+                if($this->check_comeet_is_category_long($post, $sub_group, $comeet_cat, true)) {
+                    echo ComeetData::get_group_value($post, $sub_group);
+                    break;
+                }
+            }
+        }
+
+        public function get_has_group($data, $group_element, $category, $sub_group, $comeet_cat){
+            $hasGroup = false;
+            foreach ($data as $post) {
+                if ($this->check_comeet_is_category_short($post, $group_element, $category) && $this->check_comeet_is_category_long($post, $sub_group, $comeet_cat, true)) {
+                    $hasGroup = true;
+                    break;
+                }
+            }
+            return $hasGroup;
+        }
+
+        public function check_for_category($post, $group_element, $category, $sub_group, $comeet_cat){
+            if($this->check_comeet_is_category_short($post, $group_element, $category) && $this->check_comeet_is_category_long($post, $sub_group, $comeet_cat, true)){
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public function generate_sub_page_url($options, $category, $post){
+            return rtrim(get_the_permalink($options['post_id']), '/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . '/' . $post['uid'] . '/' . strtolower(clean($post['name']));
+        }
+
+        public function generate_careers_url($base, $category, $post){
+            return rtrim($base,'/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . '/' . $post['uid'] . '/' . strtolower(clean($post['name'])) . '/all';
+        }
+
+        public function check_comeet_is_category_short($post, $group_element, $category){
+            if(ComeetData::is_category($post, $group_element, $category)){
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public function check_comeet_is_category_long($post, $sub_group, $comeet_cat){
+            if(ComeetData::is_category($post, $sub_group, $comeet_cat, true)){
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public function get_schema_prop($name){
+            return ComeetData::get_schema_prop($name);
+        }
+
+        public function get_position_css($name){
+            return preg_replace('/\W+/', '', strtolower(strip_tags($name)));
+        }
+
+        public function get_position_title($name){
+            return $name === 'Description' ? 'About The Position' : $name;
+        }
+
     } //  End class
 
     $Comeet = new Comeet();

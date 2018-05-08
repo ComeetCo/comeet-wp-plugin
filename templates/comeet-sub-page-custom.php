@@ -1,28 +1,14 @@
 <div class="comeet-outer-wrapper">
-<?php if (isset($comeetgroups) && !empty($comeetgroups) && count(comeet_search($data, $sub_group, $comeet_cat)) >0) { ?>
+<?php if (isset($comeetgroups) && !empty($comeetgroups) && count(comeet_search($data, $sub_group, $comeet_cat)) > 0) { ?>
     <h2 class="comeet-group-name">
-        <?php foreach ( $data as $post ) {
-            if(ComeetData::is_category($post, $sub_group, $comeet_cat, true)) {
-                echo ComeetData::get_group_value($post, $sub_group);
-                break;
-            }
-        } ?>
+        <?php $this->sub_page_logic($data, $sub_group, $comeet_cat);?>
     </h2>
     <div class="comeet-groups-list">
-    <?php if (isset($group_element)) : ?>
-    <?php foreach ($comeetgroups as $category) : ?>
+    <?php if (isset($group_element)) { ?>
+    <?php foreach ($comeetgroups as $category) { ?>
     <?php
-        $hasGroup = false;
-        foreach ($data as $post) {
-            if (ComeetData::is_category($post, $group_element, $category) &&
-                ComeetData::is_category($post, $sub_group, $comeet_cat, true))
-            {
-                $hasGroup = true;
-                break;
-            }
-        }
-
-        if ($hasGroup) : ?>
+        $hasGroup = $this->get_has_group($data, $group_element, $category, $sub_group, $comeet_cat);
+        if ($hasGroup) { ?>
         <div class="comeet-g-r">
             <div class="comeet-u-1-2">
                 <div class="comeet-list comeet-group-name">
@@ -37,11 +23,9 @@
                     <ul class="comeet-positions-list">
                     <?php
                     foreach ($data as $post) {
-                        if (ComeetData::is_category($post, $group_element, $category) &&
-                            ComeetData::is_category($post, $sub_group, $comeet_cat, true))
-                        {
+                        if ($this->check_for_category($post, $group_element, $category, $sub_group, $comeet_cat)) {
                             echo '<li class="comeet-position">';
-                            echo '<div class="comeet-position-name"><a href="' . rtrim(get_the_permalink($options['post_id']), '/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . '/' . $post['uid'] . '/' . strtolower(clean($post['name'])) . '">' . $post['name'] . '</a></div>';
+                            echo '<div class="comeet-position-name"><a href="' . $this->generate_sub_page_url($options, $category, $post) . '">' . $post['name'] . '</a></div>';
                             echo '<div class="comeet-position-meta">';
                             if ($comeet_group == 0) {
                                 echo $post['department'];
@@ -62,9 +46,9 @@
                 </div>
             </div>
         </div>
-        <?php endif; ?>
-    <?php endforeach; ?>
-    <?php endif; ?>
+        <?php } ?>
+    <?php   }?>
+    <?php } ?>
     </div>
     <div class="comeet-social">
         <script type="comeet-social"></script>

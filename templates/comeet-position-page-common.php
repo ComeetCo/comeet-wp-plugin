@@ -38,9 +38,9 @@ if (empty($post_data) || (isset($post_data) && (isset($post_data['status'])) && 
 			<?php if (isset($post_data['details'])) : ?>
 			<?php foreach ($post_data['details'] as $details): ?>
 				<?php if (isset($details['value']) && !empty($details['value']) && !empty(trim($details['value']))) : ?>
-					<?php $title = $details['name'] === 'Description' ? 'About The Position' : $details['name']; ?>
-					<?php $css = preg_replace('/\W+/', '', strtolower(strip_tags($details['name']))); ?>
-					<?php $prop = ComeetData::get_schema_prop($details['name']); ?>
+					<?php $title = $this->get_position_title($details['name']); ?>
+					<?php $css = $this->get_position_css($details['name']); ?>
+					<?php $prop = $this->get_schema_prop($details['name']); ?>
 					<h4><?php echo $title; ?></h4>
 					<div class="comeet-position-<?php echo $css; ?> comeet-user-text">
 						<?php echo $details['value'] ?>

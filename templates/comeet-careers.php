@@ -14,18 +14,20 @@ if (isset($comeetgroups) && !empty($comeetgroups)) {
 				</div>
 				<div class="comeet-u-1-2">
 					<div class="comeet-list">
+                        <ul class="comeet-positions-list">
 						<?php
-						echo '<ul class="comeet-positions-list" test-6>';
 						if (isset($data)) {
                             foreach ($data as $post) {
                                 if (isset($group_element)) {
-                                    if (ComeetData::is_category($post, $group_element, $category)) {
-                                        $href = rtrim($base,'/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . '/' . $post['uid'] . '/' . strtolower(clean($post['name'])) . '/all';
-                                        echo '<li class="comeet-position">';
-                                        echo '<div class="comeet-position-name">';
-                                        echo '<a href="' . $href . '">' . $post['name'] . '</a>';
-                                        echo '</div>';
-                                        echo '<div class="comeet-position-meta">';
+                                    if ($this->check_comeet_is_category_short($post, $group_element, $category)) {
+                                        $href = $this->generate_careers_url($base, $category, $post);
+                                        ?>
+                                        <li class="comeet-position">
+                                            <div class="comeet-position-name">
+                                                <a href="<?= $href?>"><?=$post['name']?></a>
+                                            </div>
+                                            <div class="comeet-position-meta">
+                                    <?php
                                         if ($comeet_group == 0) {
                                             echo $post['department'];
                                         } else {
@@ -37,13 +39,16 @@ if (isset($comeetgroups) && !empty($comeetgroups)) {
                                         if (!$post['experience_level'] == NULL || !$post['experience_level'] == "") {
                                             echo '  &middot;  ' . $post['experience_level'];
                                         }
-                                        echo '</div></li>';
+                                        ?>
+                                            </div>
+                                        </li>
+                                        <?php
                                     }
                                 }
                             }
                         }
-						echo '</ul>';
 						?>
+                        </ul>
 					</div>
 				</div>
 			</div>
