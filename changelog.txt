@@ -15,3 +15,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - Added comeet-reset.css file with basic css rules to allow for a good display regardless of the theme being used.
 ### Changed
  - comeet.php, enqueing the new css file.
+
+
+## [1.6.9.6] - 2018-05-07
+### Changed
+ - Template files:
+    comeet-cateers.php
+    comeet-position-page-common.php
+    commet-sub-page-custom.php
+
+  All logic replaced with functions that reside in the class.
+  To allow easier templating and updating of the plugin with future versions of the plugin.
