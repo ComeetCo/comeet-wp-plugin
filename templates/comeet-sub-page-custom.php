@@ -1,23 +1,10 @@
 <?php
-if(isset($_GET['debug_comeet_plugin'])){
-    echo "<pre>";
-    echo "Template page: comeet-sub-page-custom.php - ".__LINE__."<br />";
-    echo "Data: <br />";
-    print_r($data);
-    echo "<br /> Comeetgroups:";
-    print_r($comeetgroups);
-    echo "<br /> Comeet sub group is:";
-    print_r($sub_group);
-    echo "<br /> Comeet cat is:";
-    print_r($comeet_cat);
-    echo "<br /> comeet search result count:";
-    print_r(count(comeet_search($data, $sub_group, $comeet_cat)));
-    echo "</pre>";
-}
+$comeet_count_result = count(comeet_search($data, $sub_group, $comeet_cat));
+$this->plugin_debug(['Template page: comeet-sub-page-custom.php', 'Data:', 'Comeetgroups:', $comeetgroups, 'Comeet sub group is:', $sub_group, 'Comeet cat is:', $comeet_cat, 'comeet search result count:', $comeet_count_result], __LINE__, __FILE__);
 
 ?>
 <div class="comeet-outer-wrapper">
-<?php if (isset($comeetgroups) && !empty($comeetgroups) && count(comeet_search($data, $sub_group, $comeet_cat)) > 0) { ?>
+<?php if (isset($comeetgroups) && !empty($comeetgroups) && $comeet_count_result > 0) { ?>
     <h2 class="comeet-group-name">
         <?php $this->sub_page_logic($data, $sub_group, $comeet_cat);?>
     </h2>

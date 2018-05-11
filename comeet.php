@@ -847,12 +847,7 @@ if (!class_exists('Comeet')) {
             if ($this->isComeetContentPage) {
                 if (isset($this->comeet_pos)) {
                     $this->post_data = ComeetData::get_position_data($this->get_options(), $this->comeet_pos);
-                    if(isset($_GET['debug_comeet_plugin'])){
-                        echo "<pre>";
-                        echo "Fetched post data - within comeet_preload_data is - comeet.php ".__LINE__.": <br />";
-                        print_r($this->post_data);
-                        echo "</pre>";
-                    }
+                    $this->plugin_debug(['Fetched post data - within comeet_preload_data is', $this->post_data], __LINE__, __FILE__);
                     $this->socialGraphDescription = ComeetData::get_property_value($this->post_data['details'], 'Description');
                     $this->title = 'Job opportunity: '.$this->post_data['name'];
                     $this->socialGraphTitle = $this->title;
@@ -878,11 +873,7 @@ if (!class_exists('Comeet')) {
             $this->add_frontend_css();
             $this->add_frontend_scripts();
             $text .= $this->comeet_add_template();
-            if(isset($_GET['debug_comeet_plugin'])){
-                echo "<pre>";
-                print_r('Comeet Shortcode detected - Commet-data - comeet.php '.__LINE__);
-                echo "</pre>";
-            }
+            $this->plugin_debug(['Comeet Shortcode detected - Commet-data'], __LINE__, __FILE__);
             return $text;
         }
 
@@ -1055,11 +1046,7 @@ if (!class_exists('Comeet')) {
                 $template = 'comeet-careers.php';
             }
             $template = $this->get_template_path_or_die($template);
-            if(isset($_GET['debug_comeet_plugin'])){
-                echo "<pre>";
-                print_r('Selected template file is: '.$template.' - comeet.php - '.__LINE__);
-                echo "</pre>";
-            }
+            $this->plugin_debug(['Selected template file is: '.$template], __LINE__, __FILE__);
             ob_start();
             include_once($template);
             $output = ob_get_contents();
@@ -1114,21 +1101,7 @@ if (!class_exists('Comeet')) {
 
         //404 cases handling
         function override_404() {
-            if(isset($_GET['debug_comeet_plugin'])) {
-                echo "<pre>";
-                echo "comeet.php - ".__LINE__." Query var data:<br />";
-                echo "//{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
-                echo "<br />";
-                print_r(get_query_var('pagename'));
-                echo "<br />";
-                print_r(get_query_var('comeet_cat'));
-                echo "<br />";
-                print_r(get_query_var('comeet_pos'));
-                echo "<br />";
-                print_r(get_query_var('comeet_all'));
-                echo "<br />";
-                echo "</pre>";
-            }
+            $this->plugin_debug([get_query_var('pagename'), get_query_var('comeet_cat'), get_query_var('comeet_pos'), get_query_var('comeet_all')], __LINE__, __FILE__);
             if (is_404()) {
                 //getting the plugin options
                 $options = get_option('Comeet_Options');
@@ -1366,6 +1339,15 @@ if (!class_exists('Comeet')) {
 
         public function get_position_title($name){
             return $name === 'Description' ? 'About The Position' : $name;
+        }
+
+        public function plugin_debug($message, $line, $file){
+            if(isset($_GET['debug_comeet_plugin'])){
+                echo "<pre>";
+                echo $file." - ".$line."<br />";
+                print_r($message);
+                echo "</pre>";
+            }
         }
 
     } //  End class

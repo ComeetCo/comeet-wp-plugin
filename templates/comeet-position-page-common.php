@@ -1,14 +1,6 @@
 <div>
 <?php
-if(isset($_GET['debug_comeet_plugin'])){
-    echo "<pre>";
-    echo "Template page: comeet-position-page-common.php - ".__LINE__."<br />";
-    echo "Data: <br />";
-    print_r($this->post_data);
-    echo "<br />Post data is: <br />";
-    print_r($post);
-    echo "</pre>";
-}
+$this->plugin_debug(['Template page: comeet-position-page-common.php', 'Data:', $this->post_data, $post], __LINE__, __FILE__);
 if (empty($this->post_data) || (isset($this->post_data) && (isset($this->post_data['status'])) && ($this->post_data['status'] == 404))) {
 	$careerurl = site_url() . (isset($post) ? '/' . $post->post_name : '');
 	//echo '<meta http-equiv="refresh" content="5; url=' . $careerurl .'" />';
