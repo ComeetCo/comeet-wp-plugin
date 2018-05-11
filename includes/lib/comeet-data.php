@@ -35,53 +35,100 @@ class ComeetData {
         return $result1;
     }
 
+
+    static function get_api_data($options, $position = false) {
+        //Read main data for all positions
+        $transient_prefix = 'comeet-all-data';
+        $transient_data = get_transient($transient_prefix);
+        if(isset($_GET['comeet_disable_cache'])) {
+            $transient_data = false;
+        }
+
+        if(isset($_GET['commet_debug_plugin_data'])) {
+            echo "<pre>";
+            if($position){
+                echo "Specified position is: ".$position." - ".__LINE__."<br />";
+            } else {
+                echo "No position specified ".__LINE__."<br />";
+            }
+            echo "</pre>";
+        }
+
+        if($transient_data){
+            if(isset($_GET['commet_debug_plugin_data'])) {
+                echo "<pre>";
+                print_r('Data from Transient '.__LINE__);
+                echo "</pre>";
+            }
+            $all_data = $transient_data;
+        } else {
+            $comeet_post_url = "https://www.comeet.co/careers-api/2.0/company/" . $options['comeet_uid'] .
+                "/positions?token=" . $options['comeet_token'] .
+                '&details=true';
+            $all_data = self::comeet_get_data($comeet_post_url);
+            if (empty($all_data) || (isset($all_data['status']) && $all_data['status'] != 200)) {
+                if(isset($_GET['commet_debug_plugin_data'])) {
+                    echo "<pre>";
+                    print_r('Data from API - returned error - '.__LINE__.'<br />');
+                    print_r($all_data);
+                    echo "</pre>";
+                }
+                $all_data = [];
+            } else {
+                set_transient($transient_prefix, $all_data, 1800);//cache is set for 30 minutes 60 * 30 = 1800
+            }
+            if(isset($_GET['commet_debug_plugin_data'])) {
+                echo "<pre>";
+                print_r('Data from API - '.__LINE__);
+                echo "</pre>";
+            }
+        }
+        $response = [];
+        //getting specific position data
+        if($position){
+            foreach($all_data as $result){
+                if($result['uid'] == $position){
+                    $response = $result;
+                    break;
+                }
+            }
+        } else {
+            //getting all position data
+            foreach ($all_data as $key => $job) {
+                if (empty($job['department'])) {
+                    $all_data[$key]['department'] = 'Other';
+                }
+
+                if (empty($job['location']) || empty($job['location']['name'])) {
+                    if (empty($all_data[$key]['location'])) {
+                        $all_data[$key]['location'] = array();
+                    }
+                    $all_data[$key]['location']['name'] = 'Other';
+                }
+            }
+            $response = $all_data;
+        }
+        if(isset($_GET['commet_debug_plugin_data'])) {
+            echo "<pre>";
+            echo "comeet-data - ".__LINE__."<br />";
+            print_r($response);
+            echo "</pre>";
+        }
+        return $response;
+    }
+
     static function get_position_data($options, $comeet_pos) {
         if (empty($options['comeet_token']) || empty($options['comeet_uid'])) {
             return;
         }
-        $comeet_post_url = 'https://www.comeet.co/careers-api/2.0/company/' . $options["comeet_uid"] .
-            '/positions/' . $comeet_pos .
-            '?token=' . $options["comeet_token"] .
-            '&details=true';
-        $post_data = self::comeet_get_data($comeet_post_url);
-        $transient_key = self::TRANSIENT_PREFIX . $comeet_pos;
-
-        if (empty($post_data) || (isset($post_data['status']) && $post_data['status'] != 200)) {
-            $post_data = get_transient($transient_key);
-        } else {
-            set_transient($transient_key, $post_data);
-        }
-        
+        $post_data = self::get_api_data($options, $comeet_pos);
         return $post_data;
     }
 
 
     static private function fetch_groups_data($options) {
         //Read main data for all positions
-        $comeet_post_url = "https://www.comeet.co/careers-api/2.0/company/" . $options['comeet_uid'] .
-            "/positions?token=" . $options['comeet_token'] .
-            '&details=true';
-        $result1 = self::comeet_get_data($comeet_post_url);
-        $transient_key = self::TRANSIENT_PREFIX . 'comeet-groups';
-        if (empty($result1) || (isset($result1['status']) && $result1['status'] != 200)) {
-            $result1 = get_transient($transient_key);
-        } else {
-            foreach ($result1 as $key => $job) {
-                if (empty($job['department'])) {
-                    $result1[$key]['department'] = 'Other';
-                }
-
-                if (empty($job['location']) || empty($job['location']['name'])) {
-                    if (empty($result1[$key]['location'])) {
-                        $result1[$key]['location'] = array();
-                    }
-                    $result1[$key]['location']['name'] = 'Other';
-                }
-            }
-            //saving transient data
-            set_transient($transient_key, $result1);
-        }
-
+        $result1 = self::get_api_data($options);
         return $result1;
     }
 
@@ -131,18 +178,16 @@ class ComeetData {
             return [false, false, false];
         }
         $data = self::fetch_groups_data($options);
-        $transient_key = self::TRANSIENT_PREFIX . 'careers-' . $options['comeet_uid'] . '-' . $options['comeet_token'];
-
-        if (!empty($data)) {
-            set_transient($transient_key, $data);
-        } else {
-            $data = get_transient($transient_key);
+        if(isset($_GET['commet_debug_plugin_data'])){
+            echo "<pre>";
+            echo "In get_groups function: <br />";
+            print_r($data);
+            echo "</pre>";
         }
         if (empty($data)) {
             //echo $data['status'];
         } else {
             $group_element = self::get_group_element($options, $comeet_cat, $data);
-
             if ($invert_group) {
                 $group_element = self::opposite_group_element($group_element);
             }
@@ -153,6 +198,7 @@ class ComeetData {
             }
             $comeetgroups = array_unique($groupa);
             sort($comeetgroups);
+
             return [$comeetgroups, $data, $group_element];
         }
     }

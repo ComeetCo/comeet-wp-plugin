@@ -1,3 +1,21 @@
+<?php
+if(isset($_GET['commet_debug_plugin_data'])){
+    echo "<pre>";
+    echo "Template page: comeet-sub-page-custom.php - ".__LINE__."<br />";
+    echo "Data: <br />";
+    print_r($data);
+    echo "<br /> Comeetgroups:";
+    print_r($comeetgroups);
+    echo "<br /> Comeet sub group is:";
+    print_r($sub_group);
+    echo "<br /> Comeet cat is:";
+    print_r($comeet_cat);
+    echo "<br /> comeet search result count:";
+    print_r(count(comeet_search($data, $sub_group, $comeet_cat)));
+    echo "</pre>";
+}
+
+?>
 <div class="comeet-outer-wrapper">
 <?php if (isset($comeetgroups) && !empty($comeetgroups) && count(comeet_search($data, $sub_group, $comeet_cat)) > 0) { ?>
     <h2 class="comeet-group-name">

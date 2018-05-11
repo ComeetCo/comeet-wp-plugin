@@ -26,3 +26,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
   All logic replaced with functions that reside in the class.
   To allow easier templating and updating of the plugin with future versions of the plugin.
+
+
+## [1.7] - 2018-05-11
+### Changed
+ - comeet-data.php
+    Added caching to plugin - cache is for 30 minutes and then updates from API
+    Added ability to temporarily disable cache with URL flag - allows testing and force refresh of transient
+    Added debugging functionality for better handling of future issues
+ - comeet.php
+    Added debugging functionality for better handling of future issues
+ - comeet-sub-page-custom.php
+    Added debugging functionality for better handling of future issues
+ - comeet-position-page-common.php
+    Added debugging functionality for better handling of future issues
+    Fixed potential issue detected in Zooz client site.
