@@ -44,10 +44,10 @@ class ComeetData {
             $transient_data = false;
         }
 
-        if(isset($_GET['commet_debug_plugin_data'])) {
+        if(isset($_GET['debug_comeet_plugin'])) {
             echo "<pre>";
             if($position){
-                echo "Specified position is: ".$position." - ".__LINE__."<br />";
+                echo "Specified position is: ".$position." - comeet-data.php ".__LINE__."<br />";
             } else {
                 echo "No position specified ".__LINE__."<br />";
             }
@@ -55,9 +55,9 @@ class ComeetData {
         }
 
         if($transient_data){
-            if(isset($_GET['commet_debug_plugin_data'])) {
+            if(isset($_GET['debug_comeet_plugin'])) {
                 echo "<pre>";
-                print_r('Data from Transient '.__LINE__);
+                print_r('Data from Transient - comeet-data.php '.__LINE__);
                 echo "</pre>";
             }
             $all_data = $transient_data;
@@ -67,9 +67,9 @@ class ComeetData {
                 '&details=true';
             $all_data = self::comeet_get_data($comeet_post_url);
             if (empty($all_data) || (isset($all_data['status']) && $all_data['status'] != 200)) {
-                if(isset($_GET['commet_debug_plugin_data'])) {
+                if(isset($_GET['debug_comeet_plugin'])) {
                     echo "<pre>";
-                    print_r('Data from API - returned error - '.__LINE__.'<br />');
+                    print_r('Data from API - returned error - comeet-data.php '.__LINE__.'<br />');
                     print_r($all_data);
                     echo "</pre>";
                 }
@@ -77,9 +77,9 @@ class ComeetData {
             } else {
                 set_transient($transient_prefix, $all_data, 1800);//cache is set for 30 minutes 60 * 30 = 1800
             }
-            if(isset($_GET['commet_debug_plugin_data'])) {
+            if(isset($_GET['debug_comeet_plugin'])) {
                 echo "<pre>";
-                print_r('Data from API - '.__LINE__);
+                print_r('Data from API - comeet-data.php '.__LINE__);
                 echo "</pre>";
             }
         }
@@ -108,9 +108,9 @@ class ComeetData {
             }
             $response = $all_data;
         }
-        if(isset($_GET['commet_debug_plugin_data'])) {
+        if(isset($_GET['debug_comeet_plugin'])) {
             echo "<pre>";
-            echo "comeet-data - ".__LINE__."<br />";
+            echo "comeet-data.php - ".__LINE__."<br />";
             print_r($response);
             echo "</pre>";
         }
@@ -178,9 +178,9 @@ class ComeetData {
             return [false, false, false];
         }
         $data = self::fetch_groups_data($options);
-        if(isset($_GET['commet_debug_plugin_data'])){
+        if(isset($_GET['debug_comeet_plugin'])){
             echo "<pre>";
-            echo "In get_groups function: <br />";
+            echo "In get_groups function: comeet-data.php - ".__LINE__."<br />";
             print_r($data);
             echo "</pre>";
         }

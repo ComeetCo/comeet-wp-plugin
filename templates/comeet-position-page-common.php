@@ -1,8 +1,8 @@
 <div>
 <?php
-if(isset($_GET['commet_debug_plugin_data'])){
+if(isset($_GET['debug_comeet_plugin'])){
     echo "<pre>";
-    echo "Template page: comeet-position-page-common.php<br />";
+    echo "Template page: comeet-position-page-common.php - ".__LINE__."<br />";
     echo "Data: <br />";
     print_r($this->post_data);
     echo "<br />Post data is: <br />";

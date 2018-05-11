@@ -847,9 +847,9 @@ if (!class_exists('Comeet')) {
             if ($this->isComeetContentPage) {
                 if (isset($this->comeet_pos)) {
                     $this->post_data = ComeetData::get_position_data($this->get_options(), $this->comeet_pos);
-                    if(isset($_GET['commet_debug_plugin_data'])){
+                    if(isset($_GET['debug_comeet_plugin'])){
                         echo "<pre>";
-                        echo "Fetched post data - within comeet_preload_data is: <br />";
+                        echo "Fetched post data - within comeet_preload_data is - comeet.php ".__LINE__.": <br />";
                         print_r($this->post_data);
                         echo "</pre>";
                     }
@@ -878,9 +878,9 @@ if (!class_exists('Comeet')) {
             $this->add_frontend_css();
             $this->add_frontend_scripts();
             $text .= $this->comeet_add_template();
-            if(isset($_GET['commet_debug_plugin_data'])){
+            if(isset($_GET['debug_comeet_plugin'])){
                 echo "<pre>";
-                print_r('Comeet Shortcode detected - Commet-data');
+                print_r('Comeet Shortcode detected - Commet-data - comeet.php '.__LINE__);
                 echo "</pre>";
             }
             return $text;
@@ -1055,9 +1055,9 @@ if (!class_exists('Comeet')) {
                 $template = 'comeet-careers.php';
             }
             $template = $this->get_template_path_or_die($template);
-            if(isset($_GET['commet_debug_plugin_data'])){
+            if(isset($_GET['debug_comeet_plugin'])){
                 echo "<pre>";
-                print_r('Selected template file is: '.$template.' '.__LINE__);
+                print_r('Selected template file is: '.$template.' - comeet.php - '.__LINE__);
                 echo "</pre>";
             }
             ob_start();
@@ -1114,9 +1114,9 @@ if (!class_exists('Comeet')) {
 
         //404 cases handling
         function override_404() {
-            if(isset($_GET['commet_debug_plugin_data'])) {
+            if(isset($_GET['debug_comeet_plugin'])) {
                 echo "<pre>";
-                echo "Query var data:<br />";
+                echo "comeet.php - ".__LINE__." Query var data:<br />";
                 echo "//{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
                 echo "<br />";
                 print_r(get_query_var('pagename'));
