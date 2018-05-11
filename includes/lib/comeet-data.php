@@ -36,20 +36,13 @@ class ComeetData {
     }
 
 
-    static function get_api_data($options, $position = false) {
+    static function get_api_data($options) {
         //Read main data for all positions
         $transient_prefix = 'comeet-all-data';
         $transient_data = get_transient($transient_prefix);
         if(isset($_GET['comeet_disable_cache'])) {
             $transient_data = false;
         }
-
-        if($position){
-            Comeet::plugin_debug(['Specified position is: '.$position], __LINE__, __FILE__);
-        } else {
-            Comeet::plugin_debug(['No position specified'], __LINE__, __FILE__);
-        }
-
 
         if($transient_data){
             Comeet::plugin_debug(['Data from Transient'], __LINE__, __FILE__);
@@ -67,47 +60,43 @@ class ComeetData {
             }
             Comeet::plugin_debug(['Data from API '], __LINE__, __FILE__);
         }
-        $response = [];
-        //getting specific position data
-        if($position){
-            foreach($all_data as $result){
-                if($result['uid'] == $position){
-                    $response = $result;
-                    break;
-                }
-            }
-        } else {
-            //getting all position data
-            foreach ($all_data as $key => $job) {
-                if (empty($job['department'])) {
-                    $all_data[$key]['department'] = 'Other';
-                }
-
-                if (empty($job['location']) || empty($job['location']['name'])) {
-                    if (empty($all_data[$key]['location'])) {
-                        $all_data[$key]['location'] = array();
-                    }
-                    $all_data[$key]['location']['name'] = 'Other';
-                }
-            }
-            $response = $all_data;
-        }
-        return $response;
+        return $all_data;
     }
 
     static function get_position_data($options, $comeet_pos) {
         if (empty($options['comeet_token']) || empty($options['comeet_uid'])) {
             return;
         }
-        $post_data = self::get_api_data($options, $comeet_pos);
-        return $post_data;
+        $post_data = self::get_api_data($options);
+        Comeet::plugin_debug(['Specified position is: '.$comeet_pos], __LINE__, __FILE__);
+        foreach($post_data as $data){
+            if($data['uid'] == $comeet_pos){
+                $response = $data;
+                break;
+            }
+        }
+        Comeet::plugin_debug(['Position data is: ', $response], __LINE__, __FILE__);
+        return $response;
     }
 
 
     static private function fetch_groups_data($options) {
         //Read main data for all positions
-        $result1 = self::get_api_data($options);
-        return $result1;
+        $all_data = self::get_api_data($options);
+        foreach ($all_data as $key => $job) {
+            if (empty($job['department'])) {
+                $all_data[$key]['department'] = 'Other';
+            }
+
+            if (empty($job['location']) || empty($job['location']['name'])) {
+                if (empty($all_data[$key]['location'])) {
+                    $all_data[$key]['location'] = array();
+                }
+                $all_data[$key]['location']['name'] = 'Other';
+            }
+        }
+        $response = $all_data;
+        return $response;
     }
 
     static private function get_group_element($options, $comeet_cat, $data) {
