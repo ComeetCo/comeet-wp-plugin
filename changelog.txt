@@ -41,3 +41,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - comeet-position-page-common.php
     Added debugging functionality for better handling of future issues
     Fixed potential issue detected in Zooz client site.
+
+## [1.7.1] - 2018-05-15
+### Changed
+ - comeet.php
+    Changed the way the cURL notification works. Detailed notification for Settings page, and limited notification for admin.

@@ -22,25 +22,28 @@ if (isset($comeetgroups) && !empty($comeetgroups)) {
                                     if ($this->check_comeet_is_category_short($post, $group_element, $category)) {
                                         $href = $this->generate_careers_url($base, $category, $post);
                                         ?>
-                                        <li class="comeet-position">
-                                            <div class="comeet-position-name">
-                                                <a href="<?= $href?>"><?=$post['name']?></a>
-                                            </div>
-                                            <div class="comeet-position-meta">
-                                    <?php
-                                        if ($comeet_group == 0) {
-                                            echo $post['department'];
-                                        } else {
-                                            echo $post['location']['name'];
-                                        }
-                                        if (!$post['employment_type'] == NULL || !$post['employment_type'] == "") {
-                                            echo '  &middot;  ' . $post['employment_type'];
-                                        }
-                                        if (!$post['experience_level'] == NULL || !$post['experience_level'] == "") {
-                                            echo '  &middot;  ' . $post['experience_level'];
-                                        }
-                                        ?>
-                                            </div>
+                                        <li>
+                                            <a class="comeet-position" href="<?= $href?>">
+                                                <div class="comeet-position-name">
+                                                    <!--<a href="<?= $href?>"><?=$post['name']?></a> -->
+                                                    <?=$post['name']?>
+                                                </div>
+                                                <div class="comeet-position-meta">
+                                        <?php
+                                            if ($comeet_group == 0) {
+                                                echo $post['department'];
+                                            } else {
+                                                echo $post['location']['name'];
+                                            }
+                                            if (!$post['employment_type'] == NULL || !$post['employment_type'] == "") {
+                                                echo '  &middot;  ' . $post['employment_type'];
+                                            }
+                                            if (!$post['experience_level'] == NULL || !$post['experience_level'] == "") {
+                                                echo '  &middot;  ' . $post['experience_level'];
+                                            }
+                                            ?>
+                                                </div>
+                                            </a>
                                         </li>
                                         <?php
                                     }

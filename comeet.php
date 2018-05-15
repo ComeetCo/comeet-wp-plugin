@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 1.7
+ * Version: 1.7.1
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -55,7 +55,7 @@ if (!function_exists('comeet_plugin_version_arg')) {
 if (!class_exists('Comeet')) {
 
     class Comeet {
-        public $version = '1.7';
+        public $version = '1.7.1';
         var $plugin_url;
         var $plugin_dir;
         var $db_opt = 'Comeet_Options';
@@ -301,6 +301,8 @@ if (!class_exists('Comeet')) {
                 if (!in_array('curl', get_loaded_extensions())) {
                     if ($_GET['page'] == 'comeet') {
                         add_action('admin_notices', array($this, 'admin_curl_notice'));
+                    } else {
+                        echo '<div class="error"><p>The Comeet plugin may not function properly as cURL is not enabled on the server.</p></div>';
                     }
                 }
             }
