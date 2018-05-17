@@ -171,13 +171,13 @@ li a.comeet-position {
 }
 
 @media (max-width: 480px) {
-    .comeet-g-r > [class ^ "comeet-u"] {
+    .comeet-g-r > [class^="comeet-u"] {
         width: 100%;
     }
 }
 
 @media (max-width: 767px) {
-    .comeet-g-r > [class ^ "comeet-u"] {
+    .comeet-g-r > [class^="comeet-u"] {
         width: 100%;
     }
     .comeet-visible-phone {} .comeet-hidden-phone {

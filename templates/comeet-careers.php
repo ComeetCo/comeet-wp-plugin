@@ -1,10 +1,10 @@
 <div class="comeet-outer-wrapper">
 <?php
-if (isset($comeetgroups) && !empty($comeetgroups)) {
+if (isset($comeet_groups) && !empty($comeet_groups)) {
 ?>
     <div id="d" class="comeet-groups-list">
 <?php
-	foreach ($comeetgroups as $category) {
+	foreach ($comeet_groups as $category) {
 	?>
 			<div class="comeet-g-r">
 				<div class="comeet-u-1-2">
@@ -19,7 +19,7 @@ if (isset($comeetgroups) && !empty($comeetgroups)) {
 						if (isset($data)) {
                             foreach ($data as $post) {
                                 if (isset($group_element)) {
-                                    if ($this->check_comeet_is_category_short($post, $group_element, $category)) {
+                                    if ($this->check_comeet_is_category($post, $group_element, $category)) {
                                         $href = $this->generate_careers_url($base, $category, $post);
                                         ?>
                                         <li>

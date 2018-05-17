@@ -19,10 +19,12 @@ if (!function_exists('is_iterable')) {
     }
 }
 
+//class for fetching and handling data before returning toe comeet.php and displaying.
 class ComeetData {
-
+    //cache comeet prefix.
     const TRANSIENT_PREFIX = 'comeet-';
 
+    //getting comeet data - wrapper function for the cURL call
     static private function comeet_get_data($comeeturl) {
         $url = $comeeturl . '&' . comeet_plugin_version_arg();
         $cSession = curl_init();
@@ -35,7 +37,8 @@ class ComeetData {
         return $result1;
     }
 
-
+    //getting all data from comeet API - All data = all positions
+    //please note the ?details=true flag
     static function get_api_data($options) {
         //Read main data for all positions
         $transient_prefix = 'comeet-all-data';
@@ -63,6 +66,7 @@ class ComeetData {
         return $all_data;
     }
 
+    //get data of specific position
     static function get_position_data($options, $comeet_pos) {
         if (empty($options['comeet_token']) || empty($options['comeet_uid'])) {
             return;
@@ -75,12 +79,15 @@ class ComeetData {
                 break;
             }
         }
+        //debug function
         Comeet::plugin_debug(['Position data is: ', $response], __LINE__, __FILE__);
         return $response;
     }
 
 
-    static private function fetch_groups_data($options) {
+    //fixing group data. Either leaving what it comes with,
+    //or changing empty location/department to "other", so everything has some location/department
+    static private function get_groups_data($options) {
         //Read main data for all positions
         $all_data = self::get_api_data($options);
         foreach ($all_data as $key => $job) {
@@ -136,19 +143,20 @@ class ComeetData {
         return $group_element;
     }
 
+    //getting the opostie group element for pages that display positions by location or department
     static public function opposite_group_element($group_element) {
         return $group_element === 'department' ? 'location' : 'department';
     }
+
 
     static public function get_groups($options, $comeet_cat, $invert_group = false) {
         if (empty($options['comeet_token']) || empty($options['comeet_uid'])) {
             return [false, false, false];
         }
-        $data = self::fetch_groups_data($options);
+        $data = self::get_groups_data($options);
+        //debug function
         Comeet::plugin_debug(['In get_groups function', $data], __LINE__, __FILE__);
-        if (empty($data)) {
-            //echo $data['status'];
-        } else {
+        if (empty($data)){
             $group_element = self::get_group_element($options, $comeet_cat, $data);
             if ($invert_group) {
                 $group_element = self::opposite_group_element($group_element);
@@ -158,10 +166,10 @@ class ComeetData {
             foreach ($data as $h) {
                 $groupa[] = self::get_group_value($h, $group_element);
             }
-            $comeetgroups = array_unique($groupa);
-            sort($comeetgroups);
+            $comeet_groups = array_unique($groupa);
+            sort($comeet_groups);
 
-            return [$comeetgroups, $data, $group_element];
+            return [$comeet_groups, $data, $group_element];
         }
     }
 

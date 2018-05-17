@@ -17,7 +17,7 @@
 }
 
 .comeet-position-name {
-    margin-bottom: 0 0 5px 0;
+    margin: 0 0 5px 0;
 }
 
 .comeet-list ul {
@@ -165,12 +165,12 @@
 }
 
 @media (max-width: 480px) {
-    .comeet-g-r > [class ^ "comeet-u"] {
+    .comeet-g-r > [class^="comeet-u"] {
         width: 100%;
     }
 }
 @media (max-width: 767px) {
-    .comeet-g-r > [class ^ "comeet-u"] {
+    .comeet-g-r > [class^="comeet-u"] {
         width: 100%;
     }
     .comeet-visible-phone {} .comeet-hidden-phone {

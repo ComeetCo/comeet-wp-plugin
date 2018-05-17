@@ -1,16 +1,16 @@
 <?php
 $comeet_count_result = count(comeet_search($data, $sub_group, $comeet_cat));
-$this->plugin_debug(['Template page: comeet-sub-page-custom.php', 'Data:', 'Comeetgroups:', $comeetgroups, 'Comeet sub group is:', $sub_group, 'Comeet cat is:', $comeet_cat, 'comeet search result count:', $comeet_count_result], __LINE__, __FILE__);
+$this->plugin_debug(['Template page: comeet-sub-page-custom.php', 'Data:', 'Comeetgroups:', $comeet_groups, 'Comeet sub group is:', $sub_group, 'Comeet cat is:', $comeet_cat, 'comeet search result count:', $comeet_count_result], __LINE__, __FILE__);
 
 ?>
 <div class="comeet-outer-wrapper">
-<?php if (isset($comeetgroups) && !empty($comeetgroups) && $comeet_count_result > 0) { ?>
+<?php if (isset($comeet_groups) && !empty($comeet_groups) && $comeet_count_result > 0) { ?>
     <h2 class="comeet-group-name">
-        <?php $this->sub_page_logic($data, $sub_group, $comeet_cat);?>
+        <?php $this->sub_page_get_group_value($data, $sub_group, $comeet_cat);?>
     </h2>
     <div class="comeet-groups-list">
     <?php if (isset($group_element)) { ?>
-    <?php foreach ($comeetgroups as $category) { ?>
+    <?php foreach ($comeet_groups as $category) { ?>
     <?php
         $hasGroup = $this->get_has_group($data, $group_element, $category, $sub_group, $comeet_cat);
         if ($hasGroup) { ?>

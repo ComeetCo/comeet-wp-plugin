@@ -46,3 +46,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
  - comeet.php
     Changed the way the cURL notification works. Detailed notification for Settings page, and limited notification for admin.
+
+## [2.0] - 2018-05-17
+### Changed
+ - comeet.php
+    General clean up and commenting of class code, renamed some functions and variable so everything is underscored and not underscore and cammel cased.
+    Removed some duplicate functions
+    Renamed functions to stick with standard for the plugin
+ - comeet-data.php
+    General clean up and commenting of class code.
+    Renamed functions to stick with standard for the plugin

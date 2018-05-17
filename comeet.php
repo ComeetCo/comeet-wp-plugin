@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 1.7.1
+ * Version: 2.0
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -12,7 +12,7 @@
 
 /*
 
-Copyright 2016 Comeet
+Copyright 2018 Comeet
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,8 +29,6 @@ limitations under the License.
 */
 
 include_once(ABSPATH . 'wp-admin/includes/plugin.php');
-//error_reporting(E_ALL);
-//ini_set('display_errors', 1);
 $plugin_dir = trailingslashit(plugin_dir_path(__FILE__));
 require_once($plugin_dir . 'includes/lib/comeet-data.php');
 
@@ -55,9 +53,11 @@ if (!function_exists('comeet_plugin_version_arg')) {
 if (!class_exists('Comeet')) {
 
     class Comeet {
-        public $version = '1.7.1';
+        //current plugin version - used to display version as a comment on comeet pages and in the settings page
+        public $version = '2.0';
         var $plugin_url;
         var $plugin_dir;
+        //All commet options are stored in the wp options table in an array
         var $db_opt = 'Comeet_Options';
         /*URL prefix.
          * This Prefix appears after the page slug in the URL
@@ -68,20 +68,28 @@ if (!class_exists('Comeet')) {
         */
         var $comeet_prefix = 'co';
 
-        private $isComeetContentPage;
+        private $is_comeet_content_page;
         private $comeet_pos;
         private $post_data;
-        private $socialGraphTitle;
-        private $socialGraphImage;
-        private $socialGraphDescription;
-        private $socialGraphDefaultDescription = 'Job Opportunities';
+        //title used in open graph meta tags
+        private $social_graph_title;
+        //image used in open graph meta tags
+        private $social_graph_image;
+        //description used in open graph meta tags
+        private $social_graph_description;
+        //Default description if one isn't supplied.
+        private $social_graph_default_description = 'Job Opportunities';
 
         public function __construct() {
+            //getting plugin URL
             $this->plugin_url = trailingslashit(plugin_dir_url(__FILE__));
+            //getting plugin directory
             $this->plugin_dir = trailingslashit(plugin_dir_path(__FILE__));
+
             $plugin = plugin_basename( __FILE__ );
             add_action('init', array($this, 'add_rewrite_rules'));
             if (is_admin()) {
+                //adding admin specific setting that are not needed otherwise.
                 add_action('admin_init', array($this, 'register_settings'));
                 add_action('admin_menu', array($this, 'options_page'));
                 add_action('admin_init', array($this, 'flush_permalinks'));
@@ -95,17 +103,17 @@ if (!class_exists('Comeet')) {
                 add_filter('template_redirect', array($this, 'override_404'), 10 );
             }
             add_action('the_posts', array($this, 'process_posts'), 10);
-            add_filter('wpseo_og_og_title', array($this, 'filter_og_title'));
+            add_filter('wpseo_og_og_title', array($this, 'get_og_title'));
             add_action('wp_head', array($this, 'update_header'), 12);
-            add_filter('wpseo_title', array($this, 'filter_title_simple'));
-            add_filter('wpseo_opengraph_image', array($this, 'filter_image'));
+            add_filter('wpseo_title', array($this, 'get_title'));
+            add_filter('wpseo_opengraph_image', array($this, 'get_image'));
             add_filter('wpseo_canonical', array($this, 'filter_url'));
-            add_filter('wpseo_metadesc', array($this, 'getSocialGraphDescription'));
-            add_filter('wpseo_opengraph_desc', array($this, 'getSocialGraphDescription'));
+            add_filter('wpseo_metadesc', array($this, 'get_social_graph_description'));
+            add_filter('wpseo_opengraph_desc', array($this, 'get_social_graph_description'));
             register_deactivation_hook( $plugin, 'comeet_deactivation' );
         }
 
-
+        //adding meta tags
         public function add_careers_meta_tags() {
             echo '<meta name="application-name" itemprop="name" content="Comeet Jobs" />' . PHP_EOL;
             $options = $this->get_options();
@@ -155,18 +163,19 @@ if (!class_exists('Comeet')) {
             <?php
         }
 
+        //actual funciton that checks for shortcode.
         public function has_shortcode($content) {
             return stripos($content, '[comeet_data') !== false ||
                 stripos($content, '[comeet_page') !== false;
         }
 
+        //checking if post has short code
         public function posts_has_shortcode($posts) {
             foreach ($posts as $post) {
                 if ($this->has_shortcode($post->post_content)) {
                     return true;
                 }
             }
-
             return false;
         }
 
@@ -174,47 +183,48 @@ if (!class_exists('Comeet')) {
             $this->set_is_comeet_content_page($posts);
 
             if (!is_admin()) {
-                // see https://stackoverflow.com/a/9558692/938389
+                //see https://stackoverflow.com/a/9558692/938389
                 if ($this->posts_has_shortcode($posts)) {
                     add_action('wp_head', array($this, 'add_careers_meta_tags'));
                 }
             }
-
             return $posts;
         }
 
-        public function getSocialGraphDescription($pageSetDescription = null) {
-            if (!$this->isComeetContentPage) {
-                $res = $pageSetDescription;
-            } else if ($this->socialGraphDescription) {
-                $res = $this->socialGraphDescription;
-            } else if ($pageSetDescription != null) {
-                $res = $pageSetDescription;
+        //getter function for the description for meta tags
+        public function get_social_graph_description($page_set_description = null) {
+            if (!$this->is_comeet_content_page) {
+                $res = $page_set_description;
+            } else if ($this->social_graph_description) {
+                $res = $this->social_graph_description;
+            } else if ($page_set_description != null) {
+                $res = $page_set_description;
             } else {
-                $res = $this->socialGraphDefaultDescription;
+                $res = $this->social_graph_default_description;
             }
-
             return strip_tags($res);
         }
 
-        function filter_image($imageUrl) {
-            if (isset($this->socialGraphImage)) {
-                $imageUrl = $this->socialGraphImage;
+        //getter function for the image for meta tags
+        function get_image($imageUrl) {
+            if (isset($this->social_graph_image)) {
+                $imageUrl = $this->social_graph_image;
             }
             return $imageUrl;
         }
 
+        //checking and setting the value to true of comeet page detected.
         function set_is_comeet_content_page($posts) {
-            $this->isComeetContentPage = false;
+            $this->is_comeet_content_page = false;
 
             for ($c = 0; $c < count($posts); $c++) {
                 if (has_shortcode($posts[$c]->post_content, 'comeet_data') || has_shortcode($posts[$c]->post_content, 'comeet_page')) {
-                    $this->isComeetContentPage = true;
+                    $this->is_comeet_content_page = true;
                     break;
                 }
             }
 
-            if ($this->isComeetContentPage) {
+            if ($this->is_comeet_content_page) {
                 global $wp_query;
 
                 if (isset($wp_query->query_vars['comeet_pos'])) {
@@ -232,17 +242,18 @@ if (!class_exists('Comeet')) {
             return $posts;
         }
 
+        //updating the page header with meta tags if needed.
         function update_header() {
-            if ($this->isComeetContentPage && (!is_plugin_active('wordpress-seo/wp-seo.php'))) : ?>
+            if ($this->is_comeet_content_page && (!is_plugin_active('wordpress-seo/wp-seo.php'))) : ?>
                 <!-- COMEET PLUGIN -->
                 <?php if (isset($this->title)) : ?>
                     <meta name="og:title" content="<?= $this->title ?>"/>
                 <?php endif; ?>
-                <?php if (isset($this->socialGraphImage)) : ?>
-                    <meta property="og:image" content="<?= $this->socialGraphImage ?>"/>
+                <?php if (isset($this->social_graph_image)) : ?>
+                    <meta property="og:image" content="<?= $this->social_graph_image ?>"/>
                 <?php endif; ?>
-                <meta property="og:description" content="<?= $this->getSocialGraphDescription() ?>">
-                <meta name="description" content="<?= $this->getSocialGraphDescription() ?>">
+                <meta property="og:description" content="<?= $this->get_social_graph_description() ?>">
+                <meta name="description" content="<?= $this->get_social_graph_description() ?>">
                 <meta property="og:url" content="<?= $this->get_current_url(); ?>"/>
                 <meta property="og:type" content="article" />
                 <!-- COMEET PLUGIN -->
@@ -274,6 +285,7 @@ if (!class_exists('Comeet')) {
             return $template;
         }
 
+
         public function install() {
             $this->get_options();
         }
@@ -289,6 +301,8 @@ if (!class_exists('Comeet')) {
             }
         }
 
+        //notice shown to user after plugin activation
+        //requesting he add the uid and token.
         public function admin_keys_notice() {
             $message = '';
             if (empty($this->comeet_token)) $message = 'Almost done! Just enter your <b>Comeet Token</b> in the ';
@@ -296,6 +310,8 @@ if (!class_exists('Comeet')) {
             echo '<div class="updated"><p>' . $message . ' <a href="' . admin_url('admin.php?page=comeet') . '">settings</a></p></div>';
         }
 
+        //checking if cURL is active, if not, notifications will be set, different depending on the page the user is
+        //If on the settings page, the notification will be more in depth
         public function check_for_curl() {
             if (is_admin()) {
                 if (!in_array('curl', get_loaded_extensions())) {
@@ -308,6 +324,7 @@ if (!class_exists('Comeet')) {
             }
         }
 
+        //checking if the uid and token have been set
         public function check_for_comeetapi() {
             if (is_admin()) {
                 if ((!empty($this->comeet_token) && !empty($this->comeet_uid))) {
@@ -316,6 +333,8 @@ if (!class_exists('Comeet')) {
             }
         }
 
+        //if cURL isn't active on the server and the user is in the comeet settings page,
+        //he will get this lengthy message about cURL and how to activate it.
         public function admin_curl_notice() {
             $message = 'The Comeet plugin may not function properly as cURL is not enabled on the server.<br /><br />Ensure that Curl for php is enabled and that your server can execute http requests to www.comeet.co (used to retrieve the positions data).';
             echo '<div class="error"><p>' . $message . '</p></div>';
@@ -354,6 +373,7 @@ if (!class_exists('Comeet')) {
 		</div>';
         }
 
+        //function that tests if the details the user entered work while making an API call and adds an admin notice if there is an issue.
         public function admin_comeet_api_notice() {
             $apiurl = 'https://www.comeet.co/careers-api/2.0/company/' . $this->comeet_uid . '/positions?token=' . $this->comeet_token . '&' . comeet_plugin_version_arg();
             $request = wp_remote_get($apiurl);
@@ -416,12 +436,14 @@ if (!class_exists('Comeet')) {
             add_options_page('Comeet Settings', 'Comeet', 'manage_options', 'comeet', array($this, 'handle_options'));
         }
 
+        //flush convenience function
         function flush_permalinks() {
             if(isset($_GET['settings-updated'])){
                 flush_rewrite_rules(true);
             }
         }
 
+        //adding settings
         function register_settings() {
             register_setting('comeet_options', $this->db_opt, array($this, 'validate_options'));
             $options = $this->get_options();
@@ -434,6 +456,8 @@ if (!class_exists('Comeet')) {
             $this->add_settings_sections();
         }
 
+        //adding rewrite rules to wordpress - this allows creating pretty URL's for the
+        //different pages
         function add_rewrite_rules() {
             $options = $this->get_options();
             $post = get_post($options['post_id']);
@@ -505,7 +529,7 @@ if (!class_exists('Comeet')) {
             add_settings_section(
                 'comeet_api_blank',
                 '',
-                array($this, 'comeet_api_blank'),
+                array($this, 'comeet_other_blank'),
                 'comeet'
             );
             // Other fields as needed.
@@ -598,11 +622,12 @@ if (!class_exists('Comeet')) {
             add_settings_section(
                 'comeet_advanced_blank',
                 '',
-                array($this, 'comeet_advanced_blank'),
+                array($this, 'comeet_other_blank'),
                 'comeet'
             );
         }
 
+        /*Start settings page functions*/
         function api_credentials_text() {
             echo '<div class="card" style="margin-bottom: 4em;"><p>To find these values, navigate in Comeet to Company Settings / Careers Website and make sure to enable the API. These settings are available to the company&#39;s admin. <a href="http://support.comeet.co/knowledgebase/careers-website/" target="_blank">Learn More</a></p>';
         }
@@ -612,10 +637,6 @@ if (!class_exists('Comeet')) {
       Use a different theme by specifying the templates that you would like to use.</br>
       Templates are PHP files that reside in your theme folder. <a target="_blank" href="https://developer.wordpress.org/themes/template-files-section/page-template-files/page-templates/">Learn more about page templates</a>
       </p>';
-        }
-
-        function comeet_api_blank() {
-            echo '</div>';
         }
 
         function other_text() {
@@ -635,10 +656,6 @@ if (!class_exists('Comeet')) {
         }
 
         function comeet_other_blank() {
-            echo '</div>';
-        }
-
-        function comeet_advanced_blank() {
             echo '</div>';
         }
 
@@ -741,7 +758,10 @@ if (!class_exists('Comeet')) {
 
             echo '</select></div>';
         }
+        /*End settings page functions*/
 
+
+        //clearing all commit cache
         function clear_cache() {
             global $wpdb;
 
@@ -757,7 +777,7 @@ if (!class_exists('Comeet')) {
                 delete_transient($key);
             }
         }
-
+        //checking if options have been updated, if yes, clearing cache
         function check_option($option, $old_value, $new_value) {
             if ($option !== 'Comeet_Options') {
                 return;
@@ -779,6 +799,7 @@ if (!class_exists('Comeet')) {
 
             $valid['comeet_token'] = (isset($input['comeet_token'])) ? $input['comeet_token'] : "";
             $valid['comeet_uid'] = (isset($input['comeet_uid'])) ? $input['comeet_uid'] : "";
+
             $valid['location'] = (isset($input['location'])) ? $input['location'] : "";
             $valid['comeet_color'] = (isset($input['comeet_color'])) ? $input['comeet_color'] : "";
             $valid['comeet_bgcolor'] = (isset($input['comeet_bgcolor'])) ? $input['comeet_bgcolor'] : "";
@@ -786,6 +807,7 @@ if (!class_exists('Comeet')) {
             $valid['comeet_stylesheet'] = (isset($input['comeet_stylesheet'])) ? $input['comeet_stylesheet'] : "";
             $valid['comeet_subpage_template'] = (isset($input['comeet_subpage_template'])) ? $input['comeet_subpage_template'] : "";
             $valid['comeet_positionpage_template'] = (isset($input['comeet_positionpage_template'])) ? $input['comeet_positionpage_template'] : "";
+            //thank you page id, if specified. else, leave blank and plugin template will be used.
             $valid['thank_you_id'] = (isset($input['thank_you_id'])) ? $input['thank_you_id'] : "";
 
             $valid['comeet_auto_generate_location_pages'] = (isset($input['comeet_auto_generate_location_pages'])) ? $input['comeet_auto_generate_location_pages'] : "";
@@ -812,23 +834,14 @@ if (!class_exists('Comeet')) {
             return $valid;
         }
 
-        /**
-         * Displays the plugin settings form.
-         *
-         * @access public
-         * @return void
-         */
+        //Displays the plugin settings form.
         public function handle_options() {
-            $settings = $this->db_opt;
             include_once($this->plugin_dir . 'includes/comeet-options.php');
         }
 
-        /**
-         * Creates new WP Page to attach the job listings to.
-         *
-         * @access private
-         * @return integer
-         */
+
+        //Creates new WP Page to attach the job listings to.
+        //If no page specified by user
         private function create_new_page() {
             global $user_ID;
             $page = array(
@@ -845,23 +858,23 @@ if (!class_exists('Comeet')) {
             return wp_insert_post($page);
         }
 
+        //getting comeet data
         function comeet_preload_data() {
-            if ($this->isComeetContentPage) {
+            if ($this->is_comeet_content_page) {
                 if (isset($this->comeet_pos)) {
                     $this->post_data = ComeetData::get_position_data($this->get_options(), $this->comeet_pos);
                     $this->plugin_debug(['Fetched post data - within comeet_preload_data is', $this->post_data], __LINE__, __FILE__);
-                    $this->socialGraphDescription = ComeetData::get_property_value($this->post_data['details'], 'Description');
+                    $this->social_graph_description = ComeetData::get_property_value($this->post_data['details'], 'Description');
                     $this->title = 'Job opportunity: '.$this->post_data['name'];
-                    $this->socialGraphTitle = $this->title;
-                    $this->socialGraphImage = $this->post_data['picture_url'];
+                    $this->social_graph_title = $this->title;
+                    $this->social_graph_image = $this->post_data['picture_url'];
                 } else if (isset($this->comeet_cat)) {
-
                     $options = $this->get_options();
-                    list($comeetgroups, $data, $group_element) = ComeetData::get_groups($options, $this->comeet_cat);
+                    list($comeet_groups, $data, $group_element) = ComeetData::get_groups($options, $this->comeet_cat);
                     foreach ($data as $post) {
-                        if (ComeetData::is_category($post, $group_element, $this->comeet_cat)) {
+                        if ($this->check_for_category($post, $group_element, $this->comeet_cat)) {
                             $this->title = $post[$group_element];
-                            $this->socialGraphDescription = $this->socialGraphDefaultDescription . ' - ' . ComeetData::get_group_value($post, $group_element);
+                            $this->social_graph_description = $this->social_graph_default_description . ' - ' . ComeetData::get_group_value($post, $group_element);
                             break;
                         }
                     }
@@ -870,24 +883,25 @@ if (!class_exists('Comeet')) {
 
         }
 
+
         function comeet_content($text) {
-            $options = $this->get_options();
             $this->add_frontend_css();
             $this->add_frontend_scripts();
             $text .= $this->comeet_add_template();
+            //debugging function
             $this->plugin_debug(['Comeet Shortcode detected - Commet-data'], __LINE__, __FILE__);
             return $text;
         }
 
+        //comeet custom shortcode - adding the needed styles and scripts
         function comeet_custom_shortcode($attr, $content = null) {
-            $options = $this->get_options();
             $this->add_frontend_css();
             $this->add_frontend_scripts();
             $text = $this->comeet_add_template_custom_shortcode($attr, $content);
-
             return $text;
         }
 
+        //getting short code from content
         function extract_shortcode($content) {
             $start = stripos($content, '[comeet_');
 
@@ -917,6 +931,7 @@ if (!class_exists('Comeet')) {
             return $content;
         }
 
+        //getting the URL of the thank you page, either set by user or the default the plugin has as a template.
         function get_thank_you_url($options, $careers_page) {
             if (isset($options['thank_you_id']) && !empty($options['thank_you_id'])) {
                 $post_id = $options['thank_you_id'];
@@ -938,6 +953,8 @@ if (!class_exists('Comeet')) {
             return site_url() . '/' . $careers_page->post_name . '/'.$this->comeet_prefix.'/thankyou';
         }
 
+        //adding front end hs scripts
+        //this also adds inline js for init of the comeet script
         protected function add_frontend_scripts() {
             $options = $this->get_options();
 
@@ -958,6 +975,8 @@ if (!class_exists('Comeet')) {
             wp_enqueue_script("comeet_script");
         }
 
+        //adding css files to que for front end.
+        //Different CSS file depending on the layout the user has selected.
         protected function add_frontend_css() {
             $options = $this->get_options();
             $css_url = 'css/' . $options['comeet_stylesheet'];
@@ -965,7 +984,8 @@ if (!class_exists('Comeet')) {
             wp_enqueue_style('comeet_reset_style', $this->plugin_url . 'css/comeet-reset.css', null, null, 'all');
         }
 
-        function filter_title_simple($title) {
+        //getter function for title
+        function get_title($title) {
             if (isset($this->title)) {
                 return $this->title;
             } else {
@@ -973,14 +993,7 @@ if (!class_exists('Comeet')) {
             }
         }
 
-        function filter_title($title) {
-            if (isset($this->title)) {
-                return ["title" => $this->title];
-            } else {
-                return $title;
-            }
-        }
-
+        //getting current site URL - Helper function
         function get_current_url() {
             $url = is_ssl() ? "https://" : "http://";
             $url .= $_SERVER["HTTP_HOST"];
@@ -988,7 +1001,8 @@ if (!class_exists('Comeet')) {
             return $url;
         }
 
-        function filter_url($url) {
+        //getter function for the URL
+        function get_url($url) {
             if (isset($_SERVER["HTTP_HOST"])) {
                 $url = $this->get_current_url();
 
@@ -996,11 +1010,12 @@ if (!class_exists('Comeet')) {
             return $url;
         }
 
-        function filter_og_title($tag) {
-            return $this->socialGraphTitle;
-
+        //getter function for the og title
+        function get_og_title() {
+            return $this->social_graph_title;
         }
 
+        //get template path
         function get_template_path_or_die($template) {
             $paths = array(
                 get_stylesheet_directory(),
@@ -1019,6 +1034,7 @@ if (!class_exists('Comeet')) {
             die();
         }
 
+        //adding templates
         function comeet_add_template() {
             global $wp_query;
 
@@ -1034,14 +1050,14 @@ if (!class_exists('Comeet')) {
                     $template = 'comeet-thankyou-page.php';
                 } else {
                     $show_all_link = !empty($wp_query->query_vars['comeet_all']);
-                    list($comeetgroups, $data, $group_element) = ComeetData::get_groups($options, $this->comeet_cat, true);
+                    list($comeet_groups, $data, $group_element) = ComeetData::get_groups($options, $this->comeet_cat, true);
                     $comeet_cat = $this->comeet_cat;
                     $comeet_group = $options['advanced_search'];
                     $sub_group = ComeetData::opposite_group_element($group_element);
                     $template = 'comeet-sub-page.php';
                 }
             } else {
-                list($comeetgroups, $data, $group_element) = ComeetData::get_groups($options, $this->comeet_cat);
+                list($comeet_groups, $data, $group_element) = ComeetData::get_groups($options, $this->comeet_cat);
                 $comeet_group = $options['advanced_search'];
                 $post = get_post($options['post_id']);
                 $base = get_the_permalink($post->ID);
@@ -1056,6 +1072,7 @@ if (!class_exists('Comeet')) {
             return $output;
         }
 
+        //shortcode
         function comeet_add_template_custom_shortcode($attr, $content) {
             global $wp_query;
             $options = $this->get_options();
@@ -1083,7 +1100,7 @@ if (!class_exists('Comeet')) {
                 if ($comeet_cat == 'thankyou') {
                     $template = 'comeet-thankyou-page.php';
                 } else {
-                    list($comeetgroups, $data, $group_element) = ComeetData::get_groups($options, $comeet_cat, true);
+                    list($comeet_groups, $data, $group_element) = ComeetData::get_groups($options, $comeet_cat, true);
                     $sub_group = ComeetData::opposite_group_element($group_element);
                     $template = 'comeet-sub-page-custom.php';
                 }
@@ -1206,7 +1223,8 @@ if (!class_exists('Comeet')) {
         }
 
 
-
+        //function checkes URL array for a ., if it's detected we will assume we have a job ID
+        //and return the position at which the id was detected
         private function check_for_id($interesting_parts_array){
             $counter = 0;
             $job_id_at = false;
@@ -1238,6 +1256,7 @@ if (!class_exists('Comeet')) {
             return $this->version;
         }
 
+        //generating page titles
         public function generate_page_titles($sub = false ,$category, $show_all_link = false, $base  = false){
             $options = $this->get_options();
             if($sub){
@@ -1279,19 +1298,21 @@ if (!class_exists('Comeet')) {
             return $category_link;
         }
 
-        public function sub_page_logic($data, $sub_group, $comeet_cat){
+        //getting group value - for sub page.
+        public function sub_page_get_group_value($data, $sub_group, $comeet_cat){
             foreach ( $data as $post ) {
-                if($this->check_comeet_is_category_long($post, $sub_group, $comeet_cat, true)) {
+                if($this->check_comeet_is_category($post, $sub_group, $comeet_cat, true)) {
                     echo ComeetData::get_group_value($post, $sub_group);
                     break;
                 }
             }
         }
 
+        //checking is the position has a group
         public function get_has_group($data, $group_element, $category, $sub_group, $comeet_cat){
             $hasGroup = false;
             foreach ($data as $post) {
-                if ($this->check_comeet_is_category_short($post, $group_element, $category) && $this->check_comeet_is_category_long($post, $sub_group, $comeet_cat, true)) {
+                if ($this->check_for_category($post, $group_element, $category, $sub_group, $comeet_cat)) {
                     $hasGroup = true;
                     break;
                 }
@@ -1299,50 +1320,51 @@ if (!class_exists('Comeet')) {
             return $hasGroup;
         }
 
+        //checking if position has category
         public function check_for_category($post, $group_element, $category, $sub_group, $comeet_cat){
-            if($this->check_comeet_is_category_short($post, $group_element, $category) && $this->check_comeet_is_category_long($post, $sub_group, $comeet_cat, true)){
+            if($this->check_comeet_is_category($post, $group_element, $category) && $this->check_comeet_is_category($post, $sub_group, $comeet_cat, true)){
                 return true;
             } else {
                 return false;
             }
         }
 
+        //generating sub page URL
         public function generate_sub_page_url($options, $category, $post){
             return rtrim(get_the_permalink($options['post_id']), '/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . '/' . $post['uid'] . '/' . strtolower(clean($post['name']));
         }
 
+        //generating URL's for specific positions
         public function generate_careers_url($base, $category, $post){
             return rtrim($base,'/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . '/' . $post['uid'] . '/' . strtolower(clean($post['name'])) . '/all';
         }
 
-        public function check_comeet_is_category_short($post, $group_element, $category){
-            if(ComeetData::is_category($post, $group_element, $category)){
+        //checking if category
+        public function check_comeet_is_category($post, $group, $category, $compare = false){
+            if(ComeetData::is_category($post, $group, $category, $compare)){
                 return true;
             } else {
                 return false;
             }
         }
-
-        public function check_comeet_is_category_long($post, $sub_group, $comeet_cat){
-            if(ComeetData::is_category($post, $sub_group, $comeet_cat, true)){
-                return true;
-            } else {
-                return false;
-            }
-        }
-
+        //getting all schema property names
         public function get_schema_prop($name){
             return ComeetData::get_schema_prop($name);
         }
 
+        //cleaning up the supplied name - removing everything that isn't a letter, number or underscore.
         public function get_position_css($name){
             return preg_replace('/\W+/', '', strtolower(strip_tags($name)));
         }
-
+        //returning the correct name for the position title.
         public function get_position_title($name){
             return $name === 'Description' ? 'About The Position' : $name;
         }
-
+        //debug function for printing content to the screen if needed.
+        //In template files usage is: $this->>plugin_debug($message, __LINE__, __FILE__);
+        //In comeet-data.php the usage is: Comeet::plugin_debug($message, __LINE__, __FILE__);
+        //$message can be String or Array
+        //To view the debug messages, add ?debug_comeet_plugin to the URL.
         public function plugin_debug($message, $line, $file){
             if(isset($_GET['debug_comeet_plugin'])){
                 echo "<pre>";
@@ -1354,8 +1376,8 @@ if (!class_exists('Comeet')) {
 
     } //  End class
 
+    //init class
     $Comeet = new Comeet();
-
     if ($Comeet) {
         register_activation_hook(__FILE__, array(&$Comeet, 'install'));
 
@@ -1375,9 +1397,6 @@ if (!class_exists('Comeet')) {
             }
         }
         add_action( 'activated_plugin', 'comeet_activation_redirect' );
-
     }
-
-
 }
 ?>
