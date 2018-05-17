@@ -872,7 +872,7 @@ if (!class_exists('Comeet')) {
                     $options = $this->get_options();
                     list($comeet_groups, $data, $group_element) = ComeetData::get_groups($options, $this->comeet_cat);
                     foreach ($data as $post) {
-                        if ($this->check_for_category($post, $group_element, $this->comeet_cat)) {
+                        if (ComeetData::is_category($post, $group_element, $this->comeet_cat)) {
                             $this->title = $post[$group_element];
                             $this->social_graph_description = $this->social_graph_default_description . ' - ' . ComeetData::get_group_value($post, $group_element);
                             break;
@@ -1036,6 +1036,7 @@ if (!class_exists('Comeet')) {
 
         //adding templates
         function comeet_add_template() {
+
             global $wp_query;
 
             $comeet_cat = null;
@@ -1065,6 +1066,7 @@ if (!class_exists('Comeet')) {
             }
             $template = $this->get_template_path_or_die($template);
             $this->plugin_debug(['Selected template file is: '.$template], __LINE__, __FILE__);
+            $this->plugin_debug(['Comeet Group is: ',$data,$group_element], __LINE__, __FILE__);
             ob_start();
             include_once($template);
             $output = ob_get_contents();

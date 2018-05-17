@@ -56,3 +56,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - comeet-data.php
     General clean up and commenting of class code.
     Renamed functions to stick with standard for the plugin
+ - comeet-basic.css
+    Fixed error in the css
+ - comeet-two-columns.css
+    Fixed error in the css
