@@ -4,8 +4,6 @@ Comeet is a collaborative recruiting platform. It’s API allows Comeet customer
 
 == Description ==
 
-The Comeet WordPress plug-in allows WordPress website owners to add the careers pages to the company’s website to allow candidates to apply for positions and employees to share
-positions.
+This plug-in is open source and available to anyone who uses the Comeet recruiting platform and wants to showcase their career openings on a WordPress site.
 
-For installation instructions and FAQs please visit:
-http://support.comeet.co/knowledgebase/wordpress-plug-in/
+Provided as-is, we do not provide support for installation of the plug-in on individual websites. We invite you to post your feature requests and report problems on this page.
