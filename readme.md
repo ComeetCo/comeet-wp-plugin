@@ -1,6 +1,6 @@
-**This plug-in is open source and available to anyone who uses the Comeet recruiting platform and wants to showcase their career openings on a WordPress site.** 
+**This plug-in is available to anyone who uses the Comeet recruiting platform and wants to showcase their career openings on a WordPress site.** 
 
-**Provided as-is, we do not provide support for installation of the plug-in on individual websites. We invite you to post your feature requests and report problems on this page.**
+**IMPORTANT: Provided as-is, we do not provide support for installation of the plug-in on individual websites. We invite you to post your feature requests and report problems on this page.**
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
