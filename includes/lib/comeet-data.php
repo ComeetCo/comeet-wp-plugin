@@ -156,7 +156,7 @@ class ComeetData {
         $data = self::get_groups_data($options);
         //debug function
         Comeet::plugin_debug(['In get_groups function', $data], __LINE__, __FILE__);
-        if (empty($data)){
+        if (!empty($data)){
             $group_element = self::get_group_element($options, $comeet_cat, $data);
             if ($invert_group) {
                 $group_element = self::opposite_group_element($group_element);
