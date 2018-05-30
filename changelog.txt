@@ -60,3 +60,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     Fixed error in the css
  - comeet-two-columns.css
     Fixed error in the css
+
+## [2.0.0.1] - 2018-05-30
+### Fix
+ -comeet-data.php
+    Added missing !
+    It being missing wouldn't let content be displayed even when it existed.
