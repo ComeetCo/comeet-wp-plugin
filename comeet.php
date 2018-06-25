@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 2.0.0.1
+ * Version: 2.0.1.0
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.0.0.1';
+        public $version = '2.0.1.0';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -211,6 +211,26 @@ if (!class_exists('Comeet')) {
                 $imageUrl = $this->social_graph_image;
             }
             return $imageUrl;
+        }
+        function filter_url($canonical){
+            global $wp_query;
+            $extra = '';
+            if(isset($wp_query->query_vars['comeet_pos'])){
+                $position_cleaned_name = clean($this->post_data['name']);
+                //there is a position variable so this is a position page
+                $comeet_pos = (isset($wp_query->query_vars['comeet_pos'])) ? $wp_query->query_vars['comeet_pos'] : '';
+                $comeet_cat = (isset($wp_query->query_vars['comeet_cat'])) ? $wp_query->query_vars['comeet_cat'] : '';
+                $comeet_all = (isset($wp_query->query_vars['comeet_all'])) ? $wp_query->query_vars['comeet_all'] : '';
+                $extra = $this->comeet_prefix.'/'.$comeet_cat.'/'.$comeet_pos.'/'.$position_cleaned_name.$comeet_all.'/';
+            } else if(isset($wp_query->query_vars['comeet_cat'])) {
+                //category/department page
+                $comeet_cat = (isset($wp_query->query_vars['comeet_cat'])) ? $wp_query->query_vars['comeet_cat'] : '';
+                $comeet_all = (isset($wp_query->query_vars['comeet_all'])) ? $wp_query->query_vars['comeet_all'] : '';
+                $extra = $this->comeet_prefix.'/'.$comeet_cat.$comeet_all.'/';
+            }
+            //Adding additional data to the supplied Canonical string.
+            $canonical = $canonical.$extra;
+            return $canonical;
         }
 
         //checking and setting the value to true of comeet page detected.
@@ -1066,7 +1086,10 @@ if (!class_exists('Comeet')) {
             }
             $template = $this->get_template_path_or_die($template);
             $this->plugin_debug(['Selected template file is: '.$template], __LINE__, __FILE__);
-            $this->plugin_debug(['Comeet Group is: ',$data,$group_element], __LINE__, __FILE__);
+            if(isset($data) && isset($group_element)){
+                $this->plugin_debug(['Comeet Group is: ',$data,$group_element], __LINE__, __FILE__);
+            }
+
             ob_start();
             include_once($template);
             $output = ob_get_contents();

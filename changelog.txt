@@ -66,3 +66,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  -comeet-data.php
     Added missing !
     It being missing wouldn't let content be displayed even when it existed.
+
+## [2.0.1.0] - 2018-06-25
+### Fix
+ -comeet-data.php
+    Stopped calling function from Comeet statically as it was throwing a Deprected warning - created an identical static function in comeet-data and calling that statically
+ -comeet.php Better handling of the debug function, in some cases the function was being called with variables that were not set - checking for variable isset now first (not in all cases)
+ -comeet-position-page-common.php Better handling of the debug function, in some cases the function was being called with variables that were not set - checking for variable isset now first (not in all cases)

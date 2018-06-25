@@ -48,7 +48,7 @@ class ComeetData {
         }
 
         if($transient_data){
-            Comeet::plugin_debug(['Data from Transient'], __LINE__, __FILE__);
+            ComeetData::plugin_debug(['Data from Transient'], __LINE__, __FILE__);
             $all_data = $transient_data;
         } else {
             $comeet_post_url = "https://www.comeet.co/careers-api/2.0/company/" . $options['comeet_uid'] .
@@ -56,12 +56,12 @@ class ComeetData {
                 '&details=true';
             $all_data = self::comeet_get_data($comeet_post_url);
             if (empty($all_data) || (isset($all_data['status']) && $all_data['status'] != 200)) {
-                Comeet::plugin_debug(['Data from API - returned error', $all_data], __LINE__, __FILE__);
+                ComeetData::plugin_debug(['Data from API - returned error', $all_data], __LINE__, __FILE__);
                 $all_data = [];
             } else {
                 set_transient($transient_prefix, $all_data, 1800);//cache is set for 30 minutes 60 * 30 = 1800
             }
-            Comeet::plugin_debug(['Data from API '], __LINE__, __FILE__);
+            ComeetData::plugin_debug(['Data from API '], __LINE__, __FILE__);
         }
         return $all_data;
     }
@@ -72,7 +72,7 @@ class ComeetData {
             return;
         }
         $post_data = self::get_api_data($options);
-        Comeet::plugin_debug(['Specified position is: '.$comeet_pos], __LINE__, __FILE__);
+        ComeetData::plugin_debug(['Specified position is: '.$comeet_pos], __LINE__, __FILE__);
         foreach($post_data as $data){
             if($data['uid'] == $comeet_pos){
                 $response = $data;
@@ -80,7 +80,7 @@ class ComeetData {
             }
         }
         //debug function
-        Comeet::plugin_debug(['Position data is: ', $response], __LINE__, __FILE__);
+        ComeetData::plugin_debug(['Position data is: ', $response], __LINE__, __FILE__);
         return $response;
     }
 
@@ -155,7 +155,7 @@ class ComeetData {
         }
         $data = self::get_groups_data($options);
         //debug function
-        Comeet::plugin_debug(['In get_groups function', $data], __LINE__, __FILE__);
+        ComeetData::plugin_debug(['In get_groups function', $data], __LINE__, __FILE__);
         if (!empty($data)){
             $group_element = self::get_group_element($options, $comeet_cat, $data);
             if ($invert_group) {
@@ -259,6 +259,15 @@ class ComeetData {
         }
 
         return false;
+    }
+
+    static function plugin_debug($message, $line, $file){
+        if(isset($_GET['debug_comeet_plugin'])){
+            echo "<pre>";
+            echo $file." - ".$line."<br />";
+            print_r($message);
+            echo "</pre>";
+        }
     }
 }
 
