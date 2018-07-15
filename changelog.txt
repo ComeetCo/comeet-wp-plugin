@@ -73,3 +73,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     Stopped calling function from Comeet statically as it was throwing a Deprected warning - created an identical static function in comeet-data and calling that statically
  -comeet.php Better handling of the debug function, in some cases the function was being called with variables that were not set - checking for variable isset now first (not in all cases)
  -comeet-position-page-common.php Better handling of the debug function, in some cases the function was being called with variables that were not set - checking for variable isset now first (not in all cases)
+
+
+## [2.0.1.1] - 2018-07-15
+### Fix
+ -comeet.php
+    Fixing issue with job posting Schema.
