@@ -126,7 +126,7 @@ if (!class_exists('Comeet')) {
         public function add_job_posting_js_schema(){
             $positions_details = '';
             foreach($this->post_data['details'] as $detail){
-                $positions_details .= "<b>".$detail['name']."</b><br />".$detail['value']."<br />";
+                $positions_details .= "<b>".$detail['name']."</b><br />".addslashes($detail['value'])."<br />";
             }
             ?>
             <script type="application/ld+json">{
@@ -157,7 +157,7 @@ if (!class_exists('Comeet')) {
                         }
                     },
                     "image": "<?= $this->post_data['picture_url']?>",
-                    "description": "<?= $positions_details?>"
+                    "description": "<?= $positions_details;?>"
                     }
                 </script>
             <?php

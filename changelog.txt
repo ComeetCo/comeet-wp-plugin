@@ -79,3 +79,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fix
  -comeet.php
     Fixing issue with job posting Schema.
+
+## [2.0.1.2] - 2018-07-16
+### Fix
+ -comeet.php
+    Fixing issue with job posting Schema - The descrioption could have slashes that would cause the JSON to not be valid.
+    Fix - Addslashes to the descriotion value - so special characters are escaped.
