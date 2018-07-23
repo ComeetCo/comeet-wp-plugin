@@ -14,7 +14,7 @@ If you wish to contribute to the plug-in’s evolution, we’d love to get your 
 Comeet is a collaborative recruiting platform. It's [Careers API](http://support.comeet.co/knowledgebase/careers-api/) allows Comeet customers to create a customized careers website using the job openings data that resides in Comeet.
 
 # Pre-requisites
- - You should have your Comeet company identifiers (UID and Token) and the API access should be enabled.
+ - You should have your Comeet company identifiers (UID and Token).
  - You should have permalinks enabled in your WordPress website.
  
 # Installation
