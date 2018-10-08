@@ -22,6 +22,9 @@ if (!function_exists('is_iterable')) {
 //class for fetching and handling data before returning toe comeet.php and displaying.
 class ComeetData {
 
+    //cache comeet prefix.
+    const TRANSIENT_PREFIX = 'comeet-';
+
     //getting comeet data - wrapper function for the cURL call
     static private function comeet_get_data($comeeturl) {
         $url = $comeeturl . '&' . comeet_plugin_version_arg();
