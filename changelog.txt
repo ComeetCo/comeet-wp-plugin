@@ -85,3 +85,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  -comeet.php
     Fixing issue with job posting Schema - The descrioption could have slashes that would cause the JSON to not be valid.
     Fix - Addslashes to the descriotion value - so special characters are escaped.
+
+## [2.0.2] - 2018-10-08
+### Changed
+ - comeet.php
+    Added a check for WP_error - when the API test call is made. Better handling of errors, if an error is detected, the error message will be displayed in the admin dashboard.
+ -comeet-data.php
+    Added a timeout to the cURL call that is made to the API - 5 seconds
+    Changed caching mechanism, the cache now does NOT expire automatically, but lasts for ever.
+    In addition to the Data Cache, we also store the time the last API call was made. The data will be pulled from cache for 30 minutes,
+    after 30 minutes a new API call is made and the cache is updated along with the call time.
+    If the API call fails for what ever reason, the data will continue to be pulled from Cache and the time will be reset, so another API call will not be attempted for 30 minutes.
+    This is to allow for API failure or Server issues (cURL not working for some reason) while still showing content on the front end.
+

@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 2.0.1.2
+ * Version: 2.0.2
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.0.1.2';
+        public $version = '2.0.2';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -397,18 +397,26 @@ if (!class_exists('Comeet')) {
         public function admin_comeet_api_notice() {
             $apiurl = 'https://www.comeet.co/careers-api/2.0/company/' . $this->comeet_uid . '/positions?token=' . $this->comeet_token . '&' . comeet_plugin_version_arg();
             $request = wp_remote_get($apiurl);
-            $response = $request['response'];
-            if ($response['code'] != 200) {
-                $jsonresponse = json_decode($request['body']);
-                $message = $jsonresponse->message;
-                if (strlen(trim($message)) != 0) {
-                    echo '<div class="error"><p>Settings saved but there was an error retrieving positions data: ' . $message . '</p></div>';
+            if(!is_wp_error($request)) {
+                //the response is NOT a wp_error - so we check that the response from Comeet is good.
+                $response = $request['body'];
+                if ($request['response']['code'] != 200) {
+                    $jsonresponse = json_decode($response);
+                    $message = $jsonresponse->message;
+                    if (strlen(trim($message)) != 0) {
+                        echo '<div class="error"><p>Settings saved but there was an error retrieving positions data: ' . $message . '</p></div>';
+                    } else {
+                        $message = 'Comeet - Unexpected error retrieving positions data. If the problem persists please contact us at: <a href="mailto:support@comeet.co" target="_blank">support@comeet.co</a>';
+                        echo '<div class="error"><p>' . $message . '</p></div>';
+                    }
                 } else {
-                    $message = 'Comeet - Unexpected error retrieving positions data. If the problem persists please contact us at: <a href="mailto:support@comeet.co" target="_blank">support@comeet.co</a>';
-                    echo '<div class="error"><p>' . $message . '</p></div>';
+
                 }
             } else {
-
+                //response from the all is an WP_error
+                $message = 'Comeet - Unexpected error retrieving positions data. If the problem persists please contact us at: <a href="mailto:support@comeet.co" target="_blank">support@comeet.co</a>';
+                $message .= "<br />".$request->errors['http_request_failed'][0];
+                echo '<div class="error"><p>' . $message . '</p></div>';
             }
         }
 

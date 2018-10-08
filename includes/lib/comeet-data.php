@@ -21,8 +21,6 @@ if (!function_exists('is_iterable')) {
 
 //class for fetching and handling data before returning toe comeet.php and displaying.
 class ComeetData {
-    //cache comeet prefix.
-    const TRANSIENT_PREFIX = 'comeet-';
 
     //getting comeet data - wrapper function for the cURL call
     static private function comeet_get_data($comeeturl) {
@@ -31,6 +29,7 @@ class ComeetData {
         curl_setopt($cSession, CURLOPT_URL, $url);
         curl_setopt($cSession, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($cSession, CURLOPT_CONNECTTIMEOUT, 5);
         $result = curl_exec($cSession);
         curl_close($cSession);
         $result1 = json_decode($result, true);
@@ -41,12 +40,19 @@ class ComeetData {
     //please note the ?details=true flag
     static function get_api_data($options) {
         //Read main data for all positions
+        $cache_time = 60 * 30; //30 minutes
         $transient_prefix = 'comeet-all-data';
-        $transient_data = get_transient($transient_prefix);
-        if(isset($_GET['comeet_disable_cache'])) {
+        $transient_prefix_time = 'comeet-all-data-time';
+        $transient_data = get_option($transient_prefix);
+        $transient_time = get_option($transient_prefix_time);
+        if(!$transient_time){
+            //for the first run, if transient time isn't set, we give it a value and set the transient_data to false so we make a new API call.
+            $transient_time = time();
             $transient_data = false;
         }
-
+        if(time() - $transient_time > $cache_time || isset($_GET['comeet_disable_cache'])){
+            $transient_data = false;
+        }
         if($transient_data){
             ComeetData::plugin_debug(['Data from Transient'], __LINE__, __FILE__);
             $all_data = $transient_data;
@@ -57,11 +63,17 @@ class ComeetData {
             $all_data = self::comeet_get_data($comeet_post_url);
             if (empty($all_data) || (isset($all_data['status']) && $all_data['status'] != 200)) {
                 ComeetData::plugin_debug(['Data from API - returned error', $all_data], __LINE__, __FILE__);
-                $all_data = [];
+                //we attempted to get the data from the API, there was an issue, so we fall back on the Cache
+                $all_data = get_option($transient_prefix);
+                //The api call failed, we will continue pulling from cache for the preset cache time - 30 minutes.
+                update_option($transient_prefix_time, time());
             } else {
-                set_transient($transient_prefix, $all_data, 1800);//cache is set for 30 minutes 60 * 30 = 1800
+                //API call was successfull, we update the API with the new DATA + update the cache time for later checks.
+                update_option($transient_prefix, $all_data);
+                update_option($transient_prefix_time, time());
+                ComeetData::plugin_debug(['Data from API '], __LINE__, __FILE__);
             }
-            ComeetData::plugin_debug(['Data from API '], __LINE__, __FILE__);
+
         }
         return $all_data;
     }
