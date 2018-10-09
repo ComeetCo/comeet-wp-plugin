@@ -93,7 +93,7 @@ if (!class_exists('Comeet')) {
                 add_action('admin_init', array($this, 'register_settings'));
                 add_action('admin_menu', array($this, 'options_page'));
                 add_action('admin_init', array($this, 'flush_permalinks'));
-                add_action('updated_option', array($this, 'check_option'), 10, 3);
+                //add_action('updated_option', array($this, 'check_option'), 10, 3);
                 add_filter( "plugin_action_links_$plugin", array($this, 'plugin_add_settings_link') );
             } else {
                 add_filter('template_include', array($this, 'career_page_template'), 99);
