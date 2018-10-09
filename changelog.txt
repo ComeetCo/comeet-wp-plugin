@@ -98,3 +98,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     If the API call fails for what ever reason, the data will continue to be pulled from Cache and the time will be reset, so another API call will not be attempted for 30 minutes.
     This is to allow for API failure or Server issues (cURL not working for some reason) while still showing content on the front end.
 
+## [2.0.3] - 2018-10-09
+### Changed
+ -comeet.php
+    When saving settings the cache will be cleared.
+    Please note that the cache will ONLY be cleared if the API call works correctly. If the cache exists and the API call fails cache will NOT be replaced.
+ -comeet-data.php
+    Modified the function that fetches the data. When settings are saved a new options parameter is passed into the funciton: "clear_comeet_cache", if this parameter isset in the
+    options array, the API call will be made and if succesfull the Cache will be updated. If the API call fails, cache will not be updated!

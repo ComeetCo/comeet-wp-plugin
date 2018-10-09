@@ -53,7 +53,7 @@ class ComeetData {
             $transient_time = time();
             $transient_data = false;
         }
-        if(time() - $transient_time > $cache_time || isset($_GET['comeet_disable_cache'])){
+        if(time() - $transient_time > $cache_time || isset($_GET['comeet_disable_cache']) || isset($options['clear_comeet_cache'])){
             $transient_data = false;
         }
         if($transient_data){
@@ -193,14 +193,12 @@ class ComeetData {
             if (isset($item['location']) && isset($item['location']['name'])) {
                 return $item['location']['name'];
             }
-
             return '';
         }
-        
+
         if (isset($item[$key])) {
             return $item[$key];
         }
-
         return '';
     }
 

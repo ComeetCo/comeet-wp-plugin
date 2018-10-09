@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 2.0.2
+ * Version: 2.0.3
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.0.2';
+        public $version = '2.0.3';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -475,6 +475,8 @@ if (!class_exists('Comeet')) {
         function register_settings() {
             register_setting('comeet_options', $this->db_opt, array($this, 'validate_options'));
             $options = $this->get_options();
+            $options['clear_comeet_cache'] = true;
+            $this->clear_cache($options);
             // Fetch the integration settings
             $this->comeet_token = $options['comeet_token'];
             $this->comeet_uid = $options['comeet_uid'];
@@ -790,23 +792,11 @@ if (!class_exists('Comeet')) {
 
 
         //clearing all commit cache
-        function clear_cache() {
-            global $wpdb;
-
-            $prefix  = esc_sql('_transient_' . ComeetData::TRANSIENT_PREFIX . '%');
-            $sql = $wpdb->prepare(
-                "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '%s'",
-                $prefix
-            );
-            $transients = $wpdb->get_col($sql);
-
-            foreach ($transients as $transient) {
-                $key = str_replace('_transient_', '', $transient);
-                delete_transient($key);
-            }
+        function clear_cache($options) {
+            ComeetData::get_api_data($options);
         }
         //checking if options have been updated, if yes, clearing cache
-        function check_option($option, $old_value, $new_value) {
+        /*function check_option($option, $old_value, $new_value) {
             if ($option !== 'Comeet_Options') {
                 return;
             }
@@ -814,9 +804,8 @@ if (!class_exists('Comeet')) {
             if ($old_value['comeet_token'] !== $new_value['comeet_token'] ||
                 $old_value['comeet_uid'] !== $new_value['comeet_uid']
             ) {
-                $this->clear_cache();
             }
-        }
+        }*/
 
         /**
          * Validates plugin settings form when submitted.
