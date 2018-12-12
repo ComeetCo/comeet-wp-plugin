@@ -106,3 +106,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  -comeet-data.php
     Modified the function that fetches the data. When settings are saved a new options parameter is passed into the funciton: "clear_comeet_cache", if this parameter isset in the
     options array, the API call will be made and if succesfull the Cache will be updated. If the API call fails, cache will not be updated!
+
+## [2.0.4] - 2018-12-12
+### Changed
+ -comeet.php
+    The 404 function that handles redirecting in cases that the page is a Comeet page, will not check if there are
+    GET parameters in the URL, and if so, pass them on.
+    This is to handle cases of UTM and other such parameters.

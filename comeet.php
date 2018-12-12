@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 2.0.3
+ * Version: 2.0.4
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -1160,6 +1160,13 @@ if (!class_exists('Comeet')) {
                     flush_rewrite_rules();
                     //getting full current URL
                     $url =  "//{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+                    //checking for URL GET parameters so we can push them forward.
+                    $url_parameters = explode('?', $url );
+                    $pass_on_url_paramters = '';
+                    if(count($url_parameters) > 1){
+                        //this means there were parameters
+                        $pass_on_url_paramters = $url_parameters[1];
+                    }
                     //checking if we have redirected before, if yes, we should see ?rd in the URL
                     if(!strstr($url, '?rd') && !strstr($url, '&rd')){
                         //this page has been redirected by this function before
@@ -1178,7 +1185,12 @@ if (!class_exists('Comeet')) {
                                 $build_url = '?pagename='.$post_name.'&comeet_cat='.$interesting_parts_array[0].'&comeet_pos='.$interesting_parts_array[1].'&comeet_all='.$interesting_parts_array[3];
                                 $redirect_to = home_url().$build_url;
                                 //redirecting
-                                header('Location: ' . $redirect_to . '&rd');
+                                if($pass_on_url_paramters != ''){
+                                    $redirect = $redirect_to . '&rd&'.$pass_on_url_paramters;
+                                } else {
+                                    $redirect = $redirect_to . '&rd';
+                                }
+                                header('Location: '.$redirect);
                                 die();
                             } else {
                                 //no . detected in the job ID, one should be there...
@@ -1201,8 +1213,12 @@ if (!class_exists('Comeet')) {
                                     //echo "Job ID detected at array key: ".$job_id_at."<br />";
                                     //echo $interesting_parts_array[$job_id_at];
                                     //redirect to ugly URL
-                                    header('Location: ' . $redirect_to . '&rd');
-
+                                    if($pass_on_url_paramters != ''){
+                                        $redirect = $redirect_to . '&rd&'.$pass_on_url_paramters;
+                                    } else {
+                                        $redirect = $redirect_to . '&rd';
+                                    }
+                                    header('Location: '.$redirect);
                                     die();
                                 } else {
                                     //no job id detected - 404 (non of the array items had a . in them)
@@ -1219,7 +1235,12 @@ if (!class_exists('Comeet')) {
                                 $comeet_all = $interesting_parts_array[1];
                             $build_url = '?pagename='.$post_name.'&comeet_cat='.$comeet_cat.'&comeet_all='.$comeet_all;
                             $redirect_to = home_url().$build_url;
-                            header('Location: ' . $redirect_to . '&rd');
+                            if($pass_on_url_paramters != ''){
+                                $redirect = $redirect_to . '&rd&'.$pass_on_url_paramters;
+                            } else {
+                                $redirect = $redirect_to . '&rd';
+                            }
+                            header('Location: '.$redirect);
                             die();
                         }
                     } else {
@@ -1236,7 +1257,12 @@ if (!class_exists('Comeet')) {
                             //generate the full URL
                             $redirect_to = home_url($fixed_request);
                             //redirect - ?rd is added so we can detect a second redirect and stop issues from happening.
-                            header('Location: ' . $redirect_to . '?rd');
+                            if($pass_on_url_paramters != ''){
+                                $redirect = $redirect_to . '?rd&'.$pass_on_url_paramters;
+                            } else {
+                                $redirect = $redirect_to . '?rd';
+                            }
+                            header('Location: '.$redirect);
                             die();
                         }
                     }
