@@ -113,3 +113,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     The 404 function that handles redirecting in cases that the page is a Comeet page, will not check if there are
     GET parameters in the URL, and if so, pass them on.
     This is to handle cases of UTM and other such parameters.
+
+## [2.0.5] - 2018-12-12
+### Changed
+ -comeet.php
+    Added trim to UID and Token validation function - this is to handle cases where the UID or Token that is copied and pasted has extra spaces in the start or end of the string, which can cause issues and errors.
+    Thank you page will now have the comeet.js included in the head.
