@@ -112,7 +112,7 @@ if (!class_exists('Comeet')) {
             add_filter('wpseo_opengraph_desc', array($this, 'get_social_graph_description'));
             register_deactivation_hook( $plugin, 'comeet_deactivation' );
             //adding comeet.js to the thank you page.
-            add_action( 'wp_head', array($this, 'comeet_add_js_to_thank_you_page'), 5,
+            add_action( 'wp_head', array($this, 'comeet_add_js_to_thank_you_page'), 5);
         }
 
         //adding meta tags
