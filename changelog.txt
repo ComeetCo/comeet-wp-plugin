@@ -119,3 +119,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  -comeet.php
     Added trim to UID and Token validation function - this is to handle cases where the UID or Token that is copied and pasted has extra spaces in the start or end of the string, which can cause issues and errors.
     Thank you page will now have the comeet.js included in the head.
+
+## [2.0.5.5] - 2019-13-01
+### Changed
+ -comeet.php
+    Typo fix.
