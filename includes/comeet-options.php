@@ -1,6 +1,9 @@
 <div class="wrap">
   <h2 style="min-width: 255px; max-width: 575px; margin-bottom: 2em;">
-    <img src="<?php echo plugins_url('comeet-wp-plugin/img/comeet-logo.png') ?>" style="width:110px;margin-bottom:-5px;"/>
+      <?php
+      $plugin_basename = str_replace('includes/comeet-options.php', '', plugin_basename(__FILE__));
+      ?>
+      <img src="<?php echo plugins_url($plugin_basename.'img/comeet-logo.png') ?>" style="width:110px;margin-bottom:-5px;"/>
     Careers Website
     <?php $options = $this->get_options(); 
     $post = get_post($options['post_id']);

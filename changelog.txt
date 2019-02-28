@@ -124,3 +124,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
  -comeet.php
     Typo fix.
+
+## [2.0.5.6] - 2019-28-02
+### Minor Fix
+ -comeet.php
+    Version bump
+ -includes/comeet-options.php
+    Fix issue with Comeet logo not showing. Expected Plugin folder was comeet-wp-plugin but it was sometimes different when users downloaded from Github.
+    After this fix the logo will appear no matter what the plugin folder is named.
