@@ -1,6 +1,6 @@
 <?php
 
-function clean($string) {
+function comeet_string_clean($string) {
     $fallback = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
     $fallback = preg_replace('/[^A-Za-z0-9\-]/', '', $fallback); // Removes special chars.
     return sanitize_title($string, $fallback);
@@ -206,7 +206,7 @@ class ComeetData {
         $value = self::get_group_value($item, $key);
 
         if ($cleanCompare) {
-            $value = strtolower(clean($value));
+            $value = strtolower(comeet_string_clean($value));
         }
         return $category === $value;
     }
@@ -290,7 +290,7 @@ function comeet_search($array, $key, $value) {
     if (is_array($array)) {
         $array_value = ComeetData::get_group_value($array, $key);
 
-        if (isset($array_value) && strtolower(clean($array_value)) == strtolower($value)) {
+        if (isset($array_value) && strtolower(comeet_string_clean($array_value)) == strtolower($value)) {
             $results[] = $array;
         }
 

@@ -132,3 +132,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  -includes/comeet-options.php
     Fix issue with Comeet logo not showing. Expected Plugin folder was comeet-wp-plugin but it was sometimes different when users downloaded from Github.
     After this fix the logo will appear no matter what the plugin folder is named.
+
+## [2.0.5.7] - 2019-06-03
+### Fix
+ -comeet.php
+    Version bump
+    Renamed all refrences to clean( to comeet_string_clean( to avoid naming conflicts with other functions called clean (That could appear in other plugins, themes or what not.)
+ -comeet-data.php
+    Renamed function clean() to comeet_string_clean() - Less generic name for plugin specific name, to avoid naming conflicts
+    Renamed all refrences to clean( to comeet_string_clean( to avoid naming conflicts with other functions called clean (That could appear in other plugins, themes or what not.)

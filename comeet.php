@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 2.0.5.6
+ * Version: 2.0.5.7
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.0.5.6';
+        public $version = '2.0.5.7';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -218,7 +218,7 @@ if (!class_exists('Comeet')) {
             global $wp_query;
             $extra = '';
             if(isset($wp_query->query_vars['comeet_pos'])){
-                $position_cleaned_name = clean($this->post_data['name']);
+                $position_cleaned_name = comeet_string_clean($this->post_data['name']);
                 //there is a position variable so this is a position page
                 $comeet_pos = (isset($wp_query->query_vars['comeet_pos'])) ? $wp_query->query_vars['comeet_pos'] : '';
                 $comeet_cat = (isset($wp_query->query_vars['comeet_cat'])) ? $wp_query->query_vars['comeet_cat'] : '';
@@ -1327,13 +1327,13 @@ if (!class_exists('Comeet')) {
                 //cheking if to create a link or now.
                 if(isset($options[$check_option])){
                     if($options[$check_option] == 1){
-                        $category_link = '<a href="' . rtrim(get_the_permalink($options['post_id']), '/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . (isset($show_all_link) && $show_all_link ? '/all' : '') . '">' . $category . '</a>';
+                        $category_link = '<a href="' . rtrim(get_the_permalink($options['post_id']), '/') . '/' . $this->comeet_prefix . '/' . strtolower(comeet_string_clean($category)) . (isset($show_all_link) && $show_all_link ? '/all' : '') . '">' . $category . '</a>';
                     } else {
                         $category_link = $category;
                     }
                 } else {
                     //if this parameter isn't set, it will default to creating the link.
-                    $category_link = '<a href="' . rtrim(get_the_permalink($options['post_id']), '/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . (isset($show_all_link) && $show_all_link ? '/all' : '') . '">' . $category . '</a>';
+                    $category_link = '<a href="' . rtrim(get_the_permalink($options['post_id']), '/') . '/' . $this->comeet_prefix . '/' . strtolower(comeet_string_clean($category)) . (isset($show_all_link) && $show_all_link ? '/all' : '') . '">' . $category . '</a>';
 
                 };
             } else {
@@ -1344,13 +1344,13 @@ if (!class_exists('Comeet')) {
                 //cheking if to create a link or now.
                 if(isset($options[$check_option])){
                     if($options[$check_option] == 1){
-                        $category_link = '<a href="' . rtrim($base,'/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . '/all">' . $category . '</a>';
+                        $category_link = '<a href="' . rtrim($base,'/') . '/' . $this->comeet_prefix . '/' . strtolower(comeet_string_clean($category)) . '/all">' . $category . '</a>';
                     } else {
                         $category_link = $category;
                     }
                 } else {
                     //if this parameter isn't set, it will default to creating the link.
-                    $category_link = '<a href="' . rtrim($base,'/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . '/all">' . $category . '</a>';
+                    $category_link = '<a href="' . rtrim($base,'/') . '/' . $this->comeet_prefix . '/' . strtolower(comeet_string_clean($category)) . '/all">' . $category . '</a>';
                 };
             }
             return $category_link;
@@ -1389,12 +1389,12 @@ if (!class_exists('Comeet')) {
 
         //generating sub page URL
         public function generate_sub_page_url($options, $category, $post){
-            return rtrim(get_the_permalink($options['post_id']), '/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . '/' . $post['uid'] . '/' . strtolower(clean($post['name']));
+            return rtrim(get_the_permalink($options['post_id']), '/') . '/' . $this->comeet_prefix . '/' . strtolower(comeet_string_clean($category)) . '/' . $post['uid'] . '/' . strtolower(comeet_string_clean($post['name']));
         }
 
         //generating URL's for specific positions
         public function generate_careers_url($base, $category, $post){
-            return rtrim($base,'/') . '/' . $this->comeet_prefix . '/' . strtolower(clean($category)) . '/' . $post['uid'] . '/' . strtolower(clean($post['name'])) . '/all';
+            return rtrim($base,'/') . '/' . $this->comeet_prefix . '/' . strtolower(comeet_string_clean($category)) . '/' . $post['uid'] . '/' . strtolower(comeet_string_clean($post['name'])) . '/all';
         }
 
         //checking if category
