@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 2.0.5.7
+ * Version: 2.0.6
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.0.5.7';
+        public $version = '2.0.6';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -188,9 +188,26 @@ if (!class_exists('Comeet')) {
                 //see https://stackoverflow.com/a/9558692/938389
                 if ($this->posts_has_shortcode($posts)) {
                     add_action('wp_head', array($this, 'add_careers_meta_tags'));
+                    //will check if yoast is active and if not, remove defauolt canonical and add fixed one.
+                    $this->check_for_canonical_fix();
                 }
             }
             return $posts;
+        }
+        //will check if yoast is active and if not, remove defauolt canonical and add fixed one.
+        public function check_for_canonical_fix(){
+            if ($this->is_comeet_content_page && (!is_plugin_active('wordpress-seo/wp-seo.php'))){
+                remove_action( 'wp_head', 'rel_canonical' );
+                add_action( 'wp_head', array($this, 'rel_canonical_fix'), 9 );
+            }
+        }
+
+        //adds the correct canonical + checks if coref param exists and ads if needed.
+        public function rel_canonical_fix(){
+            global $wp;
+            $current_url = home_url( $wp->request );
+            $coref = (isset($_GET['coref'])) ? "?coref=".$_GET['coref'] : "";
+            echo "<link rel=\"canonical\" href=\"".$current_url.$coref."\">\n";
         }
 
         //getter function for the description for meta tags
@@ -232,7 +249,8 @@ if (!class_exists('Comeet')) {
             }
             //Adding additional data to the supplied Canonical string.
             $canonical = $canonical.$extra;
-            return $canonical;
+            $coref = (isset($_GET['coref'])) ? "?coref=".$_GET['coref'] : "";
+            return  "<link rel=\"canonical\" href=\"".$canonical.$coref."\">\n";
         }
 
         //checking and setting the value to true of comeet page detected.
@@ -1070,6 +1088,7 @@ if (!class_exists('Comeet')) {
             $options = $this->get_options();
 
             if (isset($this->comeet_pos)) {
+
                 $post_data = $this->post_data;
                 $show_all_link = !empty($wp_query->query_vars['comeet_all']);
                 $template = 'comeet-position-page.php';
