@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 2.0.6
+ * Version: 2.0.6.1
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.0.6';
+        public $version = '2.0.6.1';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -108,6 +108,7 @@ if (!class_exists('Comeet')) {
             add_filter('wpseo_title', array($this, 'get_title'));
             add_filter('wpseo_opengraph_image', array($this, 'get_image'));
             add_filter('wpseo_canonical', array($this, 'filter_url'));
+            add_filter('wpseo_opengraph_url', array($this, 'filter_url'));
             add_filter('wpseo_metadesc', array($this, 'get_social_graph_description'));
             add_filter('wpseo_opengraph_desc', array($this, 'get_social_graph_description'));
             register_deactivation_hook( $plugin, 'comeet_deactivation' );
@@ -232,25 +233,10 @@ if (!class_exists('Comeet')) {
             return $imageUrl;
         }
         function filter_url($canonical){
-            global $wp_query;
-            $extra = '';
-            if(isset($wp_query->query_vars['comeet_pos'])){
-                $position_cleaned_name = comeet_string_clean($this->post_data['name']);
-                //there is a position variable so this is a position page
-                $comeet_pos = (isset($wp_query->query_vars['comeet_pos'])) ? $wp_query->query_vars['comeet_pos'] : '';
-                $comeet_cat = (isset($wp_query->query_vars['comeet_cat'])) ? $wp_query->query_vars['comeet_cat'] : '';
-                $comeet_all = (isset($wp_query->query_vars['comeet_all'])) ? $wp_query->query_vars['comeet_all'] : '';
-                $extra = $this->comeet_prefix.'/'.$comeet_cat.'/'.$comeet_pos.'/'.$position_cleaned_name.$comeet_all.'/';
-            } else if(isset($wp_query->query_vars['comeet_cat'])) {
-                //category/department page
-                $comeet_cat = (isset($wp_query->query_vars['comeet_cat'])) ? $wp_query->query_vars['comeet_cat'] : '';
-                $comeet_all = (isset($wp_query->query_vars['comeet_all'])) ? $wp_query->query_vars['comeet_all'] : '';
-                $extra = $this->comeet_prefix.'/'.$comeet_cat.$comeet_all.'/';
-            }
-            //Adding additional data to the supplied Canonical string.
-            $canonical = $canonical.$extra;
+            global $wp;
+            $current_url = rtrim(home_url( $wp->request ), '/').'/';
             $coref = (isset($_GET['coref'])) ? "?coref=".$_GET['coref'] : "";
-            return  "<link rel=\"canonical\" href=\"".$canonical.$coref."\">\n";
+            return  $current_url.$coref;
         }
 
         //checking and setting the value to true of comeet page detected.
