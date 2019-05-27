@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 2.0.6.1
+ * Version: 2.0.6.5
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.0.6.1';
+        public $version = '2.0.6.5';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -103,14 +103,14 @@ if (!class_exists('Comeet')) {
                 add_filter('template_redirect', array($this, 'override_404'), 10 );
             }
             add_action('the_posts', array($this, 'process_posts'), 10);
-            add_filter('wpseo_og_og_title', array($this, 'get_og_title'));
+            /*add_filter('wpseo_og_og_title', array($this, 'get_og_title'));
             add_action('wp_head', array($this, 'update_header'), 12);
             add_filter('wpseo_title', array($this, 'get_title'));
             add_filter('wpseo_opengraph_image', array($this, 'get_image'));
             add_filter('wpseo_canonical', array($this, 'filter_url'));
             add_filter('wpseo_opengraph_url', array($this, 'filter_url'));
             add_filter('wpseo_metadesc', array($this, 'get_social_graph_description'));
-            add_filter('wpseo_opengraph_desc', array($this, 'get_social_graph_description'));
+            add_filter('wpseo_opengraph_desc', array($this, 'get_social_graph_description'));*/
             register_deactivation_hook( $plugin, 'comeet_deactivation' );
             //adding comeet.js to the thank you page.
             add_action( 'wp_head', array($this, 'comeet_add_js_to_thank_you_page'), 5);
@@ -232,6 +232,20 @@ if (!class_exists('Comeet')) {
             }
             return $imageUrl;
         }
+        function add_custom_position_image($opengraph_images){
+            if (isset($this->social_graph_image)) {
+                $opengraph_images->add_image( $this->social_graph_image );
+            }
+        }
+
+        function verify_og_image_exists($ID){
+            if(has_post_thumbnail($ID)){
+                add_filter('wpseo_opengraph_image', array($this, 'get_image'));
+            } else {
+                add_action( 'wpseo_add_opengraph_images', array($this, 'add_custom_position_image') );
+            }
+        }
+
         function filter_url($canonical){
             global $wp;
             $current_url = rtrim(home_url( $wp->request ), '/').'/';
@@ -258,10 +272,26 @@ if (!class_exists('Comeet')) {
                 } else {
                     $this->comeet_cat = (isset($wp_query->query_vars['comeet_cat'])) ? urldecode($wp_query->query_vars['comeet_cat']) : null;
                 }
+
                 $this->comeet_preload_data();
-                //adding json schema to head ONLY if we are on individual job page.
+                //adding json schema to head  and modifying Yoast SEO meta tags and or no Yoast meta tags as needed, on pages that have the Comeet shortcode
+                // ONLY if we are on individual job page
                 if(isset($wp_query->query_vars['comeet_pos'])){
                     add_action('wp_head', array($this, 'add_job_posting_js_schema'));
+                    add_filter('wpseo_og_og_title', array($this, 'get_og_title'));
+                    add_action('wp_head', array($this, 'update_header'), 12);
+                    add_filter('wpseo_title', array($this, 'get_title'));
+                    //will check if feature image exists, edit it if it does, and add if not.
+                    //THere is an issue where Yoast requires that images have an extension of approved type,
+                    //Comeet returns images with no extension, so they will bot be added...
+
+                    $this->verify_og_image_exists($wp_query->queried_object->ID);
+
+                    add_filter('wpseo_canonical', array($this, 'filter_url'));
+                    add_filter('wpseo_opengraph_url', array($this, 'filter_url'));
+                    add_filter('wpseo_metadesc', array($this, 'get_social_graph_description'));
+                    add_filter('wpseo_opengraph_desc', array($this, 'get_social_graph_description'));
+
                 }
             }
 

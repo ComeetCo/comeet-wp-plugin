@@ -155,3 +155,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     Making sure the meta tag is correct + includes the coref url parameter when preset - fix for LinkedIn sharing.
     Improving how the filter_url function works - Just displaying the current URL + making sure that the coref parameter continues to pass.
     This all works with or without Yoast SEO plugin
+
+## [2.0.6.5] - 2019-27-05
+### Changed
+ -comeet.php
+    Moved Meta tag editing so that it ONLY happens if the page is a Comeet page, containing the Comeet ShortCode.
+    Improved OG:image handling
+ -comeet-data.php
+    Improved position UID comparison, we had cases where the UID's being compared where upper case and lower case, so strtolower added to ensure that they are the same case.

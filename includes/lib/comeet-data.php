@@ -89,7 +89,7 @@ class ComeetData {
         $post_data = self::get_api_data($options);
         ComeetData::plugin_debug(['Specified position is: '.$comeet_pos], __LINE__, __FILE__);
         foreach($post_data as $data){
-            if($data['uid'] == $comeet_pos){
+            if(strtolower($data['uid']) == strtolower($comeet_pos)){
                 $response = $data;
                 break;
             }
