@@ -64,7 +64,7 @@ class ComeetData {
                 "/positions?token=" . $options['comeet_token'] .
                 '&details=true';
             $all_data = self::comeet_get_data($comeet_post_url);
-            if (empty($all_data) || (isset($all_data['status']) && $all_data['status'] != 200)) {
+            if (!is_array($all_data) || (isset($all_data['status']) && $all_data['status'] != 200)) {
                 ComeetData::plugin_debug(['Data from API - returned error', $all_data], __LINE__, __FILE__);
                 //we attempted to get the data from the API, there was an issue, so we fall back on the Cache
                 $all_data = get_option($transient_prefix);

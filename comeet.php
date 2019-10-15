@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 2.0.6.5
+ * Version: 2.0.6.6
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -12,7 +12,7 @@
 
 /*
 
-Copyright 2018 Comeet
+Copyright 2019 Comeet
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.0.6.5';
+        public $version = '2.0.6.6';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -263,7 +263,6 @@ if (!class_exists('Comeet')) {
                     break;
                 }
             }
-
             if ($this->is_comeet_content_page) {
                 global $wp_query;
 
@@ -277,6 +276,7 @@ if (!class_exists('Comeet')) {
                 //adding json schema to head  and modifying Yoast SEO meta tags and or no Yoast meta tags as needed, on pages that have the Comeet shortcode
                 // ONLY if we are on individual job page
                 if(isset($wp_query->query_vars['comeet_pos'])){
+                    $this->plugin_debug([$wp_query->query_vars], __LINE__, __FILE__);
                     add_action('wp_head', array($this, 'add_job_posting_js_schema'));
                     add_filter('wpseo_og_og_title', array($this, 'get_og_title'));
                     add_action('wp_head', array($this, 'update_header'), 12);

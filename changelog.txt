@@ -163,3 +163,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     Improved OG:image handling
  -comeet-data.php
     Improved position UID comparison, we had cases where the UID's being compared where upper case and lower case, so strtolower added to ensure that they are the same case.
+
+## [2.0.6.6] - 2019-15-10
+### Changed
+ -comeet.php
+    Added debug output - this is used when debugging issues with the plugin using the debug_comeet_plugin get parameter
+### Fix
+ -comeet-data.php
+    Cases where there are no open positions would result in an error from the API (not realy, the plugin treated it as such)
+    Fixed this case by not checking for Empty (which would throw the false error) but instead checking for array.
