@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 2.0.6.6
+ * Version: 2.0.6.7
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.0.6.6';
+        public $version = '2.0.6.7';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -291,6 +291,10 @@ if (!class_exists('Comeet')) {
                     add_filter('wpseo_opengraph_url', array($this, 'filter_url'));
                     add_filter('wpseo_metadesc', array($this, 'get_social_graph_description'));
                     add_filter('wpseo_opengraph_desc', array($this, 'get_social_graph_description'));
+                    //on the Comeet Careers pages we remove the oembed meta tags as they make LinkedIn use the WRONG title
+                    //<link rel="alternate" type="application/json+oembed" href="..." />
+                    //<link rel="alternate" type="text/xml+oembed" href="..." />
+                    remove_action( 'wp_head','wp_oembed_add_discovery_links');
 
                 }
             }

@@ -172,3 +172,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  -comeet-data.php
     Cases where there are no open positions would result in an error from the API (not realy, the plugin treated it as such)
     Fixed this case by not checking for Empty (which would throw the false error) but instead checking for array.
+
+## [2.0.6.7] - 2019-21-10
+### Changed
+ -comeet.php
+    It Seems that LinkedIn fetches the title from the wrong location. As long as we have the oembed meta tags in the page,
+    LinkedIn will take the title from the oembed page/code. As a fix, on the individual position pages, we remove the oembed meta tags. (This removal is limited to the position pages)
