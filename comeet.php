@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 2.0.6.7
+ * Version: 2.0.6.8
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.0.6.7';
+        public $version = '2.0.6.8';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -1231,7 +1231,10 @@ if (!class_exists('Comeet')) {
                             if(strstr($interesting_parts_array[1], '.')){
                                 //the job id should have a . in it and one was detected
                                 //creating Ugly URL
-                                $build_url = '?pagename='.$post_name.'&comeet_cat='.$interesting_parts_array[0].'&comeet_pos='.$interesting_parts_array[1].'&comeet_all='.$interesting_parts_array[3];
+                                $build_url = 'pagename='.$post_name.'&comeet_cat='.$interesting_parts_array[0].'&comeet_pos='.$interesting_parts_array[1].'&comeet_all='.$interesting_parts_array[3];
+                                if(strstr($build_url, '?'))
+                                    $build_url = str_replace('?', '&', $build_url);
+                                $build_url = '?'.$build_url;
                                 $redirect_to = home_url().$build_url;
                                 //redirecting
                                 if($pass_on_url_paramters != ''){
@@ -1257,7 +1260,10 @@ if (!class_exists('Comeet')) {
                                     if(isset($interesting_parts_array[$job_id_at + 1]))
                                         $comeet_all = $interesting_parts_array[$job_id_at + 1];
                                     //build Ugly URL
-                                    $build_url = '?pagename='.$post_name.'&comeet_cat='.$comeet_cat.'&comeet_pos='.$comeet_pos.'&comeet_all='.$comeet_all;
+                                    $build_url = 'pagename='.$post_name.'&comeet_cat='.$comeet_cat.'&comeet_pos='.$comeet_pos.'&comeet_all='.$comeet_all;
+                                    if(strstr($build_url, '?'))
+                                        $build_url = str_replace('?', '&', $build_url);
+                                    $build_url = '?'.$build_url;
                                     $redirect_to = home_url().$build_url;
                                     //echo "Job ID detected at array key: ".$job_id_at."<br />";
                                     //echo $interesting_parts_array[$job_id_at];
@@ -1282,7 +1288,10 @@ if (!class_exists('Comeet')) {
                             $comeet_all = '';
                             if(isset($interesting_parts_array[1]))
                                 $comeet_all = $interesting_parts_array[1];
-                            $build_url = '?pagename='.$post_name.'&comeet_cat='.$comeet_cat.'&comeet_all='.$comeet_all;
+                            $build_url = 'pagename='.$post_name.'&comeet_cat='.$comeet_cat.'&comeet_all='.$comeet_all;
+                            if(strstr($build_url, '?'))
+                                $build_url = str_replace('?', '&', $build_url);
+                            $build_url = '?'.$build_url;
                             $redirect_to = home_url().$build_url;
                             if($pass_on_url_paramters != ''){
                                 $redirect = $redirect_to . '&rd&'.$pass_on_url_paramters;

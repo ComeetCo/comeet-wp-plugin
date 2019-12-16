@@ -178,3 +178,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  -comeet.php
     It Seems that LinkedIn fetches the title from the wrong location. As long as we have the oembed meta tags in the page,
     LinkedIn will take the title from the oembed page/code. As a fix, on the individual position pages, we remove the oembed meta tags. (This removal is limited to the position pages)
+
+
+## [2.0.6.8] - 2019-16-12
+### Changed
+ -comeet.php
+    Fixing issue with 404 redirects when the plugin saves bad redirections.
+    Now checking the URL for extra ? and replacing them with &
