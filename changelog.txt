@@ -185,3 +185,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  -comeet.php
     Fixing issue with 404 redirects when the plugin saves bad redirections.
     Now checking the URL for extra ? and replacing them with &
+
+## [2.0.6.9] - 2019-17-12
+### Changed
+ -comeet.php
+    No longer relying on "has_shortcode" to check if the page is a Comeet page.
+    With the use of plugins such as ACF's this is no longer reliable. We now compare the post ID to the post that was set in the Comeet Settings page.
