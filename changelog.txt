@@ -196,3 +196,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
  -comeet.php
     Job Meta Schema updated to include PostalCode and StreetAddress.
+ -comeet.php
+    Typo fix
