@@ -198,3 +198,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     Job Meta Schema updated to include PostalCode and StreetAddress.
  -comeet.php
     Typo fix
+
+## [2.1] - 2020-14-09
+### Changed
+ -comeet.php
+    Added support for new API param - location.is_remote
+    If parameter exists and is true, Google structured data to job postings will have specific data included:
+    Location will not be specified (Other then Country) and "jobLocationType" : "TELECOMMUTE" will be added.
