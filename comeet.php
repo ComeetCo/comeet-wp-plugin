@@ -144,7 +144,14 @@ if (!class_exists('Comeet')) {
                         "@type": "Organization",
                         "name": "<?= $this->post_data['company_name']?>"
                     },
-                    "jobLocation":
+                     <?php if(isset($this->post_data['location']['is_remote']) && $this->post_data['location']['is_remote']){?>
+                    "applicantLocationRequirements" : {
+                        "@type": "Country",
+                        "name" : ""<?= $this->post_data['location']['country']?>""
+                    },
+                    "jobLocationType" : "TELECOMMUTE",
+                    <?php } else { ?>
+                       "jobLocation":
                     {
                         "@type": "Place",
                         "address":
@@ -161,6 +168,7 @@ if (!class_exists('Comeet')) {
                             "streetAddress": "<?= $this->post_data['location']['street_name']?>"
                         }
                     },
+                    <?php }?>
                     "image": "<?= $this->post_data['picture_url']?>",
                     "description": "<?= $positions_details;?>"
                     }
