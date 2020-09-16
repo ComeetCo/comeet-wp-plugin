@@ -774,7 +774,7 @@ if (!class_exists('Comeet')) {
         }
 
         public function comeet_branding_box(){
-            echo '<div class="card" style="margin-bottom: 4em;"><p>Only show positions of one sub-brand of the company</p>';
+            echo '<div class="card" style="margin-bottom: 4em;"><p>Only show positions of one sub-brand of the company.</p>';
         }
 
         public function comeet_get_categories(){
