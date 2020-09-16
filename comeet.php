@@ -802,7 +802,6 @@ if (!class_exists('Comeet')) {
 
         function comeet_set_category_values(){
             $options = $this->get_options();
-            print_r($options);
             $default_display = 'style="display: none;"';
             if($options['comeet_selected_category_value'] == 'default')
                 $default_display = '';
