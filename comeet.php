@@ -12,7 +12,7 @@
 
 /*
 
-Copyright 2019 Comeet
+Copyright 2020 Comeet
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ if (!class_exists('Comeet')) {
 
         private $is_comeet_content_page;
         private $comeet_pos;
-        private $post_data;
+        public $post_data;
         //title used in open graph meta tags
         private $social_graph_title;
         //image used in open graph meta tags
@@ -144,10 +144,10 @@ if (!class_exists('Comeet')) {
                         "@type": "Organization",
                         "name": "<?= $this->post_data['company_name']?>"
                     },
-                     <?php if(isset($this->post_data['location']['is_remote']) && $this->post_data['location']['is_remote']){?>
+                    <?php if(isset($this->post_data['location']['is_remote']) && $this->post_data['location']['is_remote']){?>
                     "applicantLocationRequirements" : {
                         "@type": "Country",
-                        "name" : ""<?= $this->post_data['location']['country']?>""
+                        "name" : "<?= $this->post_data['location']['country']?>"
                     },
                     "jobLocationType" : "TELECOMMUTE",
                     <?php } else { ?>
@@ -489,7 +489,9 @@ if (!class_exists('Comeet')) {
                 'comeet_subpage_template' => 'page.php',
                 'comeet_positionpage_template' => 'page.php',
                 'comeet_auto_generate_location_pages' => '1',
-                'comeet_auto_generate_department_pages' => '1'
+                'comeet_auto_generate_department_pages' => '1',
+                'comeet_selected_category_value' => 'default',
+                'comeet_selected_category' => 'default'
             );
 
             $saved = get_option($this->db_opt);
@@ -678,6 +680,21 @@ if (!class_exists('Comeet')) {
                 array($this, 'comeet_other_blank'),
                 'comeet'
             );
+            //Branding section
+            add_settings_section(
+                'comeet_branding',
+                'Branding',
+                array($this, 'comeet_branding_box'),
+                'comeet'
+            );
+            add_settings_section(
+                'comeet_branding_blank',
+                '',
+                array($this, 'comeet_other_blank'),
+                'comeet'
+            );
+
+
             //Advanced Section
             add_settings_section(
                 'comeet_advanced_settings',
@@ -705,7 +722,29 @@ if (!class_exists('Comeet')) {
                 array($this, 'comeet_other_blank'),
                 'comeet'
             );
+
+            /*Added section for branding ability*/
+
+            add_settings_field(
+                'comeet_category_branding',
+                'Position category',
+                array($this, 'comeet_get_categories'),
+                'comeet',
+                'comeet_branding'
+            );
+
+            add_settings_field(
+                'comeet_category_value_branding',
+                'Only show positions with:',
+                array($this, 'comeet_set_category_values'),
+                'comeet',
+                'comeet_branding'
+            );
+
+
         }
+
+
 
         /*Start settings page functions*/
         function api_credentials_text() {
@@ -713,8 +752,7 @@ if (!class_exists('Comeet')) {
         }
 
         function comeet_advanced_text() {
-            echo '<div class="card" style="margin-bottom: 4em;"><p>
-      Use a different theme by specifying the templates that you would like to use.</br>
+            echo '<div class="card" style="margin-bottom: 4em;"><p>Use a different theme by specifying the templates that you would like to use.
       Templates are PHP files that reside in your theme folder. <a target="_blank" href="https://developer.wordpress.org/themes/template-files-section/page-template-files/page-templates/">Learn more about page templates</a>
       </p>';
         }
@@ -735,9 +773,97 @@ if (!class_exists('Comeet')) {
             echo '<input type="text" id="comeet_uid" name="' . $this->db_opt . '[comeet_uid]" value="' . $options['comeet_uid'] . '" size="25"  style="width:200px" />';
         }
 
+        public function comeet_branding_box(){
+            echo '<div class="card" style="margin-bottom: 4em;"><p>Use this option to filter the list of positions to only display positions of one sub-brand of the company.</p>';
+        }
+
+        public function comeet_get_categories(){
+            $disabled = "disabled=\"disabled\"";
+            $categories_and_values = get_option('comeet_categories_and_values');
+            $options = $this->get_options();
+            if(!empty($categories_and_values))
+                $disabled = '';
+
+            $selected = '';
+            if($options['comeet_selected_category'] == 'default'){
+                $selected = 'selected="selected"';
+            }
+            echo "<select name='".$this->db_opt."[comeet_selected_category]' class='branding_categories' ".$disabled.">";
+            echo "<option $selected value='default'>Show all - don't apply filters</option>";
+
+            foreach($categories_and_values as $key => $value){
+                $cat_selected = '';
+                if($options['comeet_selected_category'] == $key)
+                    $cat_selected = 'selected="selected"';
+                echo "<option ".$cat_selected." value='".$key."'>".$key."</option>";
+            }
+            echo "</select>";
+        }
+
+        function comeet_set_category_values(){
+            $options = $this->get_options();
+            print_r($options);
+            $default_display = 'style="display: none;"';
+            if($options['comeet_selected_category_value'] == 'default')
+                $default_display = '';
+            echo "<select disabled='disabled' class='comeet_default_disabled' name='branding_selected_value_disabled' ".$default_display.">";
+            echo "<option selected='selected' disabled='disabled' value='default'>Show all - don't apply filters</option>";
+            echo "</select>";
+            $categories_and_values = get_option('comeet_categories_and_values');
+            foreach($categories_and_values as $cat_key => $cat_value){
+                $disabled = 'disabled="disabled"';
+                $display_style = 'style="display: none;"';
+                if($options['comeet_selected_category'] == $cat_key){
+                    $disabled = '';
+                    $display_style = '';
+                }
+
+
+                $default_selected = '';
+                if($options['comeet_selected_category_value'] == 'default')
+                    $default_selected = 'selected="selected"';
+                echo "<select name='".$this->db_opt."[comeet_selected_category_value]' class='branding_selected_value_".$cat_key." comeet_val_select' ".$display_style." ".$disabled.">";
+                echo "<option ".$default_selected." value='default' >Show all - don't apply filters</option>";
+                foreach($categories_and_values[$cat_key] as $key => $value){
+                    $selected = '';
+                    if($options['comeet_selected_category_value'] == $value)
+                        $selected = 'selected="selected"';
+                    echo "<option ".$selected.">".$value."</option>";
+                }
+                echo "</select>";
+            }
+
+
+
+
+
+
+            echo "<script type='text/javascript'>";
+            echo "jQuery(document).ready(function($){";
+            echo "$('.branding_categories').change(function(){";
+            echo "var selected_value = $(this).val();";
+            echo "if(selected_value == 'default'){";
+            echo "$('.comeet_default_disabled').show();
+                $('.comeet_val_select').hide();
+             } else {
+                $('.comeet_default_disabled').hide();
+                $('.comeet_default_disabled').attr('disabled', 'disabled');
+                $('.comeet_val_select').hide();
+                $('.branding_selected_value_'+selected_value).show();
+                $('.branding_selected_value_'+selected_value).attr('disabled', false);
+             }
+             ";
+            echo "})";
+            echo "})";
+            echo "</script>";
+
+        }
+
         function comeet_other_blank() {
             echo '</div>';
         }
+
+
 
         function pages_input($post_id, $key, $select_text) {
             $page_opts = array();
@@ -863,7 +989,6 @@ if (!class_exists('Comeet')) {
          * @return array
          */
         function validate_options($input) {
-
             $valid['comeet_token'] = (isset($input['comeet_token'])) ? trim($input['comeet_token']) : "";
             $valid['comeet_uid'] = (isset($input['comeet_uid'])) ? trim($input['comeet_uid']) : "";
 
@@ -880,6 +1005,14 @@ if (!class_exists('Comeet')) {
             $valid['comeet_auto_generate_location_pages'] = (isset($input['comeet_auto_generate_location_pages'])) ? $input['comeet_auto_generate_location_pages'] : "";
             $valid['comeet_auto_generate_department_pages'] = (isset($input['comeet_auto_generate_department_pages'])) ? $input['comeet_auto_generate_department_pages'] : "";
 
+            $valid['comeet_selected_category'] = (isset($input['comeet_selected_category'])) ? $input['comeet_selected_category'] : "default";
+            $valid['comeet_selected_category_value'] = (isset($input['comeet_selected_category_value'])) ? $input['comeet_selected_category_value'] : "default";
+
+            if($valid['comeet_selected_category'] == 'default')
+                $valid['comeet_selected_category_value'] = 'default';
+
+            if($valid['comeet_selected_category_value'] == 'default')
+                $valid['comeet_selected_category'] = 'default';
 
             if ($input['post_id'] == '-1') {
                 // Create a new page for the job posts to appear.
@@ -1100,7 +1233,6 @@ if (!class_exists('Comeet')) {
 
             foreach ($paths as $path) {
                 $fullpath = "$path/$template";
-
                 if (file_exists($fullpath)) {
                     return $fullpath;
                 }

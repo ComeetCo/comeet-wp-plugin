@@ -76,9 +76,30 @@ class ComeetData {
                 update_option($transient_prefix_time, time());
                 ComeetData::plugin_debug(['Data from API '], __LINE__, __FILE__);
             }
+            //getting the categories and values
+            self::get_categories_and_values($all_data);
 
         }
         return $all_data;
+    }
+
+    static function get_categories_and_values($transient_data){
+        $categories_and_values = [];
+        foreach($transient_data as $position_data){
+            foreach($position_data['categories'] as $position_categories){
+                if(!array_key_exists($position_categories['name'], $categories_and_values)){
+                    $categories_and_values[$position_categories['name']] = [];
+                    if(!in_array($position_categories['value'], $categories_and_values[$position_categories['name']]) && !is_null($position_categories['value'])){
+                        $categories_and_values[$position_categories['name']][] = $position_categories['value'];
+                    }
+                } else {
+                    if(!in_array($position_categories['value'], $categories_and_values[$position_categories['name']]) && !is_null($position_categories['value'])){
+                        $categories_and_values[$position_categories['name']][] = $position_categories['value'];
+                    }
+                }
+            }
+        }
+        update_option('comeet_categories_and_values', $categories_and_values);
     }
 
     //get data of specific position
@@ -115,6 +136,21 @@ class ComeetData {
                     $all_data[$key]['location'] = array();
                 }
                 $all_data[$key]['location']['name'] = 'Other';
+            }
+
+            //checking for filtered positions -
+            //Positions filtering can be set in the Comeet settings page.
+            if($options['comeet_selected_category'] != 'default'){
+                //Position filter is set - will filter the positions accordingly
+                    $display_position = false;
+                    foreach($job['categories'] as $category){
+                        if($category['name'] == $options['comeet_selected_category'] && $category['value'] == $options['comeet_selected_category_value']){
+                            $display_position = true;
+                        }
+                    }
+                    if(!$display_position){
+                        unset($all_data[$key]);
+                    }
             }
         }
         $response = $all_data;
@@ -204,7 +240,6 @@ class ComeetData {
 
     static public function is_category($item, $key, $category, $cleanCompare = false) {
         $value = self::get_group_value($item, $key);
-
         if ($cleanCompare) {
             $value = strtolower(comeet_string_clean($value));
         }

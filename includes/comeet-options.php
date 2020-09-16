@@ -3,7 +3,7 @@
       <?php
       $plugin_basename = str_replace('includes/comeet-options.php', '', plugin_basename(__FILE__));
       ?>
-      <img src="<?php echo plugins_url($plugin_basename.'img/comeet-logo.png') ?>" style="width:110px;margin-bottom:-5px;"/>
+      <img src="<?php echo plugins_url($plugin_basename.'img/comeet-logo.svg') ?>" style="width:110px;margin-bottom:-5px;"/>
     Careers Website
     <?php $options = $this->get_options(); 
     $post = get_post($options['post_id']);

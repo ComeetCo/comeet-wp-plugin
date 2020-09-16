@@ -205,3 +205,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     Added support for new API param - location.is_remote
     If parameter exists and is true, Google structured data to job postings will have specific data included:
     Location will not be specified (Other then Country) and "jobLocationType" : "TELECOMMUTE" will be added.
+
+## [2.1] - 2020-16-09
+### update
+ -comeet.php
+    $post_data changed back to public to allow better access in template files
+    Added options for user to filter position by brand
+    Updated Comeet logo to new logo on Settings page
+
+ -comeet-data.php
+    Added position filtering based on settings set in settings page.
+    This defaults to NO filter, so all positions are shown.
+
+ -comeet-logo.png
+    File removes and replaced with comeet-logo.svg - new logo
+
+ -comeet-options.php
+    Logo replaced with new one.
+
