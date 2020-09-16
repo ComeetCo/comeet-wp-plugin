@@ -683,7 +683,7 @@ if (!class_exists('Comeet')) {
             //Branding section
             add_settings_section(
                 'comeet_branding',
-                'Branding',
+                'Sub-brand',
                 array($this, 'comeet_branding_box'),
                 'comeet'
             );
@@ -727,7 +727,7 @@ if (!class_exists('Comeet')) {
 
             add_settings_field(
                 'comeet_category_branding',
-                'Position category',
+                'Sub-brand field',
                 array($this, 'comeet_get_categories'),
                 'comeet',
                 'comeet_branding'
@@ -735,7 +735,7 @@ if (!class_exists('Comeet')) {
 
             add_settings_field(
                 'comeet_category_value_branding',
-                'Only show positions with:',
+                'Select sub-brand',
                 array($this, 'comeet_set_category_values'),
                 'comeet',
                 'comeet_branding'
@@ -774,7 +774,7 @@ if (!class_exists('Comeet')) {
         }
 
         public function comeet_branding_box(){
-            echo '<div class="card" style="margin-bottom: 4em;"><p>Use this option to filter the list of positions to only display positions of one sub-brand of the company.</p>';
+            echo '<div class="card" style="margin-bottom: 4em;"><p>Only show positions of one sub-brand of the company</p>';
         }
 
         public function comeet_get_categories(){
