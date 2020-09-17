@@ -63,6 +63,13 @@ class ComeetData {
             $comeet_post_url = "https://www.comeet.co/careers-api/2.0/company/" . $options['comeet_uid'] .
                 "/positions?token=" . $options['comeet_token'] .
                 '&details=true';
+
+            //in case of forced cache disable OR clearing comeet cache, we add a time parameter to the API
+            //URL to ensure that we get a clean un cached response from the API server.
+            if(isset($_GET['comeet_disable_cache']) || isset($options['clear_comeet_cache'])){
+                $comeet_post_url = $comeet_post_url.'?'.time();
+            }
+
             $all_data = self::comeet_get_data($comeet_post_url);
             if (!is_array($all_data) || (isset($all_data['status']) && $all_data['status'] != 200)) {
                 ComeetData::plugin_debug(['Data from API - returned error', $all_data], __LINE__, __FILE__);
