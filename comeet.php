@@ -128,8 +128,10 @@ if (!class_exists('Comeet')) {
         //function for adding json schema to header of page on individual job pages.
         public function add_job_posting_js_schema(){
             $positions_details = '';
-            foreach($this->post_data['details'] as $detail){
-                $positions_details .= "<b>".$detail['name']."</b><br />".addslashes($detail['value'])."<br />";
+            if(isset($this->post_data['details'])) {
+                foreach ($this->post_data['details'] as $detail) {
+                    $positions_details .= "<b>" . $detail['name'] . "</b><br />" . addslashes($detail['value']) . "<br />";
+                }
             }
             ?>
             <script type="application/ld+json">{

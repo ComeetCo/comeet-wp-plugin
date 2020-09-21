@@ -71,6 +71,8 @@ class ComeetData {
             }
 
             $all_data = self::comeet_get_data($comeet_post_url);
+            //debug function
+            ComeetData::plugin_debug(['URL used for API call: ', $comeet_post_url], __LINE__, __FILE__);
             if (!is_array($all_data) || (isset($all_data['status']) && $all_data['status'] != 200)) {
                 ComeetData::plugin_debug(['Data from API - returned error', $all_data], __LINE__, __FILE__);
                 //we attempted to get the data from the API, there was an issue, so we fall back on the Cache
@@ -92,16 +94,18 @@ class ComeetData {
 
     static function get_categories_and_values($transient_data){
         $categories_and_values = [];
-        foreach($transient_data as $position_data){
-            foreach($position_data['categories'] as $position_categories){
-                if(!array_key_exists($position_categories['name'], $categories_and_values)){
-                    $categories_and_values[$position_categories['name']] = [];
-                    if(!in_array($position_categories['value'], $categories_and_values[$position_categories['name']]) && !is_null($position_categories['value'])){
-                        $categories_and_values[$position_categories['name']][] = $position_categories['value'];
-                    }
-                } else {
-                    if(!in_array($position_categories['value'], $categories_and_values[$position_categories['name']]) && !is_null($position_categories['value'])){
-                        $categories_and_values[$position_categories['name']][] = $position_categories['value'];
+        if(is_array($transient_data)) {
+            foreach ($transient_data as $position_data) {
+                foreach ($position_data['categories'] as $position_categories) {
+                    if (!array_key_exists($position_categories['name'], $categories_and_values)) {
+                        $categories_and_values[$position_categories['name']] = [];
+                        if (!in_array($position_categories['value'], $categories_and_values[$position_categories['name']]) && !is_null($position_categories['value'])) {
+                            $categories_and_values[$position_categories['name']][] = $position_categories['value'];
+                        }
+                    } else {
+                        if (!in_array($position_categories['value'], $categories_and_values[$position_categories['name']]) && !is_null($position_categories['value'])) {
+                            $categories_and_values[$position_categories['name']][] = $position_categories['value'];
+                        }
                     }
                 }
             }
