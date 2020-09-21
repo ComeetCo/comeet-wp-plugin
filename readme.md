@@ -54,6 +54,13 @@ If you wish to use custom templates with a different structure or design then fo
 1. Visit the plugin settings from within WordPress.
 2. Under Advanced, specify the names of the template files the plugin should use. These template files should be available in the folder of the theme that the website uses.
 
+###Filter positions by Brand
+If you wish to filter the positions that appear on the site to show only positions for a specific Sub-brand of you company, follow these steps:
+
+1. Visit the plugin settings from within WordPress.
+2. Under "Sub-brand" , select the appropriate sub-brand field (the custom position category that indicated the brand of each position) and then select the sub-brand that you want displayed.
+3. Click Save
+
 
 ### Customize the plug-in
 If you wish to customize the structure of the content of the positions list or the position page, beyond styling using CSS, then you can customize the templates of the plug-in. To do that follow these steps:
