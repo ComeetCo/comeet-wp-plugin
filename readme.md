@@ -54,7 +54,7 @@ If you wish to use custom templates with a different structure or design then fo
 1. Visit the plugin settings from within WordPress.
 2. Under Advanced, specify the names of the template files the plugin should use. These template files should be available in the folder of the theme that the website uses.
 
-###Filter positions by Brand
+### Filter positions by Brand
 If you wish to filter the positions that appear on the site to show only positions for a specific Sub-brand of you company, follow these steps:
 
 1. Visit the plugin settings from within WordPress.
