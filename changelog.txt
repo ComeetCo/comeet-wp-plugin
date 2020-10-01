@@ -223,3 +223,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  -comeet-options.php
     Logo replaced with new one.
 
+## [2.1] - 2020-01-10
+###FIX
+ -comee-data.php
+    Fixing issue with cache force reset.
+

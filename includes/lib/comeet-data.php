@@ -67,7 +67,7 @@ class ComeetData {
             //in case of forced cache disable OR clearing comeet cache, we add a time parameter to the API
             //URL to ensure that we get a clean un cached response from the API server.
             if(isset($_GET['comeet_disable_cache']) || isset($options['clear_comeet_cache'])){
-                $comeet_post_url = $comeet_post_url.'?'.time();
+                $comeet_post_url = $comeet_post_url.'&'.time();
             }
 
             $all_data = self::comeet_get_data($comeet_post_url);
