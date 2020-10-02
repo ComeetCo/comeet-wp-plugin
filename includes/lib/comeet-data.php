@@ -96,15 +96,17 @@ class ComeetData {
         $categories_and_values = [];
         if(is_array($transient_data)) {
             foreach ($transient_data as $position_data) {
-                foreach ($position_data['categories'] as $position_categories) {
-                    if (!array_key_exists($position_categories['name'], $categories_and_values)) {
-                        $categories_and_values[$position_categories['name']] = [];
-                        if (!in_array($position_categories['value'], $categories_and_values[$position_categories['name']]) && !is_null($position_categories['value'])) {
-                            $categories_and_values[$position_categories['name']][] = $position_categories['value'];
-                        }
-                    } else {
-                        if (!in_array($position_categories['value'], $categories_and_values[$position_categories['name']]) && !is_null($position_categories['value'])) {
-                            $categories_and_values[$position_categories['name']][] = $position_categories['value'];
+                if (isset($position_data['categories'])) {
+                    foreach ($position_data['categories'] as $position_categories) {
+                        if (!array_key_exists($position_categories['name'], $categories_and_values)) {
+                            $categories_and_values[$position_categories['name']] = [];
+                            if (!in_array($position_categories['value'], $categories_and_values[$position_categories['name']]) && !is_null($position_categories['value'])) {
+                                $categories_and_values[$position_categories['name']][] = $position_categories['value'];
+                            }
+                        } else {
+                            if (!in_array($position_categories['value'], $categories_and_values[$position_categories['name']]) && !is_null($position_categories['value'])) {
+                                $categories_and_values[$position_categories['name']][] = $position_categories['value'];
+                            }
                         }
                     }
                 }

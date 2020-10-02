@@ -228,3 +228,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  -comee-data.php
     Fixing issue with cache force reset.
 
+
+## [2.11] - 2020-02-10
+###FIX
+ -comeet-data.php
+    Before trying to get the categories that a company has - checking that the company has categories.
+    this is to avoid showing warnings if and when PHP is trying to access an array key that doesn't exist
+
+
