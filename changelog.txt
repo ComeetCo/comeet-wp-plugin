@@ -236,3 +236,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     this is to avoid showing warnings if and when PHP is trying to access an array key that doesn't exist
 
 
+## [2.15] - 2020-24-11
+###Update
+ -comeet.php
+    WPML plugin has a very aggressive URL rewriting, as a result Position URL's would be overwriten
+    and not work properly. This fix removes https or http from the generated URL, which stops WPML from rewriting the URL.

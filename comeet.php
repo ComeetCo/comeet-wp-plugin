@@ -1585,7 +1585,7 @@ if (!class_exists('Comeet')) {
 
         //generating URL's for specific positions
         public function generate_careers_url($base, $category, $post){
-            return rtrim($base,'/') . '/' . $this->comeet_prefix . '/' . strtolower(comeet_string_clean($category)) . '/' . $post['uid'] . '/' . strtolower(comeet_string_clean($post['name'])) . '/all';
+            return str_replace(['https:', 'http:'], '',rtrim($base,'/') . '/' . $this->comeet_prefix . '/' . strtolower(comeet_string_clean($category)) . '/' . $post['uid'] . '/' . strtolower(comeet_string_clean($post['name'])) . '/all');
         }
 
         //checking if category
@@ -1610,7 +1610,7 @@ if (!class_exists('Comeet')) {
             return $name === 'Description' ? 'About The Position' : $name;
         }
         //debug function for printing content to the screen if needed.
-        //In template files usage is: $this->>plugin_debug($message, __LINE__, __FILE__);
+        //In template files usage is: $this->plugin_debug($message, __LINE__, __FILE__);
         //In comeet-data.php the usage is: Comeet::plugin_debug($message, __LINE__, __FILE__);
         //$message can be String or Array
         //To view the debug messages, add ?debug_comeet_plugin to the URL.
