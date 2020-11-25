@@ -241,3 +241,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  -comeet.php
     WPML plugin has a very aggressive URL rewriting, as a result Position URL's would be overwriten
     and not work properly. This fix removes https or http from the generated URL, which stops WPML from rewriting the URL.
+
+## [2.15] - 2020-25-11
+###Feature
+ -comeet.php
+    WPML plugin has a very aggressive URL rewriting, as a result Position URL's would be overwriten
+    and not work properly. This fix removes https or http from the generated URL, which stops WPML from rewriting the URL.
+
