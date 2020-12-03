@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
  * Description: Job listing page using the Comeet API.
- * Version: 2.15
+ * Version: 2.16
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.15';
+        public $version = '2.16';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -290,7 +290,7 @@ if (!class_exists('Comeet')) {
                 if(isset($wp_query->query_vars['comeet_pos'])){
                     $this->plugin_debug([$wp_query->query_vars], __LINE__, __FILE__);
                     add_action('wp_head', array($this, 'add_job_posting_js_schema'));
-                    add_filter('wpseo_og_og_title', array($this, 'get_og_title'));
+                    add_filter('wpseo_opengraph_title', array($this, 'get_og_title'));
                     add_action('wp_head', array($this, 'update_header'), 12);
                     add_filter('wpseo_title', array($this, 'get_title'));
                     //will check if feature image exists, edit it if it does, and add if not.

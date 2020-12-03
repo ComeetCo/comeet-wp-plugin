@@ -248,3 +248,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     WPML plugin has a very aggressive URL rewriting, as a result Position URL's would be overwriten
     and not work properly. This fix removes https or http from the generated URL, which stops WPML from rewriting the URL.
 
+## [2.16] - 2020-03-12
+###Update
+ -comeet.php
+    Fixed how we handle Yoast SEO, og:title meta tag.
+
