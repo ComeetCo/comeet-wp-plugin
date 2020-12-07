@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: Comeet
- * Plugin URI: http://support.comeet.co/knowledgebase/wordpress-plug-in/
+ * Plugin URI: https://developers.comeet.com/v1.0/reference#wordpress-plugin-1
  * Description: Job listing page using the Comeet API.
  * Version: 2.16
  * Author: Comeet
@@ -750,12 +750,12 @@ if (!class_exists('Comeet')) {
 
         /*Start settings page functions*/
         function api_credentials_text() {
-            echo '<div class="card" style="margin-bottom: 4em;"><p>To find these values, navigate in Comeet to Company Settings / Careers Website and make sure to enable the API. These settings are available to the company&#39;s admin. <a href="http://support.comeet.co/knowledgebase/careers-website/" target="_blank">Learn More</a></p>';
+            echo '<div class="card" style="margin-bottom: 4em;"><p>To find these values, navigate in Comeet to Company Settings / Careers Website and make sure to enable the API. These settings are available to the company&#39;s admin. <a href="https://developers.comeet.com/v1.0/reference#careers-api-section-header" target="_blank">Learn More</a></p>';
         }
 
         function comeet_advanced_text() {
             echo '<div class="card" style="margin-bottom: 4em;"><p>Use a different theme by specifying the templates that you would like to use.
-      Templates are PHP files that reside in your theme folder. <a target="_blank" href="https://developer.wordpress.org/themes/template-files-section/page-template-files/page-templates/">Learn more about page templates</a>
+      Templates are PHP files that reside in your theme folder. <a target="_blank" href="https://developer.wordpress.org/themes/template-files-section/page-template-files/">Learn more about page templates</a>
       </p>';
         }
 

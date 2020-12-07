@@ -21,7 +21,7 @@
      do_settings_sections('comeet');
     ?>
     <div>
-      <p>For more information visit <a href="http://support.comeet.co/knowledgebase/wordpress-plug-in/" target="_blank">our guide</a> or <a href="mailto:support@comeet.co" target="_blank">contact us</a>.</p>
+      <p>For more information visit <a href="https://developers.comeet.com/v1.0/reference#wordpress-plugin-1" target="_blank">our guide</a> or <a href="mailto:support@comeet.co" target="_blank">contact us</a>.</p>
         <p>
             <?php
             echo "Comeet Plugin version: ".Comeet::get_version()."<br />";

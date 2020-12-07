@@ -253,3 +253,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  -comeet.php
     Fixed how we handle Yoast SEO, og:title meta tag.
 
+## [2.16] - 2020-07-12 - No version change.
+###Update
+ -comeet.php
+ Fixed link to Wordpress documentation
+ Updated references to support.comeet.co => developers.comeet.com
+ -comeet-data.php
+ Updated references to support.comeet.co => developers.comeet.com
+ -comeet-options.php
+ Updated references to support.comeet.co => developers.comeet.com
+
