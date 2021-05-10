@@ -263,3 +263,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  -comeet-options.php
  Updated references to support.comeet.co => developers.comeet.com
 
+## [2.16.5] - 2021-10-05
+###FIX
+ -comeet-position-page-common.php
+    Fixed position image issue. If image is added to position in Comeet - it will be displayed on the position page.

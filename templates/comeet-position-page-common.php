@@ -37,7 +37,7 @@ if (empty($this->post_data) || (isset($this->post_data) && (isset($this->post_da
 			<?php endif; ?>
 		</div>
 		<div class="comeet-position-info">
-			<?php if (!empty($this->post_data['employment_type'])) : ?>
+			<?php if (!empty($this->post_data['picture_url'])) : ?>
 				<div class="position-image">
 					<img src="<?php echo $this->post_data['picture_url']; ?>" alt="" />
 				</div>
