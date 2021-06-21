@@ -42,7 +42,7 @@ class ComeetData {
     //please note the ?details=true flag
     static function get_api_data($options) {
         //Read main data for all positions
-        $cache_time = 60 * 30; //30 minutes
+        $cache_time = 60 * 5; //5 minutes
         $transient_prefix = 'comeet-all-data';
         $transient_prefix_time = 'comeet-all-data-time';
         $transient_data = get_option($transient_prefix);
