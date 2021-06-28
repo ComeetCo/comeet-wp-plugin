@@ -276,3 +276,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ###FIX
  -comeet-position-page-common.php
     Fixing issue where a closed position shows a message but breaks part of the page (Footer not included and stuff like that.)
+
+## [2.17.5] - 2021-28-06
+###FIX
+    -comeet.php
+        Fixing the Description added to the JSON schema of each position page.
