@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.17.6';
+        public $version = '2.17.7';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
