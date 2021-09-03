@@ -1,11 +1,16 @@
-   window.comeetInit = function() {
-      COMEET.init({
-         "token":               comeetvar.comeet_token,
-         "company-uid":         comeetvar.comeet_uid,
-         "color":               comeetvar.comeet_color,
-         "background-color":    comeetvar.comeet_bgcolor,
-         "thankyou-url":        comeetvar.comeet_thankyou_url
-      });
+comeet_init = {
+   "token":               comeetvar.comeet_token,
+   "company-uid":         comeetvar.comeet_uid,
+   "color":               comeetvar.comeet_color,
+   "background-color":    comeetvar.comeet_bgcolor,
+   "thankyou-url":        comeetvar.comeet_thankyou_url,
+   "css-url":             comeetvar.comeet_css_url
+};
+if(comeetvar.comeet_css_cache == 'false'){
+   comeet_init['css-cache'] = false;
+}
+window.comeetInit = function() {
+      COMEET.init(comeet_init);
    };
 
    (function(d, s, id) {

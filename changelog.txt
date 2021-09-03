@@ -291,3 +291,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ###Update
    -comeet.php
         Added "directApply" : "True" to the Job posting js schema.
+
+## [2.18] - 2021-03-09
+###Update
+   -comeet.php
+        Added CSS-URL and CSS-Cache to the Comeet settings page
+        By Default Location and Department URL's will not be created.
+   -comeet.js
+        reformated so we can handle the css-cache case.

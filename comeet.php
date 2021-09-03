@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: https://developers.comeet.com/v1.0/reference#wordpress-plugin-1
  * Description: Job listing page using the Comeet API.
- * Version: 2.17.7
+ * Version: 2.18
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.17.7';
+        public $version = '2.18';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -79,6 +79,8 @@ if (!class_exists('Comeet')) {
         private $social_graph_description;
         //Default description if one isn't supplied.
         private $social_graph_default_description = 'Job Opportunities';
+        //documentation url for use in different places in the code
+        public $documentation_url = 'https://developers.comeet.com/reference/';
 
         public function __construct() {
             //getting plugin URL
@@ -661,6 +663,20 @@ if (!class_exists('Comeet')) {
                 'comeet',
                 'comeet_other_settings'
             );
+	        add_settings_field(
+		        'comeet_css_url',
+		        'CSS URL',
+		        array($this, 'comeet_css_url'),
+		        'comeet',
+		        'comeet_other_settings'
+	        );
+	        add_settings_field(
+		        'comeet_css_cache',
+		        'CSS URL',
+		        array($this, 'comeet_css_cache'),
+		        'comeet',
+		        'comeet_other_settings'
+	        );
             add_settings_field(
                 'comeet_bgcolor',
                 'Form Background Color',
@@ -911,6 +927,25 @@ if (!class_exists('Comeet')) {
             echo '<p class="description">Optional. e.g. 278fe6</p>';
         }
 
+	    function comeet_css_url() {
+		    $options = $this->get_options();
+
+		    echo '<input type="text" id="comeet_css_url" name="' . $this->db_opt . '[comeet_css_url]" value="' . $options['comeet_css_url'] . '" size="25"  style="width:200px" />';
+		    echo '<p class="description">Optional - <a href="'.$this->documentation_url.'custom-css" target="_blank">See documentation</a></p>';
+	    }
+
+	    function comeet_css_cache() {
+		    $options = $this->get_options();
+		    $comeet_css_cache_checked = '';
+		    if($options['comeet_css_cache'])
+			    $comeet_css_cache_checked = 'checked="checked"';
+
+
+		    echo '<input type="checkbox" id="comeet_css_cache" name="' . $this->db_opt . '[comeet_css_cache]" value="1" '.$comeet_css_cache_checked.' />&nbsp;';
+		    echo '<label for="comeet_css_cache"">Set CSS Cache to false</label><br />';
+		    echo '<p class="description">Optional - <a href="'.$this->documentation_url.'custom-css" target="_blank">See documentation</a></p>';
+	    }
+
         function comeet_bgcolor_input() {
             $options = $this->get_options();
 
@@ -926,13 +961,13 @@ if (!class_exists('Comeet')) {
             if(isset($options['comeet_auto_generate_department_pages'])){
                 ($options['comeet_auto_generate_department_pages'] == 1) ? $department_checked = 'checked="checked"' : $department_checked = '';
             } else {
-                $department_checked = 'checked="checked"';
+                $department_checked = '';
             }
 
             if(isset($options['comeet_auto_generate_location_pages'])){
                 ($options['comeet_auto_generate_location_pages'] == 1) ? $locations_checked = 'checked="checked"' : $locations_checked = '';
             } else {
-                $locations_checked = 'checked="checked"';
+                $locations_checked = '';
             }
 
             echo '<input type="checkbox" id="comeet_auto_generate_location_pages" name="' . $this->db_opt . '[comeet_auto_generate_location_pages]" value="1" '.$locations_checked.' />&nbsp;';
@@ -997,6 +1032,13 @@ if (!class_exists('Comeet')) {
             $valid['location'] = (isset($input['location'])) ? $input['location'] : "";
             $valid['comeet_color'] = (isset($input['comeet_color'])) ? $input['comeet_color'] : "";
             $valid['comeet_bgcolor'] = (isset($input['comeet_bgcolor'])) ? $input['comeet_bgcolor'] : "";
+            $valid['comeet_css_url'] = (isset($input['comeet_css_url'])) ? $input['comeet_css_url'] : "";
+            //if no url has been entered, css cache defaults to false.
+            if($valid['comeet_css_url'] == ''){
+	            $valid['comeet_css_cache'] = false;
+            } else {
+	            $valid['comeet_css_cache'] = (isset($input['comeet_css_cache'])) ? $input['comeet_css_cache'] : true;
+            }
             $valid['advanced_search'] = (isset($input['advanced_search'])) ? $input['advanced_search'] : "";
             $valid['comeet_stylesheet'] = (isset($input['comeet_stylesheet'])) ? $input['comeet_stylesheet'] : "";
             $valid['comeet_subpage_template'] = (isset($input['comeet_subpage_template'])) ? $input['comeet_subpage_template'] : "";
@@ -1171,7 +1213,8 @@ if (!class_exists('Comeet')) {
             if (empty($options['comeet_token']) || empty($options['comeet_uid'])) {
                 return;
             }
-            wp_register_script("comeet_script", ($this->plugin_url . 'js/comeet.js'));
+            wp_register_script("comeet_script", ($this->plugin_url . 'js/comeet.js'), [], $this->version);
+
             $post = get_post($options['post_id']);
             $comeet_thankyou_url = $this->get_thank_you_url($options, $post);
             $data = array(
@@ -1179,8 +1222,12 @@ if (!class_exists('Comeet')) {
                 "comeet_uid" => $options['comeet_uid'],
                 "comeet_color" => $options['comeet_color'],
                 "comeet_bgcolor" => $options['comeet_bgcolor'],
-                "comeet_thankyou_url" => $comeet_thankyou_url
+                "comeet_thankyou_url" => $comeet_thankyou_url,
+                "comeet_css_url" => $options['comeet_css_url'],
             );
+            if($options['comeet_css_cache']){
+               $data['comeet_css_cache'] = 'false';
+            }
             wp_localize_script("comeet_script", "comeetvar", $data);
             wp_enqueue_script("comeet_script");
         }
