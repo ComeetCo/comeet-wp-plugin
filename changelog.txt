@@ -299,3 +299,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
         By Default Location and Department URL's will not be created.
    -comeet.js
         reformated so we can handle the css-cache case.
+
+## [2.18.5] - 2021-22-09
+###Fix
+   -comeet.php
+        Fixing sub-brand issue. If the category name included spaces, this could cause an issue with selecting
+        the sub-brand value to use
+   -comeet-data.php
+        Fixing sub-brand issue. If the category name included spaces, this could cause an issue with selecting
+                the sub-brand value to use

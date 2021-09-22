@@ -156,7 +156,7 @@ class ComeetData {
                 //Position filter is set - will filter the positions accordingly
                     $display_position = false;
                     foreach($job['categories'] as $category){
-                        if($category['name'] == $options['comeet_selected_category'] && $category['value'] == $options['comeet_selected_category_value']){
+                        if(str_replace(" ", "_", $category['name']) == $options['comeet_selected_category'] && str_replace(" ", "_", $category['value']) == $options['comeet_selected_category_value']){
                             $display_position = true;
                         }
                     }

@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: https://developers.comeet.com/v1.0/reference#wordpress-plugin-1
  * Description: Job listing page using the Comeet API.
- * Version: 2.18
+ * Version: 2.18.5
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.18';
+        public $version = '2.18.5';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -812,9 +812,11 @@ if (!class_exists('Comeet')) {
 
             foreach($categories_and_values as $key => $value){
                 $cat_selected = '';
-                if($options['comeet_selected_category'] == $key)
+                $actual_key = str_replace(" ", "_", $key);
+                if($options['comeet_selected_category'] == $actual_key)
                     $cat_selected = 'selected="selected"';
-                echo "<option ".$cat_selected." value='".$key."'>".$key."</option>";
+
+                echo "<option ".$cat_selected." value='".$actual_key."'>".$key."</option>";
             }
             echo "</select>";
         }
@@ -831,7 +833,7 @@ if (!class_exists('Comeet')) {
             foreach($categories_and_values as $cat_key => $cat_value){
                 $disabled = 'disabled="disabled"';
                 $display_style = 'style="display: none;"';
-                if($options['comeet_selected_category'] == $cat_key){
+                if($options['comeet_selected_category'] == str_replace(" ", "_", $cat_key)){
                     $disabled = '';
                     $display_style = '';
                 }
@@ -840,13 +842,15 @@ if (!class_exists('Comeet')) {
                 $default_selected = '';
                 if($options['comeet_selected_category_value'] == 'default')
                     $default_selected = 'selected="selected"';
-                echo "<select name='".$this->db_opt."[comeet_selected_category_value]' class='branding_selected_value_".$cat_key." comeet_val_select' ".$display_style." ".$disabled.">";
+                $cleand_cat_key = str_replace(" ", "_", $cat_key);
+                echo "<select name='".$this->db_opt."[comeet_selected_category_value]' class='branding_selected_value_".$cleand_cat_key." comeet_val_select' ".$display_style." ".$disabled.">";
                 echo "<option ".$default_selected." value='default' >Show all - don't apply filters</option>";
                 foreach($categories_and_values[$cat_key] as $key => $value){
                     $selected = '';
                     if($options['comeet_selected_category_value'] == $value)
                         $selected = 'selected="selected"';
-                    echo "<option ".$selected.">".$value."</option>";
+                    $actual_value = str_replace(" ", "_", $value);
+                    echo "<option ".$selected." value='".$actual_value."'>".$value."</option>";
                 }
                 echo "</select>";
             }
