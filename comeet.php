@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: https://developers.comeet.com/v1.0/reference#wordpress-plugin-1
  * Description: Job listing page using the Comeet API.
- * Version: 2.18.5
+ * Version: 2.18.6
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.18.5';
+        public $version = '2.18.6';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -941,11 +941,11 @@ if (!class_exists('Comeet')) {
 	    function comeet_css_cache() {
 		    $options = $this->get_options();
 		    $comeet_css_cache_checked = '';
-		    if($options['comeet_css_cache'])
+            if($options['comeet_css_cache'] == 'set_no_cache')
 			    $comeet_css_cache_checked = 'checked="checked"';
 
 
-		    echo '<input type="checkbox" id="comeet_css_cache" name="' . $this->db_opt . '[comeet_css_cache]" value="1" '.$comeet_css_cache_checked.' />&nbsp;';
+		    echo '<input type="checkbox" id="comeet_css_cache" name="' . $this->db_opt . '[comeet_css_cache]" value="set_no_cache" '.$comeet_css_cache_checked.' />&nbsp;';
 		    echo '<label for="comeet_css_cache"">Set CSS Cache to false</label><br />';
 		    echo '<p class="description">Optional - <a href="'.$this->documentation_url.'custom-css" target="_blank">See documentation</a></p>';
 	    }
@@ -1039,9 +1039,9 @@ if (!class_exists('Comeet')) {
             $valid['comeet_css_url'] = (isset($input['comeet_css_url'])) ? $input['comeet_css_url'] : "";
             //if no url has been entered, css cache defaults to false.
             if($valid['comeet_css_url'] == ''){
-	            $valid['comeet_css_cache'] = false;
+                $valid['comeet_css_cache'] = 'unset_cache';
             } else {
-	            $valid['comeet_css_cache'] = (isset($input['comeet_css_cache'])) ? $input['comeet_css_cache'] : true;
+                $valid['comeet_css_cache'] = (isset($input['comeet_css_cache'])) ? $input['comeet_css_cache'] : 'unset_cache';
             }
             $valid['advanced_search'] = (isset($input['advanced_search'])) ? $input['advanced_search'] : "";
             $valid['comeet_stylesheet'] = (isset($input['comeet_stylesheet'])) ? $input['comeet_stylesheet'] : "";

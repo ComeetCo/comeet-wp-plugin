@@ -308,3 +308,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
    -comeet-data.php
         Fixing sub-brand issue. If the category name included spaces, this could cause an issue with selecting
                 the sub-brand value to use
+
+## [2.18.6] - 2021-22-09
+###Fix
+   -comeet.php
+        Fixing issue with CSS-CACHE. As long as a CSS-URL was set, the CSS-CACHE was also set. Now fixed.
+
+   -comeet.js
+        Fix, same as above.
