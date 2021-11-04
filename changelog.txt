@@ -316,3 +316,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
    -comeet.js
         Fix, same as above.
+
+## [2.2] - 2021-04-11
+###Fix
+    -comeet.php
+        Fixing issue with updating the Position meta description with Yoast.

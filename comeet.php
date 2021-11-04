@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: https://developers.comeet.com/v1.0/reference#wordpress-plugin-1
  * Description: Job listing page using the Comeet API.
- * Version: 2.18.6
+ * Version: 2.2
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.18.6';
+        public $version = '2.2';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -228,7 +228,8 @@ if (!class_exists('Comeet')) {
 
         //getter function for the description for meta tags
         public function get_social_graph_description($page_set_description = null) {
-            if (!$this->is_comeet_content_page) {
+            global $wp_query;
+            if (!$wp_query->query_vars['comeet_pos']) {
                 $res = $page_set_description;
             } else if ($this->social_graph_description) {
                 $res = $this->social_graph_description;
