@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: https://developers.comeet.com/v1.0/reference#wordpress-plugin-1
  * Description: Job listing page using the Comeet API.
- * Version: 2.2
+ * Version: 2.3
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.2';
+        public $version = '2.3';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -673,7 +673,7 @@ if (!class_exists('Comeet')) {
 	        );
 	        add_settings_field(
 		        'comeet_css_cache',
-		        'CSS URL',
+		        'CSS URL Cache',
 		        array($this, 'comeet_css_cache'),
 		        'comeet',
 		        'comeet_other_settings'
@@ -1229,9 +1229,11 @@ if (!class_exists('Comeet')) {
                 "comeet_bgcolor" => $options['comeet_bgcolor'],
                 "comeet_thankyou_url" => $comeet_thankyou_url,
                 "comeet_css_url" => $options['comeet_css_url'],
+                "comeet_css_cache" => $options['comeet_css_cache']
             );
-            if($options['comeet_css_cache']){
-               $data['comeet_css_cache'] = 'false';
+            //if we want no cache, we add a timestamp to the CSS url to ensure no cache is used
+            if($options['comeet_css_cache'] == 'set_no_cache'){
+                $data['comeet_css_url'] .= "?".time();
             }
             wp_localize_script("comeet_script", "comeetvar", $data);
             wp_enqueue_script("comeet_script");

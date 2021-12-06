@@ -321,3 +321,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ###Fix
     -comeet.php
         Fixing issue with updating the Position meta description with Yoast.
+
+## [2.3] - 2021-06-12
+###Update
+    -comeet.php
+        Version update to 2.3
+###Fix
+    -comeet.php
+        css-cache - fixing label on the settings page
+        ensuring cleaner and more reliable css-cache = false
+        this is done with the addition of timestamp to the CSS url when cache set to false
+    -comeet.js
+        applying changes described above to the js file
