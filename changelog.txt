@@ -333,3 +333,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
         this is done with the addition of timestamp to the CSS url when cache set to false
     -comeet.js
         applying changes described above to the js file
+
+## [2.3.1] - 2021-14-12
+###Fix
+    -comeet.php
+        Fixing job posting schema description.
+        There was an issue with special characters not being escaped and some characters that don' need escaping being escaped.
+        This fix is in response to issue #9 in Github.
+
