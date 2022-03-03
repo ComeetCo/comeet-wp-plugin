@@ -341,3 +341,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
         There was an issue with special characters not being escaped and some characters that don' need escaping being escaped.
         This fix is in response to issue #9 in Github.
 
+## [2.3.2] - 2022-03-02
+###Fix
+    -comeet-data.php
+        Added CURLOPT_TIMEOUT to cURL call. This is to handle very rare cases where a connection
+        to the API is initiated and stalls for some reason. The addition of this paramter will allow
+        PHP to drop the connection after 5 seconds and continue working.
+

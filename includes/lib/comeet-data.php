@@ -32,6 +32,7 @@ class ComeetData {
         curl_setopt($cSession, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($cSession, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($cSession, CURLOPT_TIMEOUT, 5);
         $result = curl_exec($cSession);
         curl_close($cSession);
         $result1 = json_decode($result, true);
