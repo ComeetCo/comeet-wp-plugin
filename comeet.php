@@ -1,9 +1,9 @@
 <?php
 /*
  * Plugin Name: Comeet
- * Plugin URI: https://developers.comeet.com/v1.0/reference#wordpress-plugin-1
+ * Plugin URI: https://developers.comeet.com/reference/wordpress-plugin
  * Description: Job listing page using the Comeet API.
- * Version: 2.3.2
+ * Version: 2.3.3
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.3.2';
+        public $version = '2.3.3';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -346,16 +346,18 @@ if (!class_exists('Comeet')) {
             $new_template = '';
             $options = $this->get_options();
 
-            if (isset($wp_query->query_vars['comeet_pos'])) {
-                $new_template = locate_template(array(
-                    $options['comeet_positionpage_template'],
-                    'comeet/' . $options['comeet_positionpage_template']
-                ));
-            } elseif (isset($wp_query->query_vars['comeet_cat'])) {
-                $new_template = locate_template(array(
-                    $options['comeet_subpage_template'],
-                    'comeet/' . $options['comeet_subpage_template']
-                ));
+            if(!empty($options['comeet_positionpage_template']) && $options['comeet_positionpage_template'] != '') {
+                if (isset($wp_query->query_vars['comeet_pos'])) {
+                    $new_template = locate_template(array(
+                        $options['comeet_positionpage_template'],
+                        'comeet/' . $options['comeet_positionpage_template']
+                    ));
+                } elseif (isset($wp_query->query_vars['comeet_cat'])) {
+                    $new_template = locate_template(array(
+                        $options['comeet_subpage_template'],
+                        'comeet/' . $options['comeet_subpage_template']
+                    ));
+                }
             }
 
             if ('' != $new_template) {

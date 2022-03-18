@@ -348,3 +348,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
         to the API is initiated and stalls for some reason. The addition of this paramter will allow
         PHP to drop the connection after 5 seconds and continue working.
 
+## [2.3.3] - 2022-03-18
+###Fix
+    -comeet.php
+        fixing rare issue where PHP tries and fails to load a template file that does not exist
+        when a folder named comeet is created in the theme folder.
+###Update
+    -comeet.php
+        Updated Plugin URI to the current documentation
