@@ -356,3 +356,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ###Update
     -comeet.php
         Updated Plugin URI to the current documentation
+
+## [2.3.4] - 2022-05-04
+###Fix
+    -comeet.php
+        Fixing issue where job schema is added to pages even on closed/non existant positions
+        if a position is closed or doesn't exist the data on the page will lead back to the careers page
+
+###Update
+    -comeet.php, comeet-careers.php, comeet-sub-page-custom.php
+        Updated position URL's that are generated so they are always the same no matter where they
+        are being generated from, This is to resolve an issue where 1 position could have multiple
+        URL's causing content duplication and issues with SEO.

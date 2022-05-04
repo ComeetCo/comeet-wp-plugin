@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: https://developers.comeet.com/reference/wordpress-plugin
  * Description: Job listing page using the Comeet API.
- * Version: 2.3.3
+ * Version: 2.3.4
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -12,7 +12,7 @@
 
 /*
 
-Copyright 2021 Comeet
+Copyright 2022 Comeet
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.3.3';
+        public $version = '2.3.4';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -296,26 +296,27 @@ if (!class_exists('Comeet')) {
                 //adding json schema to head  and modifying Yoast SEO meta tags and or no Yoast meta tags as needed, on pages that have the Comeet shortcode
                 // ONLY if we are on individual job page
                 if(isset($wp_query->query_vars['comeet_pos'])){
-                    $this->plugin_debug([$wp_query->query_vars], __LINE__, __FILE__);
-                    add_action('wp_head', array($this, 'add_job_posting_js_schema'));
-                    add_filter('wpseo_opengraph_title', array($this, 'get_og_title'));
-                    add_action('wp_head', array($this, 'update_header'), 12);
-                    add_filter('wpseo_title', array($this, 'get_title'));
-                    //will check if feature image exists, edit it if it does, and add if not.
-                    //THere is an issue where Yoast requires that images have an extension of approved type,
-                    //Comeet returns images with no extension, so they will bot be added...
+                    if(!empty($this->post_data)) {
+                        $this->plugin_debug([$wp_query->query_vars], __LINE__, __FILE__);
+                        add_action('wp_head', array($this, 'add_job_posting_js_schema'));
+                        add_filter('wpseo_opengraph_title', array($this, 'get_og_title'));
+                        add_action('wp_head', array($this, 'update_header'), 12);
+                        add_filter('wpseo_title', array($this, 'get_title'));
+                        //will check if feature image exists, edit it if it does, and add if not.
+                        //THere is an issue where Yoast requires that images have an extension of approved type,
+                        //Comeet returns images with no extension, so they will bot be added...
 
-                    $this->verify_og_image_exists($wp_query->queried_object->ID);
+                        $this->verify_og_image_exists($wp_query->queried_object->ID);
 
-                    add_filter('wpseo_canonical', array($this, 'filter_url'));
-                    add_filter('wpseo_opengraph_url', array($this, 'filter_url'));
-                    add_filter('wpseo_metadesc', array($this, 'get_social_graph_description'));
-                    add_filter('wpseo_opengraph_desc', array($this, 'get_social_graph_description'));
-                    //on the Comeet Careers pages we remove the oembed meta tags as they make LinkedIn use the WRONG title
-                    //<link rel="alternate" type="application/json+oembed" href="..." />
-                    //<link rel="alternate" type="text/xml+oembed" href="..." />
-                    remove_action( 'wp_head','wp_oembed_add_discovery_links');
-
+                        add_filter('wpseo_canonical', array($this, 'filter_url'));
+                        add_filter('wpseo_opengraph_url', array($this, 'filter_url'));
+                        add_filter('wpseo_metadesc', array($this, 'get_social_graph_description'));
+                        add_filter('wpseo_opengraph_desc', array($this, 'get_social_graph_description'));
+                        //on the Comeet Careers pages we remove the oembed meta tags as they make LinkedIn use the WRONG title
+                        //<link rel="alternate" type="application/json+oembed" href="..." />
+                        //<link rel="alternate" type="text/xml+oembed" href="..." />
+                        remove_action('wp_head', 'wp_oembed_add_discovery_links');
+                    }
                 }
             }
 
@@ -1645,7 +1646,12 @@ if (!class_exists('Comeet')) {
         }
 
         //generating URL's for specific positions
-        public function generate_careers_url($base, $category, $post){
+        public function generate_careers_url($base, $post){
+            if (empty($post['location']) || empty($post['location']['name'])) {
+                $category = 'Other';
+            } else {
+                $category = $post['location']['name'];
+            }
             return str_replace(['https:', 'http:'], '',rtrim($base,'/') . '/' . $this->comeet_prefix . '/' . strtolower(comeet_string_clean($category)) . '/' . $post['uid'] . '/' . strtolower(comeet_string_clean($post['name'])) . '/all');
         }
 
