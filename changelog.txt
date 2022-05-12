@@ -368,3 +368,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
         Updated position URL's that are generated so they are always the same no matter where they
         are being generated from, This is to resolve an issue where 1 position could have multiple
         URL's causing content duplication and issues with SEO.
+
+## [2.3.5] - 2022-05-12
+###Fix
+    -comeet.php
+        Fixing for backwards compatibility of the "generate_page_titles" function
