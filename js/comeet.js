@@ -4,13 +4,17 @@ comeet_init = {
    "candidate-source-storage": false,
    "color":               comeetvar.comeet_color,
    "background-color":    comeetvar.comeet_bgcolor,
-   "thankyou-url":        comeetvar.comeet_thankyou_url,
+  // "thankyou-url":        comeetvar.comeet_thankyou_url,
    "css-url":             comeetvar.comeet_css_url,
 
 };
 if(comeetvar.comeet_css_cache == 'set_no_cache'){
    comeet_init['css-cache'] = false;
 }
+if(comeetvar.comeet_thankyou_url != 'no_thankyou_page'){
+   comeet_init['thankyou-url'] = comeetvar.comeet_thankyou_url;
+}
+
 window.comeetInit = function() {
    COMEET.init(comeet_init);
 };

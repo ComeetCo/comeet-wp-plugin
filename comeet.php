@@ -1210,11 +1210,11 @@ if (!class_exists('Comeet')) {
                 }
             }
 
-            if (empty($careers_page)) {
-                return site_url();
-            }
-
-            return site_url() . '/' . $careers_page->post_name . '/'.$this->comeet_prefix.'/thankyou';
+            //if (empty($careers_page)) {
+            //    return site_url();
+            //}
+            return false;
+            //return site_url() . '/' . $careers_page->post_name . '/'.$this->comeet_prefix.'/thankyou';
         }
 
         //adding front end hs scripts
@@ -1234,10 +1234,12 @@ if (!class_exists('Comeet')) {
                 "comeet_uid" => $options['comeet_uid'],
                 "comeet_color" => $options['comeet_color'],
                 "comeet_bgcolor" => $options['comeet_bgcolor'],
-                "comeet_thankyou_url" => $comeet_thankyou_url,
                 "comeet_css_url" => $options['comeet_css_url'],
                 "comeet_css_cache" => $options['comeet_css_cache']
             );
+            if($comeet_thankyou_url) {
+                $data["comeet_thankyou_url"] = $comeet_thankyou_url;
+            }
             //if we want no cache, we add a timestamp to the CSS url to ensure no cache is used
             if($options['comeet_css_cache'] == 'set_no_cache'){
                 $data['comeet_css_url'] .= "?".time();
