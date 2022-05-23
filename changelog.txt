@@ -379,3 +379,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     -comeet.php
         If a user does not explicitly select a thank you page, non will be set.
 
+## [2.3.7] - 2022-05-23
+###Fix
+    -comeet-careers.php
+        Backwards compatibility fix
+
+

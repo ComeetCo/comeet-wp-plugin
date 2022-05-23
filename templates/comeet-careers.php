@@ -20,7 +20,7 @@ if (isset($comeet_groups) && !empty($comeet_groups)) {
                             foreach ($data as $post) {
                                 if (isset($group_element)) {
                                     if ($this->check_comeet_is_category($post, $group_element, $category)) {
-                                        $href = $this->generate_careers_url($base, $post);
+                                        $href = $this->generate_careers_url($base, $category, $post);
                                         ?>
                                         <li>
                                             <a class="comeet-position" href="<?= $href?>">
