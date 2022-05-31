@@ -30,7 +30,7 @@ $this->plugin_debug(['Template page: comeet-sub-page-custom.php', 'Data:', 'Come
                     foreach ($data as $post) {
                         if ($this->check_for_category($post, $group_element, $category, $sub_group, $comeet_cat)) {
                             echo '<li class="comeet-position">';
-                            echo '<div class="comeet-position-name"><a href="' . $this->generate_careers_url(get_the_permalink($options['post_id']), $post) . '">' . $post['name'] . '</a></div>';
+                            echo '<div class="comeet-position-name"><a href="' . $this->generate_careers_url(get_the_permalink($options['post_id']),$category, $post) . '">' . $post['name'] . '</a></div>';
                             echo '<div class="comeet-position-meta">';
                             if ($comeet_group == 0) {
                                 echo $post['department'];
