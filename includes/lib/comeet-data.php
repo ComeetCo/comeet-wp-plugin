@@ -1,8 +1,10 @@
 <?php
-function comeet_string_clean($string) {
-    $fallback = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
-    $fallback = preg_replace('/[^A-Za-z0-9\-]/', '', $fallback); // Removes special chars.
-    return sanitize_title($string, $fallback);
+if (!function_exists('comeet_string_clean')) {
+    function comeet_string_clean($string){
+        $fallback = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
+        $fallback = preg_replace('/[^A-Za-z0-9\-]/', '', $fallback); // Removes special chars.
+        return sanitize_title($string, $fallback);
+    }
 }
 
 if (!function_exists('is_iterable')) {

@@ -394,4 +394,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     -comeet.php
         Fix to for Elementor pro issue
 
+## [2.4] - 2022-09-12
+###Fix
+    -comeet.php
+        Fixing some issues that were displaying warnings in special cases like multi site installs and so on.
+        Fixing issue with the 'comee-deactivation' function.
+    -comeet-data.php
+        Fixing issue where in some cases, on multi sites 'comeet_string_clean' function would get redeclared causing a fata error
+        We now check if the function exists before declaring it to avoid the issue.
+
+
 

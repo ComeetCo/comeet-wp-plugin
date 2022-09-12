@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: https://developers.comeet.com/reference/wordpress-plugin
  * Description: Job listing page using the Comeet API.
- * Version: 2.3.9
+ * Version: 2.4
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.3.9';
+        public $version = '2.4';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -113,7 +113,7 @@ if (!class_exists('Comeet')) {
             add_filter('wpseo_opengraph_url', array($this, 'filter_url'));
             add_filter('wpseo_metadesc', array($this, 'get_social_graph_description'));
             add_filter('wpseo_opengraph_desc', array($this, 'get_social_graph_description'));*/
-            register_deactivation_hook( $plugin, 'comeet_deactivation' );
+            register_deactivation_hook( $plugin, array($this, 'comeet_deactivation') );
             //adding comeet.js to the thank you page.
             add_action( 'wp_head', array($this, 'comeet_add_js_to_thank_you_page'), 5);
         }
@@ -941,15 +941,18 @@ if (!class_exists('Comeet')) {
 
 	    function comeet_css_url() {
 		    $options = $this->get_options();
+            $comeet_css_url = '';
+            if(isset($options['comeet_css_url']))
+                $comeet_css_url = $options['comeet_css_url'];
 
-		    echo '<input type="text" id="comeet_css_url" name="' . $this->db_opt . '[comeet_css_url]" value="' . $options['comeet_css_url'] . '" size="25"  style="width:200px" />';
+		    echo '<input type="text" id="comeet_css_url" name="' . $this->db_opt . '[comeet_css_url]" value="' . $comeet_css_url . '" size="25"  style="width:200px" />';
 		    echo '<p class="description">Optional - <a href="'.$this->documentation_url.'custom-css" target="_blank">See documentation</a></p>';
 	    }
 
 	    function comeet_css_cache() {
 		    $options = $this->get_options();
 		    $comeet_css_cache_checked = '';
-            if($options['comeet_css_cache'] == 'set_no_cache')
+            if(isset($options['comeet_css_cache']) && $options['comeet_css_cache'] == 'set_no_cache')
 			    $comeet_css_cache_checked = 'checked="checked"';
 
 
@@ -1142,8 +1145,10 @@ if (!class_exists('Comeet')) {
         function comeet_add_js_to_thank_you_page(){
             $options = $this->get_options();
             global $post;
-            if($post->ID == $options['thank_you_id']){
-                $this->add_frontend_scripts();
+            if(isset($options['thank_you_id'])){
+                if($post->ID == $options['thank_you_id']){
+                    $this->add_frontend_scripts();
+                }
             }
         }
 
@@ -1570,7 +1575,7 @@ if (!class_exists('Comeet')) {
         }
 
         //generating page titles
-        public function generate_page_titles($sub = false ,$category, $show_all_link = false, $base  = false){
+        public function generate_page_titles($sub = false ,$category = [], $show_all_link = false, $base  = false){
             $options = $this->get_options();
             if($sub){
                 //this means that the sub page (this page) is showing jobs grouped by department
