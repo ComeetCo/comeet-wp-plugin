@@ -55,7 +55,7 @@ class ComeetData {
             $transient_time = time();
             $transient_data = false;
         }
-        if(time() - $transient_time > $cache_time || isset($_GET['comeet_disable_cache']) || isset($options['clear_comeet_cache'])){
+        if(time() - $transient_time > $cache_time || isset($_GET['comeet_disable_cache'])){
             $transient_data = false;
         }
         if($transient_data){
@@ -68,7 +68,7 @@ class ComeetData {
 
             //in case of forced cache disable OR clearing comeet cache, we add a time parameter to the API
             //URL to ensure that we get a clean un cached response from the API server.
-            if(isset($_GET['comeet_disable_cache']) || isset($options['clear_comeet_cache'])){
+            if(isset($_GET['comeet_disable_cache'])){
                 $comeet_post_url = $comeet_post_url.'&'.time();
             }
 

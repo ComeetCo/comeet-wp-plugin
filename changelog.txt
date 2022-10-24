@@ -403,5 +403,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
         Fixing issue where in some cases, on multi sites 'comeet_string_clean' function would get redeclared causing a fata error
         We now check if the function exists before declaring it to avoid the issue.
 
+## [2.4.1] - 2022-09-12
+###Fix
+    Removing parameter that was forcing all API calls to bypass API response caching.
+
 
 
