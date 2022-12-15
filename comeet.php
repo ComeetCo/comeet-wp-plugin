@@ -105,27 +105,28 @@ if (!class_exists('Comeet')) {
                 add_filter('template_redirect', array($this, 'override_404'), 10 );
             }
             add_action('the_posts', array($this, 'process_posts'), 10);
-            /*add_filter('wpseo_og_og_title', array($this, 'get_og_title'));
-            add_action('wp_head', array($this, 'update_header'), 12);
-            add_filter('wpseo_title', array($this, 'get_title'));
-            add_filter('wpseo_opengraph_image', array($this, 'get_image'));
-            add_filter('wpseo_canonical', array($this, 'filter_url'));
-            add_filter('wpseo_opengraph_url', array($this, 'filter_url'));
-            add_filter('wpseo_metadesc', array($this, 'get_social_graph_description'));
-            add_filter('wpseo_opengraph_desc', array($this, 'get_social_graph_description'));*/
             register_deactivation_hook( $plugin, array($this, 'comeet_deactivation') );
             //adding comeet.js to the thank you page.
             add_action( 'wp_head', array($this, 'comeet_add_js_to_thank_you_page'), 5);
         }
 
-        //adding meta tags
-        public function add_careers_meta_tags() {
-            echo '<meta name="application-name" itemprop="name" content="Comeet Jobs" />' . PHP_EOL;
-            $options = $this->get_options();
-            $post = get_post($options['post_id']);
-            $url = get_permalink($post->ID);
-            echo '<meta name="application-url" itemprop="url" content="' . $url . '" />' . PHP_EOL;
+        public function redirect_to_404($redirect_to = '404page'){
+            $server_uri = $_SERVER['REQUEST_URI'];
+            if($server_uri != $redirect_to) {
+                header("HTTP/1.1 301 Moved Permanently");
+                header("Location: " . home_url('/'.$redirect_to));
+                die();
+            }
         }
+
+		//adding meta tags
+		public function add_careers_meta_tags() {
+			echo '<meta name="application-name" itemprop="name" content="Comeet Jobs" />' . PHP_EOL;
+			$options = $this->get_options();
+			$post = get_post($options['post_id']);
+			$url = get_permalink($post->ID);
+			echo '<meta name="application-url" itemprop="url" content="' . $url . '" />' . PHP_EOL;
+		}
 
         //function for adding json schema to header of page on individual job pages.
         public function add_job_posting_js_schema(){
@@ -701,8 +702,47 @@ if (!class_exists('Comeet')) {
                 'comeet_other_settings'
             );
 
+			add_settings_section(
+				'comeet_other_blank',
+				'',
+				array($this, 'comeet_other_blank'),
+				'comeet'
+			);
+            //404 handling section
             add_settings_section(
-                'comeet_other_blank',
+                'comeet_404_handling',
+                '404 handling',
+                array($this, 'comeet_404_handling_box'),
+                'comeet'
+            );
+            //Select what happen if position is missing
+            add_settings_field(
+                'comeet_404_option',
+                'Missing position action',
+                array($this, 'error_404_action'),
+                'comeet',
+                'comeet_404_handling'
+            );
+
+            //error_404_page_input
+            add_settings_field(
+                'error_404_page',
+                '404 redirect page',
+                array($this, 'error_404_page_input'),
+                'comeet',
+                'comeet_404_handling'
+            );
+
+            add_settings_field(
+                'comeet_category_branding',
+                'Sub-brand field',
+                array($this, 'comeet_get_categories'),
+                'comeet',
+                'comeet_branding'
+            );
+
+            add_settings_section(
+                'comeet_branding_blank',
                 '',
                 array($this, 'comeet_other_blank'),
                 'comeet'
@@ -800,9 +840,13 @@ if (!class_exists('Comeet')) {
             echo '<input type="text" id="comeet_uid" name="' . $this->db_opt . '[comeet_uid]" value="' . $options['comeet_uid'] . '" size="25"  style="width:200px" />';
         }
 
-        public function comeet_branding_box(){
-            echo '<div class="card" style="margin-bottom: 4em;"><p>Only show positions of one sub-brand of the company.</p>';
+        public function comeet_404_handling_box(){
+            echo '<div class="card" style="margin-bottom: 4em;"><p>Select what happens when a user tries to view a position that has been closed or removed from Comeet. Please note, all redirects are 301 redirect. <a href="https://developers.google.com/search/docs/crawling-indexing/301-redirects">Learn more about 301 redirect here</a></p>';
         }
+
+		public function comeet_branding_box(){
+			echo '<div class="card" style="margin-bottom: 4em;"><p>Only show positions of one sub-brand of the company.</p>';
+		}
 
         public function comeet_get_categories(){
             $disabled = "disabled=\"disabled\"";
@@ -863,11 +907,6 @@ if (!class_exists('Comeet')) {
                 echo "</select>";
             }
 
-
-
-
-
-
             echo "<script type='text/javascript'>";
             echo "jQuery(document).ready(function($){";
             echo "$('.branding_categories').change(function(){";
@@ -895,13 +934,16 @@ if (!class_exists('Comeet')) {
 
 
 
-        function pages_input($post_id, $key, $select_text) {
-            $page_opts = array();
-            $page_opts[] = '<option value="-1"' .
-                (empty($post_id) ? ' selected="selected"' : '') . ' style="text-decoration:underline;">' .
-                $select_text .
-                '</option>';
-            $pages = get_pages(array('sort_column' => 'sort_column'));
+		function pages_input($post_id, $key, $select_text, $disabled = false) {
+            $disabled_option = '';
+            if($disabled)
+                $disabled_option = ' disabled="disabled" ';
+			$page_opts = array();
+			$page_opts[] = '<option value="-1"' .
+			               (empty($post_id) ? ' selected="selected"' : '') . ' style="text-decoration:underline;">' .
+			               $select_text .
+			               '</option>';
+			$pages = get_pages(array('sort_column' => 'sort_column'));
 
             foreach ($pages as $page) {
                 $page_opts[] = '<option value="' . $page->ID . '"' . ($post_id == $page->ID ? ' selected="selected"' : '') . '>' . $page->post_title . '</option>';
@@ -909,7 +951,7 @@ if (!class_exists('Comeet')) {
             return '<div><select ' .
                 'name="' . $this->db_opt . '[' . $key . ']" ' .
                 'id="' . $key . '" '.
-                'style="width:200px">' .
+                'style="width:200px" '.$disabled_option.'>' .
                 implode("\n", $page_opts) .
                 '</select></div>';
         }
@@ -927,10 +969,43 @@ if (!class_exists('Comeet')) {
             echo $this->pages_input($post_id, 'thank_you_id', '-- Select a page --');
         }
 
-        function advanced_search_input() {
+        function error_404_page_input() {
             $options = $this->get_options();
-            echo '<div><select name="' . $this->db_opt . '[advanced_search]" id="advanced_search" style="width:200px"><option value="0"' . ($options['advanced_search'] == 0 ? ' selected="selected"' : '') . '>Location</option><option value="1"' . ($options['advanced_search'] == 1 ? ' selected="selected"' : '') . '>Department</option></select></div>';
+            $post_id = isset($options['error_404_page']) ? trim($options['error_404_page']) : '';
+            $disabled = true;
+            if($options['error_404_page'] != '')
+                $disabled = false;
+            echo $this->pages_input($post_id, 'error_404_page', '-- Select a page --', $disabled);
         }
+
+        function error_404_action(){
+            $options = $this->get_options();
+            echo '<div>';
+            echo '<select name="' . $this->db_opt . '[comeet_404_option]" id="comeet_404_option" style="width:200px">';
+            echo '<option value="default_404_message"' . ($options['comeet_404_option'] == 'default_404_message' ? ' selected="selected"' : '') . '>Show default message</option>';
+            echo '<option value="redirect_to_404"' . ($options['comeet_404_option'] == 'redirect_to_404' ? ' selected="selected"' : '') . '>Redirect to 404 page</option>';
+            echo '<option value="redirect_to_page"' . ($options['comeet_404_option'] == 'redirect_to_page' ? ' selected="selected"' : '') . '>Redirect to selected page</option>';
+            echo '</select></div>';
+
+            echo "<script>
+            jQuery(document).ready(function($){
+                  $('#comeet_404_option').change(function(){
+                    console.log('Change detected');
+                    var comeet_404_option_selected_value = $(this).val();
+                    if(comeet_404_option_selected_value == 'redirect_to_page'){
+                        $('#error_404_page').attr('disabled', false);
+                    } else {
+                        $('#error_404_page').attr('disabled', true);
+                        $('#error_404_page').val('-1');
+                    }
+                  });
+            });</script>";
+        }
+
+		function advanced_search_input() {
+			$options = $this->get_options();
+			echo '<div><select name="' . $this->db_opt . '[advanced_search]" id="advanced_search" style="width:200px"><option value="0"' . ($options['advanced_search'] == 0 ? ' selected="selected"' : '') . '>Location</option><option value="1"' . ($options['advanced_search'] == 1 ? ' selected="selected"' : '') . '>Department</option></select></div>';
+		}
 
         function comeet_color_input() {
             $options = $this->get_options();
@@ -1044,22 +1119,26 @@ if (!class_exists('Comeet')) {
             $valid['comeet_token'] = (isset($input['comeet_token'])) ? trim($input['comeet_token']) : "";
             $valid['comeet_uid'] = (isset($input['comeet_uid'])) ? trim($input['comeet_uid']) : "";
 
-            $valid['location'] = (isset($input['location'])) ? $input['location'] : "";
-            $valid['comeet_color'] = (isset($input['comeet_color'])) ? $input['comeet_color'] : "";
-            $valid['comeet_bgcolor'] = (isset($input['comeet_bgcolor'])) ? $input['comeet_bgcolor'] : "";
-            $valid['comeet_css_url'] = (isset($input['comeet_css_url'])) ? $input['comeet_css_url'] : "";
-            //if no url has been entered, css cache defaults to false.
-            if($valid['comeet_css_url'] == ''){
-                $valid['comeet_css_cache'] = 'unset_cache';
-            } else {
-                $valid['comeet_css_cache'] = (isset($input['comeet_css_cache'])) ? $input['comeet_css_cache'] : 'unset_cache';
-            }
-            $valid['advanced_search'] = (isset($input['advanced_search'])) ? $input['advanced_search'] : "";
-            $valid['comeet_stylesheet'] = (isset($input['comeet_stylesheet'])) ? $input['comeet_stylesheet'] : "";
-            $valid['comeet_subpage_template'] = (isset($input['comeet_subpage_template'])) ? $input['comeet_subpage_template'] : "";
-            $valid['comeet_positionpage_template'] = (isset($input['comeet_positionpage_template'])) ? $input['comeet_positionpage_template'] : "";
-            //thank you page id, if specified. else, leave blank and plugin template will be used.
-            $valid['thank_you_id'] = (isset($input['thank_you_id'])) ? $input['thank_you_id'] : "";
+			$valid['location'] = (isset($input['location'])) ? $input['location'] : "";
+			$valid['comeet_color'] = (isset($input['comeet_color'])) ? $input['comeet_color'] : "";
+			$valid['comeet_bgcolor'] = (isset($input['comeet_bgcolor'])) ? $input['comeet_bgcolor'] : "";
+			$valid['comeet_css_url'] = (isset($input['comeet_css_url'])) ? $input['comeet_css_url'] : "";
+
+            //404 options
+			$valid['comeet_404_option'] = (isset($input['comeet_404_option'])) ? $input['comeet_404_option'] : "";
+			$valid['error_404_page'] = (isset($input['error_404_page'])) ? $input['error_404_page'] : "";
+			//if no url has been entered, css cache defaults to false.
+			if($valid['comeet_css_url'] == ''){
+				$valid['comeet_css_cache'] = 'unset_cache';
+			} else {
+				$valid['comeet_css_cache'] = (isset($input['comeet_css_cache'])) ? $input['comeet_css_cache'] : 'unset_cache';
+			}
+			$valid['advanced_search'] = (isset($input['advanced_search'])) ? $input['advanced_search'] : "";
+			$valid['comeet_stylesheet'] = (isset($input['comeet_stylesheet'])) ? $input['comeet_stylesheet'] : "";
+			$valid['comeet_subpage_template'] = (isset($input['comeet_subpage_template'])) ? $input['comeet_subpage_template'] : "";
+			$valid['comeet_positionpage_template'] = (isset($input['comeet_positionpage_template'])) ? $input['comeet_positionpage_template'] : "";
+			//thank you page id, if specified. else, leave blank and plugin template will be used.
+			$valid['thank_you_id'] = (isset($input['thank_you_id'])) ? $input['thank_you_id'] : "";
 
             $valid['comeet_auto_generate_location_pages'] = (isset($input['comeet_auto_generate_location_pages'])) ? $input['comeet_auto_generate_location_pages'] : "";
             $valid['comeet_auto_generate_department_pages'] = (isset($input['comeet_auto_generate_department_pages'])) ? $input['comeet_auto_generate_department_pages'] : "";
@@ -1117,28 +1196,42 @@ if (!class_exists('Comeet')) {
             return wp_insert_post($page);
         }
 
-        //getting comeet data
-        function comeet_preload_data() {
-            if ($this->is_comeet_content_page) {
-                if (isset($this->comeet_pos)) {
-                    $this->post_data = ComeetData::get_position_data($this->get_options(), $this->comeet_pos);
-                    $this->plugin_debug(['Fetched post data - within comeet_preload_data is', $this->post_data], __LINE__, __FILE__);
-                    $this->social_graph_description = ComeetData::get_property_value($this->post_data['details'], 'Description');
-                    $this->title = 'Job opportunity: '.$this->post_data['name'];
-                    $this->social_graph_title = $this->title;
-                    $this->social_graph_image = $this->post_data['picture_url'];
-                } else if (isset($this->comeet_cat)) {
-                    $options = $this->get_options();
-                    list($comeet_groups, $data, $group_element) = ComeetData::get_groups($options, $this->comeet_cat);
-                    foreach ($data as $post) {
-                        if (ComeetData::is_category($post, $group_element, $this->comeet_cat)) {
-                            $this->title = $post[$group_element];
-                            $this->social_graph_description = $this->social_graph_default_description . ' - ' . ComeetData::get_group_value($post, $group_element);
-                            break;
+		//getting comeet data
+		function comeet_preload_data() {
+			if ($this->is_comeet_content_page) {
+				if (isset($this->comeet_pos)) {
+					$this->post_data = ComeetData::get_position_data($this->get_options(), $this->comeet_pos);
+
+                    if(empty($this->post_data)) {
+                    //checking to see what should happen in this case according to the user
+                        $options = $this->get_options();
+                        if(isset($options['comeet_404_option']) && $options['comeet_404_option'] == 'redirect_to_404'){
+                            $this->redirect_to_404();
+                        } else if(isset($options['comeet_404_option']) &&  $options['comeet_404_option'] == 'redirect_to_page'){
+                            //getting page to redirect to
+                            $page_to_redirect_to = $options['error_404_page'];
+                            $redirect_to_page_permaling = get_post_field( 'post_name', $page_to_redirect_to );
+                            $this->redirect_to_404($redirect_to_page_permaling);
                         }
                     }
-                }
-            }
+
+					$this->plugin_debug(['Fetched post data - within comeet_preload_data is', $this->post_data], __LINE__, __FILE__);
+					$this->social_graph_description = ComeetData::get_property_value($this->post_data['details'], 'Description');
+					$this->title = 'Job opportunity: '.$this->post_data['name'];
+					$this->social_graph_title = $this->title;
+					$this->social_graph_image = $this->post_data['picture_url'];
+				} else if (isset($this->comeet_cat)) {
+					$options = $this->get_options();
+					list($comeet_groups, $data, $group_element) = ComeetData::get_groups($options, $this->comeet_cat);
+					foreach ($data as $post) {
+						if (ComeetData::is_category($post, $group_element, $this->comeet_cat)) {
+							$this->title = $post[$group_element];
+							$this->social_graph_description = $this->social_graph_default_description . ' - ' . ComeetData::get_group_value($post, $group_element);
+							break;
+						}
+					}
+				}
+			}
 
         }
 
@@ -1347,7 +1440,6 @@ if (!class_exists('Comeet')) {
             if(isset($data) && isset($group_element)){
                 $this->plugin_debug(['Comeet Group is: ',$data,$group_element], __LINE__, __FILE__);
             }
-
             ob_start();
             include_once($template);
             $output = ob_get_contents();

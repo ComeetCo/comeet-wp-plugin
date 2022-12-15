@@ -407,5 +407,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ###Fix
     Removing parameter that was forcing all API calls to bypass API response caching.
 
+## [2.4.5] - 2022-12-16
+###Update
+    Adding the ability for the user (Site admin) to decide how to handle missing positions.
+    Default behaviour is to load the position URL with a response 200 and show a default built in message,
+    User now has 3 options, default, redirect to 404 page with a response code of 404, redirect to user selected page.
+    In case of redirect, the redirect is a 301 redirect
+
+
 
 
