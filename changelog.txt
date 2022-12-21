@@ -414,8 +414,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     User now has 3 options, default, redirect to 404 page with a response code of 404, redirect to user selected page.
     In case of redirect, the redirect is a 301 redirect
 
-## [2.4.5] - 2022-12-19
-    Version bump
+## [2.4.5] - 2022-12-21
+    Version bump - view fix
 
 
 

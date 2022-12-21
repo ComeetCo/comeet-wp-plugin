@@ -733,6 +733,22 @@ if (!class_exists('Comeet')) {
                 'comeet_404_handling'
             );
 
+            add_settings_section(
+                'comeet_404_blank',
+                '',
+                array($this, 'comeet_other_blank'),
+                'comeet'
+            );
+
+
+            //Branding section
+            add_settings_section(
+                'comeet_branding',
+                'Sub-brand',
+                array($this, 'comeet_branding_box'),
+                'comeet'
+            );
+
             add_settings_field(
                 'comeet_category_branding',
                 'Sub-brand field',
