@@ -1340,6 +1340,7 @@ if (!class_exists('Comeet')) {
                 return;
             }
             wp_register_script("comeet_script", ($this->plugin_url . 'js/comeet.js'), [], $this->version);
+            wp_register_script("comeet_src_script", ($this->plugin_url . 'js/comeet-src.js'), ['comeet_script'], $this->version);
 
             $post = get_post($options['post_id']);
             $comeet_thankyou_url = $this->get_thank_you_url($options, $post);
@@ -1360,6 +1361,7 @@ if (!class_exists('Comeet')) {
             }
             wp_localize_script("comeet_script", "comeetvar", $data);
             wp_enqueue_script("comeet_script");
+            wp_enqueue_script("comeet_src_script");
         }
 
         //adding css files to que for front end.
