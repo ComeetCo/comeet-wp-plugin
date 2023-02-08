@@ -37,8 +37,10 @@ class ComeetData {
         curl_setopt($cSession, CURLOPT_TIMEOUT, 5);
         $result = curl_exec($cSession);
         curl_close($cSession);
-        $result1 = json_decode($result, true);
-        return $result1;
+        $httpCode = curl_getinfo($cSession, CURLINFO_HTTP_CODE);
+        $full_response['all_data'] = json_decode($result, true);
+        $full_response['status'] = $httpCode;
+        return $full_response;
     }
 
     //getting all data from comeet API - All data = all positions
@@ -72,16 +74,17 @@ class ComeetData {
                 $comeet_post_url = $comeet_post_url.'&'.time();
             }
 
-            $all_data = self::comeet_get_data($comeet_post_url);
+            $full_response = self::comeet_get_data($comeet_post_url);
             //debug function
             ComeetData::plugin_debug(['URL used for API call: ', $comeet_post_url], __LINE__, __FILE__);
-            if (!is_array($all_data) || (isset($all_data['status']) && $all_data['status'] != 200)) {
-                ComeetData::plugin_debug(['Data from API - returned error', $all_data], __LINE__, __FILE__);
+            if (!is_array($full_response['all_data']) || (isset($full_response['status']) &&  $full_response['status'] != 200)) {
+                ComeetData::plugin_debug(['Data from API - returned error', $full_response['all_data']], __LINE__, __FILE__);
                 //we attempted to get the data from the API, there was an issue, so we fall back on the Cache
                 $all_data = get_option($transient_prefix);
                 //The api call failed, we will continue pulling from cache for the preset cache time - 30 minutes.
                 update_option($transient_prefix_time, time());
             } else {
+                $all_data = $full_response['all_data'];
                 //API call was successfull, we update the API with the new DATA + update the cache time for later checks.
                 update_option($transient_prefix, $all_data);
                 update_option($transient_prefix_time, time());
@@ -145,7 +148,6 @@ class ComeetData {
             if (empty($job['department'])) {
                 $all_data[$key]['department'] = 'Other';
             }
-
             if (empty($job['location']) || empty($job['location']['name'])) {
                 if (empty($all_data[$key]['location'])) {
                     $all_data[$key]['location'] = array();
@@ -157,15 +159,15 @@ class ComeetData {
             //Positions filtering can be set in the Comeet settings page.
             if($options['comeet_selected_category'] != 'default'){
                 //Position filter is set - will filter the positions accordingly
-                    $display_position = false;
-                    foreach($job['categories'] as $category){
-                        if(str_replace(" ", "_", $category['name']) == $options['comeet_selected_category'] && str_replace(" ", "_", $category['value']) == $options['comeet_selected_category_value']){
-                            $display_position = true;
-                        }
+                $display_position = false;
+                foreach($job['categories'] as $category){
+                    if(str_replace(" ", "_", $category['name']) == $options['comeet_selected_category'] && str_replace(" ", "_", $category['value']) == $options['comeet_selected_category_value']){
+                        $display_position = true;
                     }
-                    if(!$display_position){
-                        unset($all_data[$key]);
-                    }
+                }
+                if(!$display_position){
+                    unset($all_data[$key]);
+                }
             }
         }
         $response = $all_data;

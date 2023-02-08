@@ -420,5 +420,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [2.4.6] - 2023-01-31
     Cookie consent fix - allowing the application form to work AFTER cookie consent.
 
+## [2.5] - 2023-02-08
+    Fixing error that occurs when the API returns an empty array (No available positions)
+    Added "Clear cache" button to the options page.
+
 
 
