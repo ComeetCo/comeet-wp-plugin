@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: https://developers.comeet.com/reference/wordpress-plugin
  * Description: Job listing page using the Comeet API.
- * Version: 2.5
+ * Version: 2.6
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.5';
+        public $version = '2.6';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -505,7 +505,8 @@ if (!class_exists('Comeet')) {
                 'comeet_auto_generate_location_pages' => '1',
                 'comeet_auto_generate_department_pages' => '1',
                 'comeet_selected_category_value' => 'default',
-                'comeet_selected_category' => 'default'
+                'comeet_selected_category' => 'default',
+                'comeet_cookie_consent' => false
             );
 
             $saved = get_option($this->db_opt);
@@ -708,6 +709,29 @@ if (!class_exists('Comeet')) {
 				array($this, 'comeet_other_blank'),
 				'comeet'
 			);
+            //Cookie consent section
+            add_settings_section(
+                'comeet_cookie_consent_handling',
+                'Cookie consent manager',
+                array($this, 'comeet_cookie_consent_handling_box'),
+                'comeet'
+            );
+            //Select what happen if position is missing
+            add_settings_field(
+                'comeet_cookie_option',
+                'Activate tracking script',
+                array($this, 'cookie_consent_option'),
+                'comeet',
+                'comeet_cookie_consent_handling'
+            );
+
+            add_settings_section(
+                'comeet_consent_blank',
+                '',
+                array($this, 'comeet_other_blank'),
+                'comeet'
+            );
+
             //404 handling section
             add_settings_section(
                 'comeet_404_handling',
@@ -860,6 +884,10 @@ if (!class_exists('Comeet')) {
             echo '<div class="card" style="margin-bottom: 4em;"><p>Select what happens when a user tries to view a position that has been closed or removed from Comeet. Please note, all redirects are 301 redirect. <a href="https://developers.google.com/search/docs/crawling-indexing/301-redirects">Learn more about 301 redirect here</a></p>';
         }
 
+        public function comeet_cookie_consent_handling_box(){
+            echo '<div class="card" style="margin-bottom: 4em;"><p>Enable this option if the website uses a cookie consent manager (such as Cookiebot or Termly). For more information see <a href="https://developers.comeet.com/reference/cookies-consent">this page</a>.</p>';
+        }
+
 		public function comeet_branding_box(){
 			echo '<div class="card" style="margin-bottom: 4em;"><p>Only show positions of one sub-brand of the company.</p>';
 		}
@@ -992,6 +1020,18 @@ if (!class_exists('Comeet')) {
             if($options['error_404_page'] != '')
                 $disabled = false;
             echo $this->pages_input($post_id, 'error_404_page', '-- Select a page --', $disabled);
+        }
+
+
+        function cookie_consent_option(){
+            $options = $this->get_options();
+            $comeet_cookie_consent_checked = '';
+            if(isset($options['comeet_cookie_consent']) && $options['comeet_cookie_consent'] == 1)
+                $comeet_cookie_consent_checked = 'checked="checked"';
+            echo '<div>';
+            echo '<input type="checkbox" id="comeet_cookie_consent" name="' . $this->db_opt . '[comeet_cookie_consent]" value="1" '.$comeet_cookie_consent_checked.' />&nbsp;';
+            echo '<label for="comeet_cookie_consent">Tracking script will be executed by a cookie consent manager</label><br />';
+            echo "</div>";
         }
 
         function error_404_action(){
@@ -1167,6 +1207,8 @@ if (!class_exists('Comeet')) {
 
             if($valid['comeet_selected_category_value'] == 'default')
                 $valid['comeet_selected_category'] = 'default';
+
+            $valid['comeet_cookie_consent'] = (isset($input['comeet_cookie_consent'])) ? $input['comeet_cookie_consent'] : "";
 
             if ($input['post_id'] == '-1') {
                 // Create a new page for the job posts to appear.
@@ -1362,6 +1404,16 @@ if (!class_exists('Comeet')) {
             wp_localize_script("comeet_script", "comeetvar", $data);
             wp_enqueue_script("comeet_script");
             wp_enqueue_script("comeet_src_script");
+            if($options['comeet_cookie_consent']){
+                add_filter( 'script_loader_tag', array($this, 'add_cookie_consent_tags'), 10, 3 );
+            }
+        }
+
+        function add_cookie_consent_tags( $tag, $handle, $src ) {
+            if ( 'comeet_src_script' === $handle ) {
+                $tag = '<script type="text/plain" src="' . esc_url( $src ) . '" id="comeet_src_script-js" data-cookieconsent="statistics" data-categories="analytics"></script>';
+            }
+            return $tag;
         }
 
         //adding css files to que for front end.

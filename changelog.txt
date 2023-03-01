@@ -424,5 +424,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     Fixing error that occurs when the API returns an empty array (No available positions)
     Added "Clear cache" button to the options page.
 
+## [2.6] - 2023-03-01
+    Better handling of Cookie consent services such as CookieBot and Termly.
+
 
 

@@ -29,4 +29,3 @@ window.comeetInit = function() {
    js.src = "//www.comeet.co/careers-api/api.js";
    fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'comeet-jsapi'));
-(function(){var a=function(){window.COMEET.set("candidate-source-storage",!0)};window.COMEET?a():window.comeetUpdate=a})();
