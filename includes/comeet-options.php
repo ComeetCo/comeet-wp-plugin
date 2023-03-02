@@ -1,4 +1,5 @@
 <div class="wrap">
+    Advanced Customization
   <h2 style="min-width: 255px; max-width: 575px; margin-bottom: 2em;">
       <?php
       $plugin_basename = str_replace('includes/comeet-options.php', '', plugin_basename(__FILE__));
