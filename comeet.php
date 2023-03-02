@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: https://developers.comeet.com/reference/wordpress-plugin
  * Description: Job listing page using the Comeet API.
- * Version: 2.6.2
+ * Version: 2.6.3
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.6.2';
+        public $version = '2.6.3';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -130,6 +130,7 @@ if (!class_exists('Comeet')) {
 
         //function for adding json schema to header of page on individual job pages.
         public function add_job_posting_js_schema(){
+            $options = $this->get_options();
             $positions_details = '';
             if(isset($this->post_data['details'])) {
                 foreach ($this->post_data['details'] as $detail) {
@@ -151,16 +152,23 @@ if (!class_exists('Comeet')) {
                     "hiringOrganization":
                     {
                         "@type": "Organization",
-                        "name": "<?= $this->post_data['company_name']?>"
+                        <?php
+                        if(empty($options['comeet_company_url'])){
+                        ?>
+"name": "<?php echo  $this->post_data['company_name']?>"
+                        <?php } else {?>
+"name": "<?php echo  $this->post_data['company_name']?>",
+                        "sameAs": "<?php echo $options['comeet_company_url']?>"
+                        <?php } ?>
                     },
                     <?php if(isset($this->post_data['location']['is_remote']) && $this->post_data['location']['is_remote']){?>
                     "applicantLocationRequirements" : {
                         "@type": "Country",
                         "name" : "<?= $this->post_data['location']['country']?>"
                     },
-                    "jobLocationType" : "TELECOMMUTE",
+"jobLocationType" : "TELECOMMUTE",
                     <?php } else { ?>
-                       "jobLocation":
+"jobLocation":
                     {
                         "@type": "Place",
                         "address":
@@ -506,7 +514,8 @@ if (!class_exists('Comeet')) {
                 'comeet_auto_generate_department_pages' => '1',
                 'comeet_selected_category_value' => 'default',
                 'comeet_selected_category' => 'default',
-                'comeet_cookie_consent' => false
+                'comeet_cookie_consent' => false,
+                'comeet_company_url' => '',
             );
 
             $saved = get_option($this->db_opt);
@@ -699,6 +708,14 @@ if (!class_exists('Comeet')) {
                 'comeet_auto_generate_pages',
                 'Auto-generate pages',
                 array($this, 'comeet_auto_generate_pages'),
+                'comeet',
+                'comeet_other_settings'
+            );
+
+            add_settings_field(
+                'comeet_company_website_url',
+                'Company website URL',
+                array($this, 'comeet_company_website_url'),
                 'comeet',
                 'comeet_other_settings'
             );
@@ -1145,6 +1162,12 @@ if (!class_exists('Comeet')) {
             echo '<label for="comeet_auto_generate_posts_pages">For each department</label><br /><br />';
         }
 
+        function comeet_company_website_url(){
+            $options = $this->get_options();
+            echo '<input type="text" id="comeet_comapny_url" name="' . $this->db_opt . '[comeet_company_url]" value="' . $options['comeet_company_url'] . '" size="25"  style="width:200px" />';
+            echo '<p class="description">Optional. e.g. https://www.acme.com</p>';
+        }
+
         function comeet_subpage_input() {
             $options = $this->get_options();
 
@@ -1223,6 +1246,7 @@ if (!class_exists('Comeet')) {
 
             $valid['comeet_selected_category'] = (isset($input['comeet_selected_category'])) ? $input['comeet_selected_category'] : "default";
             $valid['comeet_selected_category_value'] = (isset($input['comeet_selected_category_value'])) ? $input['comeet_selected_category_value'] : "default";
+            $valid['comeet_company_url'] = (isset($input['comeet_company_url'])) ? $input['comeet_company_url'] : "";
 
             if($valid['comeet_selected_category'] == 'default')
                 $valid['comeet_selected_category_value'] = 'default';
