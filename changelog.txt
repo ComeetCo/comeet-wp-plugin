@@ -427,5 +427,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [2.6] - 2023-03-01
     Better handling of Cookie consent services such as CookieBot and Termly.
 
+## [2.6.2] - 2023-03-01
+    comeet.php - updated the text and look/feel of the "Cookie consent manager" in the settings page
+    comeet-data.php - switched from using cURL to get the API response to using wp_remote_get - more inline with Wordpress standards
 
 

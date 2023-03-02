@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: https://developers.comeet.com/reference/wordpress-plugin
  * Description: Job listing page using the Comeet API.
- * Version: 2.6
+ * Version: 2.6.2
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.6';
+        public $version = '2.6.2';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -396,7 +396,7 @@ if (!class_exists('Comeet')) {
 
         //checking if cURL is active, if not, notifications will be set, different depending on the page the user is
         //If on the settings page, the notification will be more in depth
-        public function check_for_curl() {
+        /*public function check_for_curl() {
             if (is_admin()) {
                 if (!in_array('curl', get_loaded_extensions())) {
                     if ($_GET['page'] == 'comeet') {
@@ -406,7 +406,7 @@ if (!class_exists('Comeet')) {
                     }
                 }
             }
-        }
+        }*/
 
         //checking if the uid and token have been set
         public function check_for_comeetapi() {
@@ -419,7 +419,7 @@ if (!class_exists('Comeet')) {
 
         //if cURL isn't active on the server and the user is in the comeet settings page,
         //he will get this lengthy message about cURL and how to activate it.
-        public function admin_curl_notice() {
+        /*public function admin_curl_notice() {
             $message = 'The Comeet plugin may not function properly as cURL is not enabled on the server.<br /><br />Ensure that Curl for php is enabled and that your server can execute http requests to www.comeet.co (used to retrieve the positions data).';
             echo '<div class="error"><p>' . $message . '</p></div>';
             echo '<div id="message" class="updated">
@@ -455,7 +455,7 @@ if (!class_exists('Comeet')) {
 		</ol>
 		<p><i>Note: Each server is setup differently and depending on the setup these instructions may not work. But in most cases, these instructions should help.</i> </p>
 		</div>';
-        }
+        }*/
 
         //function that tests if the details the user entered work while making an API call and adds an admin notice if there is an issue.
         public function admin_comeet_api_notice() {
@@ -548,7 +548,7 @@ if (!class_exists('Comeet')) {
             $this->comeet_token = $options['comeet_token'];
             $this->comeet_uid = $options['comeet_uid'];
             $this->check_for_keys();
-            $this->check_for_curl();
+            //$this->check_for_curl();
             $this->check_for_comeetapi();
             $this->add_settings_sections();
         }
@@ -717,13 +717,13 @@ if (!class_exists('Comeet')) {
                 'comeet'
             );
             //Select what happen if position is missing
-            add_settings_field(
+           /* add_settings_field(
                 'comeet_cookie_option',
                 'Activate tracking script',
                 array($this, 'cookie_consent_option'),
                 'comeet',
                 'comeet_cookie_consent_handling'
-            );
+            );*/
 
             add_settings_section(
                 'comeet_consent_blank',
@@ -885,7 +885,25 @@ if (!class_exists('Comeet')) {
         }
 
         public function comeet_cookie_consent_handling_box(){
-            echo '<div class="card" style="margin-bottom: 4em;"><p>Enable this option if the website uses a cookie consent manager (such as Cookiebot or Termly). For more information see <a href="https://developers.comeet.com/reference/cookies-consent">this page</a>.</p>';
+            echo '<div class="card" style="margin-bottom: 4em;">';
+            echo '<p>Comeet uses cookies to track candidate sources. To give visitors the option to accept or reject these cookies, you may want to use a cookie consent manager. Some cookie consent managers require the tracking script to be embedded differently so that it is enabled only if the visitor accepts the use of these cookies. For a list of supported managers and additional details, please visit <a href="https://developers.comeet.com/reference/cookies-consent">this page</a>.</p>';
+            $options = $this->get_options();
+            $trackin_on = '';
+            $tracking_off = 'checked';
+            if(isset($options['comeet_cookie_consent']) && $options['comeet_cookie_consent'] == 0) {
+                $trackin_on = 'checked';
+                $tracking_off = '';
+            }
+            echo '<div>';
+            echo "<p><strong>How is the tracking script enabled:</strong></p>";
+            echo '<input type="radio" '.$trackin_on.' id="comeet_cookie_consent_0" value="0" name="'.$this->db_opt . '[comeet_cookie_consent]" />';
+            echo '<label for="comeet_cookie_consent_0">Enabled automatically</label><br />';
+            echo '<input type="radio" '.$tracking_off.' id="comeet_cookie_consent_1" value="1" name="'.$this->db_opt . '[comeet_cookie_consent]" />';
+            echo '<label for="comeet_cookie_consent_0">Enabled conditionally by a supported cookie consent manager</label>';
+            //echo '<input type="checkbox" id="comeet_cookie_consent" name="' . $this->db_opt . '[comeet_cookie_consent]" value="1" '.$comeet_cookie_consent_checked.' />&nbsp;';
+            //echo '<label for="comeet_cookie_consent">Check to activate</label><br />';
+            echo "</div>";
+
         }
 
 		public function comeet_branding_box(){
@@ -1024,14 +1042,18 @@ if (!class_exists('Comeet')) {
 
 
         function cookie_consent_option(){
-            $options = $this->get_options();
+           /* $options = $this->get_options();
             $comeet_cookie_consent_checked = '';
             if(isset($options['comeet_cookie_consent']) && $options['comeet_cookie_consent'] == 1)
                 $comeet_cookie_consent_checked = 'checked="checked"';
             echo '<div>';
-            echo '<input type="checkbox" id="comeet_cookie_consent" name="' . $this->db_opt . '[comeet_cookie_consent]" value="1" '.$comeet_cookie_consent_checked.' />&nbsp;';
-            echo '<label for="comeet_cookie_consent">Tracking script will be executed by a cookie consent manager</label><br />';
-            echo "</div>";
+            echo '<input type="radio" id="comeet_cookie_consent_0" value="0" name="'.$this->db_opt . '[comeet_cookie_consent]" />';
+            echo '<label for="comeet_cookie_consent_0">Enable tracking script</label><br />';
+            echo '<input type="radio" id="comeet_cookie_consent_1" value="1" name="'.$this->db_opt . '[comeet_cookie_consent]" />';
+            echo '<label for="comeet_cookie_consent_0">A cookie consent manager is configured to enable the tracking script when approved by visitor</label>';
+            //echo '<input type="checkbox" id="comeet_cookie_consent" name="' . $this->db_opt . '[comeet_cookie_consent]" value="1" '.$comeet_cookie_consent_checked.' />&nbsp;';
+            //echo '<label for="comeet_cookie_consent">Check to activate</label><br />';
+            echo "</div>";*/
         }
 
         function error_404_action(){

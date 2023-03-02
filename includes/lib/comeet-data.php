@@ -29,17 +29,9 @@ class ComeetData {
     //getting comeet data - wrapper function for the cURL call
     static private function comeet_get_data($comeeturl) {
         $url = $comeeturl . '&' . comeet_plugin_version_arg();
-        $cSession = curl_init();
-        curl_setopt($cSession, CURLOPT_URL, $url);
-        curl_setopt($cSession, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($cSession, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($cSession, CURLOPT_TIMEOUT, 5);
-        $result = curl_exec($cSession);
-        curl_close($cSession);
-        $httpCode = curl_getinfo($cSession, CURLINFO_HTTP_CODE);
-        $full_response['all_data'] = json_decode($result, true);
-        $full_response['status'] = $httpCode;
+        $result = wp_remote_get($url);
+        $full_response['all_data'] = json_decode($result['body'], true);
+        $full_response['status'] = $result['response']['code'];
         return $full_response;
     }
 
