@@ -33,7 +33,7 @@
       <div style="margin-top: 18px;">
           <?php submit_button(); ?>
           <p class="submit">
-              <a href="<?=home_url( add_query_arg( NULL, NULL ) )."&comeet_disable_cache"?>" class="button button-primary" style="display: inline-block">Clear all position cache</a>
+              <a href="<?php echo home_url( add_query_arg( NULL, NULL ) )."&comeet_disable_cache"?>" class="button button-primary" style="display: inline-block">Clear all position cache</a>
           </p>
       </div>
     
