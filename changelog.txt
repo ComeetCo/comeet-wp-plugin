@@ -434,4 +434,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [2.6.3] - 2023-03-02
     comeet.php - added a settings options allowing user to set the company URL. If set the job Schema will have sameAs added
 
+## [2.6.3.1] - 2023-03-27
+    comeet.php - Additional fix for supporting Intango and cookiebot special case.
+
 

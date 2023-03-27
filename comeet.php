@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: https://developers.comeet.com/reference/wordpress-plugin
  * Description: Job listing page using the Comeet API.
- * Version: 2.6.3
+ * Version: 2.6.3.1
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.6.3';
+        public $version = '2.6.3.1';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -1452,10 +1452,17 @@ if (!class_exists('Comeet')) {
             wp_enqueue_script("comeet_src_script");
             if($options['comeet_cookie_consent']){
                 add_filter( 'script_loader_tag', array($this, 'add_cookie_consent_tags'), 10, 3 );
+                add_filter( 'script_loader_tag', array($this, 'add_cookie_consent_tags_src'), 10, 3 );
             }
         }
 
         function add_cookie_consent_tags( $tag, $handle, $src ) {
+            if ( 'comeet_script' === $handle ) {
+                $tag = '<script type="text/plain" src="' . esc_url( $src ) . '" id="comeet_script-js" data-cookieconsent="necessary"></script>';
+            }
+            return $tag;
+        }
+        function add_cookie_consent_tags_src( $tag, $handle, $src ) {
             if ( 'comeet_src_script' === $handle ) {
                 $tag = '<script type="text/plain" src="' . esc_url( $src ) . '" id="comeet_src_script-js" data-cookieconsent="statistics" data-categories="analytics"></script>';
             }
