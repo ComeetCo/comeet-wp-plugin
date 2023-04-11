@@ -60,10 +60,12 @@
                 <h4>Apply for this position</h4>
                 <script type="comeet-applyform" data-position-uid="<?php echo $this->post_data['uid'] ?>"></script>
             </div>
+            <?php if($options['comeet_social_sharing_on_positions']){?>
             <div class="comeet-social">
                 <script type="comeet-social" data-position-uid="<?php echo $this->post_data['uid'] ?>"></script>
             </div>
             <?php
+	        }
         }
         ?>
     </div>

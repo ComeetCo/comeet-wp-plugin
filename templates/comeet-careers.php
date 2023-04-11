@@ -59,10 +59,13 @@ if (isset($comeet_groups) && !empty($comeet_groups)) {
 	}
 ?>
 </div>
+    <?php
+    if($options['comeet_social_sharing_on_careers']){?>
 <div class="comeet-social">
 	<script type="comeet-social"></script>
 </div>
 <?php
+    }
 } else {
 	echo "We don't have any open positions at this time. Please visit again soon.";
 }

@@ -516,8 +516,35 @@ if (!class_exists('Comeet')) {
                 'comeet_selected_category' => 'default',
                 'comeet_cookie_consent' => false,
                 'comeet_company_url' => '',
-            );
+                //adding advanced customization
+                'comeet_apply_as_employee' => false,
+                'comeet_field_email_required' => false,
+                'comeet_field_phone_required' => true,
+                'comeet_field_resume' => true,
+                'comeet_field_linkedin' => true,
+                'comeet_require_profile' => 'resume',
+                'comeet_field_website' => false,
+                'comeet_field_website_required' => false,
+                'comeet_field_coverletter' => true,
+                'comeet_field_coverletter_required' => false,
+                'comeet_field_portfolio' => true,
+                'comeet_field_portfolio_required' => false,
+                'comeet_field_personalnote' => true,
+                'comeet_field_personalnote_required' => false,
+                'comeet_button_text' => 'Submit Application',
+                'comeet_font_size' => '13px',
+                'comeet_button_font_size' => '13px',
+                'comeet_labels_position' => 'responsive',
+                'comeet_button_color' => '#167acd',
+                //advanced customization for Social widget
+                "comeet_social_pinterest" => true,
+                "comeet_social_whatsapp" => false,
+                "comeet_social_employees" => true,
+                "comeet_social_show_title" => true,
+                "comeet_social_share_url" => '',
+                "comeet_social_color" => 'white',
 
+            );
             $saved = get_option($this->db_opt);
 
             if (!empty($saved)) {
@@ -865,6 +892,28 @@ if (!class_exists('Comeet')) {
                 'comeet_branding'
             );
 
+	        add_settings_section(
+		        'comeet_advanced_customization',
+		        'Advanced Customization',
+		        array($this, 'comeet_advanced_customization'),
+		        'comeet'
+	        );
+
+	        add_settings_field(
+		        'comeet_subpage_template',
+		        'Template for locations / departments',
+		        array($this, 'comeet_subpage_input'),
+		        'comeet',
+		        'comeet_advanced_customization'
+	        );
+
+	        add_settings_section(
+		        'comeet_advanced_blank',
+		        '',
+		        array($this, 'comeet_other_blank'),
+		        'comeet'
+	        );
+
 
         }
 
@@ -880,6 +929,10 @@ if (!class_exists('Comeet')) {
       Templates are PHP files that reside in your theme folder. <a target="_blank" href="https://developer.wordpress.org/themes/template-files-section/page-template-files/">Learn more about page templates</a>
       </p>';
         }
+
+	    function comeet_advanced_customization() {
+		    include('includes/advanced_customization.php');
+	    }
 
         function other_text() {
             echo '<div class="card">';
@@ -1256,6 +1309,67 @@ if (!class_exists('Comeet')) {
 
             $valid['comeet_cookie_consent'] = (isset($input['comeet_cookie_consent'])) ? $input['comeet_cookie_consent'] : "";
 
+            //advanced customization
+	        $valid['comeet_apply_as_employee'] = (isset($input['apply-as-employee']) ? ($input['apply-as-employee'] == 'true' ? true : false) : (true));
+	        $valid['comeet_field_email_required'] = (isset($input['field-email-required']) ? ($input['field-email-required'] == 'true' ? true : false) : (true));
+	        $valid['comeet_field_phone_required'] = (isset($input['field-phone-required']) ? ($input['field-phone-required'] == 'true' ? true : false) : (true));
+	        $valid['comeet_field_resume'] = (isset($input['field-resume']) ? ($input['field-resume'] == 'true' ? true : false) : (true));
+	        $valid['comeet_field_linkedin'] = (isset($input['field-linkedin']) ? ($input['field-linkedin'] == 'true' ? true : false) : (true));
+	        $valid['comeet_require_profile'] = (isset($input['require-profile'])) ? $input['require-profile'] : "resume";
+
+            if($input['comeet_field_website'] == "true"){
+	            $valid['comeet_field_website'] = true;
+                //can only be true if $valid['field-website'] is true.
+	            $valid['comeet_field_website_required'] = (isset($input['comeet_field_website_required']) ? ($input['comeet_field_website_required'] == 'true' ? true : false) : (true));
+            } else {
+	            $valid['comeet_field_website'] = false;
+	            $valid['comeet_field_website_required'] = false;
+            }
+
+	        if($input['comeet_field_coverletter'] == "true"){
+		        $valid['comeet_field_coverletter'] = true;
+		        //can only be true if $valid['field-website'] is true.
+		        $valid['comeet_field_coverletter_required'] = (isset($input['comeet_field_coverletter_required']) ? ($input['comeet_field_coverletter_required'] == 'true' ? true : false) : (true));
+	        } else {
+		        $valid['comeet_field_coverletter'] = false;
+		        $valid['comeet_field_coverletter_required'] = false;
+	        }
+
+	        if($input['comeet_field_portfolio'] == "true"){
+		        $valid['comeet_field_portfolio'] = true;
+		        //can only be true if $valid['field-website'] is true.
+		        $valid['comeet_field_portfolio_required'] = (isset($input['comeet_field_portfolio_required']) ? ($input['comeet_field_portfolio_required'] == 'true' ? true : false) : (true));
+	        } else {
+		        $valid['comeet_field_portfolio'] = false;
+		        $valid['comeet_field_portfolio_required'] = false;
+	        }
+
+	        if($input['comeet_field_personalnote'] == "true"){
+		        $valid['comeet_field_personalnote'] = true;
+		        //can only be true if $valid['field-website'] is true.
+		        $valid['comeet_field_personalnote_required'] = (isset($input['comeet_field_personalnote_required']) ? ($input['comeet_field_personalnote_required'] == 'true' ? true : false) : (true));
+	        } else {
+		        $valid['comeet_field_personalnote'] = false;
+		        $valid['comeet_field_personalnote_required'] = false;
+	        }
+	        $valid['comeet_button_color'] = (isset($input['comeet_button_color'])) ? $input['comeet_button_color'] : "#167acd";
+	        $valid['comeet_button_text'] = (isset($input['comeet_button_text'])) ? $input['comeet_button_text'] : "Submit Application";
+	        $valid['comeet_font_size'] = (isset($input['comeet_font_size'])) ? $input['comeet_font_size'] : "13px";
+	        $valid['comeet_button_font_size'] = (isset($input['comeet_button_font_size'])) ? $input['comeet_button_font_size'] : "13px";
+	        $valid['comeet_labels_position'] = (isset($input['comeet_labels_position'])) ? $input['comeet_labels_position'] : "responsive";
+            //social share widget option
+	        $valid['comeet_social_pinterest'] = (isset($input['comeet_social_pinterest']) ? ($input['comeet_social_pinterest'] == 'true' ? true : false) : (true));
+	        $valid['comeet_social_whatsapp'] = (isset($input['comeet_social_whatsapp']) ? ($input['comeet_social_whatsapp'] == 'true' ? true : false) : (false));
+	        $valid['comeet_social_employees'] = (isset($input['comeet_social_employees']) ? ($input['comeet_social_employees'] == 'true' ? true : false) : (true));
+	        $valid['comeet_social_show_title'] = (isset($input['comeet_social_show_title']) ? ($input['comeet_social_show_title'] == 'true' ? true : false) : (true));
+	        $valid['comeet_social_share_url'] = (isset($input['comeet_social_share_url'])) ? $input['comeet_social_share_url'] : "";
+	        $valid['comeet_social_color'] = (isset($input['comeet_social_color'])) ? $input['comeet_social_color'] : "white";
+            //display or hide social widget on careers and position pages.
+            $valid['comeet_social_sharing_on_positions'] = (isset($input['comeet_social_sharing_on_positions']) ? ($input['comeet_social_sharing_on_positions'] == 'true' ? true : false) : (true));
+            $valid['comeet_social_sharing_on_careers'] = (isset($input['comeet_social_sharing_on_careers']) ? ($input['comeet_social_sharing_on_careers'] == 'true' ? true : false) : (true));
+
+
+	        //end advanced customization
             if ($input['post_id'] == '-1') {
                 // Create a new page for the job posts to appear.
                 if ($post_id = $this->create_new_page()) {
@@ -1438,8 +1552,36 @@ if (!class_exists('Comeet')) {
                 "comeet_color" => $options['comeet_color'],
                 "comeet_bgcolor" => $options['comeet_bgcolor'],
                 "comeet_css_url" => $options['comeet_css_url'],
-                "comeet_css_cache" => $options['comeet_css_cache']
+                "comeet_css_cache" => $options['comeet_css_cache'],
+                "comeet_apply_as_employee" => ($options['comeet_apply_as_employee']) ? "true" : "false",
+                "comeet_field_email_required" => ($options['comeet_field_email_required']) ? "true" : "false",
+                "comeet_field_phone_required" => ($options['comeet_field_phone_required']) ? "true" : "false",
+                "comeet_field_resume" => ($options['comeet_field_resume']) ? "true" : "false",
+                "comeet_field_linkedin" => ($options['comeet_field_linkedin']) ? "true" : "false",
+                "comeet_require_profile" => ($options['comeet_require_profile']) ? "true" : "false",
+                "comeet_field_website" => ($options['comeet_field_website']) ? "true" : "false",
+                "comeet_field_website_required" => ($options['comeet_field_website_required']) ? "true" : "false",
+                "comeet_field_coverletter" => ($options['comeet_field_coverletter']) ? "true" : "false",
+                "comeet_field_coverletter_required" => ($options['comeet_field_coverletter_required']) ? "true" : "false",
+                "comeet_field_portfolio" => ($options['comeet_field_portfolio']) ? "true" : "false",
+                "comeet_field_portfolio_required" => ($options['comeet_field_portfolio_required']) ? "true" : "false",
+                "comeet_field_personalnote" => ($options['comeet_field_personalnote']) ? "true" : "false",
+                "comeet_field_personalnote_required" => ($options['comeet_field_personalnote_required']) ? "true" : "false",
+                "comeet_button_text" => $options['comeet_button_text'],
+                "comeet_font_size" => $options['comeet_font_size'],
+                "comeet_button_font_size" => $options['comeet_button_font_size'],
+                "comeet_labels_position" => $options['comeet_labels_position'],
+                "comeet_button_color" => $options['comeet_button_color'],
+                //social sharing widget
+                "comeet_social_pinterest" => ($options['comeet_social_pinterest']) ? "true" : "false",
+                "comeet_social_whatsapp" => ($options['comeet_social_whatsapp']) ? "true" : "false",
+                "comeet_social_employees" => ($options['comeet_social_employees']) ? "true" : "false",
+                "comeet_social_show_title" => ($options['comeet_social_show_title']) ? "true" : "false",
+                "comeet_social_share_url" => $options['comeet_social_share_url'],
+                "comeet_social_color" => $options['comeet_social_color'],
+
             );
+
             if($comeet_thankyou_url) {
                 $data["comeet_thankyou_url"] = $comeet_thankyou_url;
             }
