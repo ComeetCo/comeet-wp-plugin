@@ -18,8 +18,9 @@ $options = $this->get_options();
       padding-bottom: 0;
       min-width: 300px;
       min-height: 175px;
+      padding-bottom: 10px;
   }
-  .comeet_advanced_customization_container label
+  .comeet_advanced_customization_container label,.comeet_advanced_customization_container div label
   {
       vertical-align: top;
       text-align: left;
@@ -31,11 +32,14 @@ $options = $this->get_options();
       margin-bottom: 10px;
       display: block;
   }
+  .comeet_advanced_customization_container div label{
+      min-height: unset;
+  }
   .comeet_social_sharing_main_options{
       width: 100%;
       margin-bottom: 20px;
   }
-  .comeet_social_sharing_main_options select{
+  .comeet_social_sharing_main_options select, .comeet_advanced_customization_container div select{
       min-width: 290px;
   }
   .border-pulse-addition{
@@ -48,9 +52,6 @@ $options = $this->get_options();
         100% { border-color: rgba(0, 21, 255, 1); }
     }
 </style>
-<?php
-print_r($options);
-?>
 <div class="card" style="margin-bottom: 4em;max-width: unset;">
     <p>Advanced customization options for the <a href="https://developers.comeet.com/reference/application-form-widget">Application form widget</a> and the <a href="https://developers.comeet.com/reference/social-widget">Social widget</a> - <a href="https://developers.comeet.com/reference/embedding-widgets">Learn More</a>
     </p>
@@ -140,21 +141,17 @@ print_r($options);
                 <option <?php echo (!$options['comeet_field_website']) ? "selected=\"selected\"" : ""?> value="false">No</option>
             </select>
             <br />
+            <div <?php echo (!$options['comeet_field_website']) ? "style=\"display: none;\"" : ""?> class="comeet_extra_options_website">
+                <label for="comeet_field_website_required">
+                    Require website?
+                </label>
+                <select name="<?php echo $this->db_opt;?>[comeet_field_website_required]" id="comeet_field_website_required">
+                    <option <?php echo ($options['comeet_field_website_required']) ? "selected=\"selected\"" : ""?> value="true">Yes</option>
+                    <option <?php echo (!$options['comeet_field_website_required']) ? "selected=\"selected\"" : ""?> value="false">No</option>
+                </select>
+            </div>
             For more information <a target="_blank" href="https://developers.comeet.com/reference/application-form-widget#:~:text=optional-,field%2Dwebsite,-Show%20website%20field">click here</a>
         </div>
-
-        <div class="comeet_advanced_customization_container comeet_field_website_required" <?php echo (!$options['comeet_field_website']) ? "style=\"display: none;\"" : ""?>>
-            <label for="comeet_field_website_required">
-                Require website?
-            </label>
-            <select name="<?php echo $this->db_opt;?>[comeet_field_website_required]" id="comeet_field_website_required">
-                <option <?php echo ($options['comeet_field_website_required']) ? "selected=\"selected\"" : ""?> value="true">Yes</option>
-                <option <?php echo (!$options['comeet_field_website_required']) ? "selected=\"selected\"" : ""?> value="false">No</option>
-            </select>
-            <br />
-            For more information <a target="_blank" href="https://developers.comeet.com/reference/application-form-widget#:~:text=field%2Dwebsite%2Drequired">click here</a>
-        </div>
-
         <div class="comeet_advanced_customization_container">
             <label for="comeet_field_coverletter">
                 Show cover letter field?
@@ -164,19 +161,18 @@ print_r($options);
                 <option <?php echo (!$options['comeet_field_coverletter']) ? "selected=\"selected\"" : ""?> value="false">No</option>
             </select>
             <br />
-            For more information <a target="_blank" href="https://developers.comeet.com/reference/application-form-widget#:~:text=optional-,field%2Dcoverletter,-Show%20cover%20letter">click here</a>
-        </div>
+            <div <?php echo (!$options['comeet_field_coverletter']) ? "style=\"display: none;\"" : ""?> class="comeet_extra_options_coverletter">
+                <label for="comeet_field_coverletter_required">
+                    Require cover letter?
+                </label>
+                <select name="<?php echo $this->db_opt;?>[comeet_field_coverletter_required]" id="comeet_field_coverletter_required">
+                    <option <?php echo ($options['comeet_field_coverletter_required']) ? "selected=\"selected\"" : ""?> value="true">Yes</option>
+                    <option <?php echo (!$options['comeet_field_coverletter_required']) ? "selected=\"selected\"" : ""?> value="false">No</option>
+                </select>
+            </div>
 
-        <div class="comeet_advanced_customization_container comeet_field_coverletter_required" <?php echo (!$options['comeet_field_coverletter']) ? "style=\"display: none;\"" : ""?>>
-            <label for="comeet_field_coverletter_required">
-                Require cover letter?
-            </label>
-            <select name="<?php echo $this->db_opt;?>[comeet_field_coverletter_required]" id="comeet_field_coverletter_required">
-                <option <?php echo ($options['comeet_field_coverletter_required']) ? "selected=\"selected\"" : ""?> value="true">Yes</option>
-                <option <?php echo (!$options['comeet_field_coverletter_required']) ? "selected=\"selected\"" : ""?> value="false">No</option>
-            </select>
-            <br />
-            For more information <a target="_blank" href="https://developers.comeet.com/reference/application-form-widget#:~:text=field%2Dcoverletter%2Drequired">click here</a>
+
+            For more information <a target="_blank" href="https://developers.comeet.com/reference/application-form-widget#:~:text=optional-,field%2Dcoverletter,-Show%20cover%20letter">click here</a>
         </div>
 
         <div class="comeet_advanced_customization_container">
@@ -188,19 +184,17 @@ print_r($options);
                 <option <?php echo (!$options['comeet_field_portfolio']) ? "selected=\"selected\"" : ""?> value="false">No</option>
             </select>
             <br />
-            For more information <a target="_blank" href="https://developers.comeet.com/reference/application-form-widget#:~:text=optional-,field%2Dportfolio,-Show%20portfolio%20field">click here</a>
-        </div>
+            <div <?php echo (!$options['comeet_field_portfolio']) ? "style=\"display: none;\"" : ""?> class="comeet_extra_options_portfolio">
+                <label for="comeet_field_portfolio_required">
+                    Require portfolio?
+                </label>
+                <select name="<?php echo $this->db_opt;?>[comeet_field_portfolio_required]" id="comeet_field_portfolio_required">
+                    <option <?php echo ($options['comeet_field_portfolio_required']) ? "selected=\"selected\"" : ""?> value="true">Yes</option>
+                    <option <?php echo (!$options['comeet_field_portfolio_required']) ? "selected=\"selected\"" : ""?> value="false">No</option>
+                </select>
+            </div>
 
-        <div class="comeet_advanced_customization_container comeet_field_portfolio_required" <?php echo (!$options['comeet_field_portfolio']) ? "style=\"display: none;\"" : ""?>>
-            <label for="comeet_field_portfolio_required">
-                Require portfolio?
-            </label>
-            <select name="<?php echo $this->db_opt;?>[comeet_field_portfolio_required]" id="comeet_field_portfolio_required">
-                <option <?php echo ($options['comeet_field_portfolio_required']) ? "selected=\"selected\"" : ""?> value="true">Yes</option>
-                <option <?php echo (!$options['comeet_field_portfolio_required']) ? "selected=\"selected\"" : ""?> value="false">No</option>
-            </select>
-            <br />
-            For more information <a target="_blank" href="https://developers.comeet.com/reference/application-form-widget#:~:text=field%2Dportfolio%2Drequired">click here</a>
+            For more information <a target="_blank" href="https://developers.comeet.com/reference/application-form-widget#:~:text=optional-,field%2Dportfolio,-Show%20portfolio%20field">click here</a>
         </div>
 
         <div class="comeet_advanced_customization_container">
@@ -212,19 +206,16 @@ print_r($options);
                 <option <?php echo (!$options['comeet_field_personalnote']) ? "selected=\"selected\"" : ""?> value="false">No</option>
             </select>
             <br />
+            <div <?php echo (!$options['comeet_field_personalnote']) ? "style=\"display: none;\"" : ""?> class="comeet_extra_options_personalnote">
+                <label for="comeet_field_personalnote_required">
+                    Require personal note?
+                </label>
+                <select name="<?php echo $this->db_opt;?>[comeet_field_personalnote_required]" id="comeet_field_personalnote_required">
+                    <option <?php echo ($options['comeet_field_personalnote_required']) ? "selected=\"selected\"" : ""?> value="true">Yes</option>
+                    <option <?php echo (!$options['comeet_field_personalnote_required']) ? "selected=\"selected\"" : ""?> value="false">No</option>
+                </select>
+            </div>
             For more information <a target="_blank" href="https://developers.comeet.com/reference/application-form-widget#:~:text=optional-,field%2Dpersonalnote,-Show%20personal%20note">click here</a>
-        </div>
-
-        <div class="comeet_advanced_customization_container comeet_field_personalnote_required" <?php echo (!$options['comeet_field_personalnote']) ? "style=\"display: none;\"" : ""?>>
-            <label for="comeet_field_personalnote_required">
-                Require personal note?
-            </label>
-            <select name="<?php echo $this->db_opt;?>[comeet_field_personalnote_required]" id="comeet_field_personalnote_required">
-                <option <?php echo ($options['comeet_field_personalnote_required']) ? "selected=\"selected\"" : ""?> value="true">Yes</option>
-                <option <?php echo (!$options['comeet_field_personalnote_required']) ? "selected=\"selected\"" : ""?> value="false">No</option>
-            </select>
-            <br />
-            For more information <a target="_blank" href="https://developers.comeet.com/reference/application-form-widget#:~:text=field%2Dpersonalnote%2Drequired">click here</a>
         </div>
 
         <div class="comeet_advanced_customization_container">
@@ -382,10 +373,10 @@ print_r($options);
         }
         $('#comeet_field_website').change(function(){
            if($(this).val() == 'true'){
-               $('.comeet_field_website_required').show().addClass('border-pulse-addition');
+               $('.comeet_extra_options_website').slideDown();
                $('#comeet_field_website_required').attr('disabled', false);
            } else {
-               $('.comeet_field_website_required').hide().removeClass('border-pulse-addition');
+               $('.comeet_extra_options_website').slideUp();
                $('#comeet_field_website_required').val('false');
                $('#comeet_field_website_required').attr('disabled', true);
            }
@@ -398,10 +389,10 @@ print_r($options);
         }
         $('#comeet_field_coverletter').change(function(){
             if($(this).val() == 'true'){
-                $('.comeet_field_coverletter_required').show().addClass('border-pulse-addition');
+                $('.comeet_extra_options_coverletter').slideDown();
                 $('#comeet_field_coverletter_required').attr('disabled', false);
             } else {
-                $('.comeet_field_coverletter_required').hide().removeClass('border-pulse-addition');
+                $('.comeet_extra_options_coverletter').slideUp();
                 $('#comeet_field_coverletter_required').val('false');
                 $('#comeet_field_coverletter_required').attr('disabled', true);
             }
@@ -414,10 +405,10 @@ print_r($options);
         }
         $('#comeet_field_portfolio').change(function(){
             if($(this).val() == 'true'){
-                $('.comeet_field_portfolio_required').show().addClass('border-pulse-addition');
+                $('.comeet_extra_options_portfolio').slideDown();
                 $('#comeet_field_portfolio_required').attr('disabled', false);
             } else {
-                $('.comeet_field_portfolio_required').hide().removeClass('border-pulse-addition');
+                $('.comeet_extra_options_portfolio').slideUp();
                 $('#comeet_field_portfolio_required').val('false');
                 $('#comeet_field_portfolio_required').attr('disabled', true);
             }
@@ -430,10 +421,10 @@ print_r($options);
         }
         $('#comeet_field_personalnote').change(function(){
             if($(this).val() == 'true'){
-                $('.comeet_field_personalnote_required').show().addClass('border-pulse-addition');
+                $('.comeet_extra_options_personalnote').slideDown();
                 $('#comeet_field_personalnote_required').attr('disabled', false);
             } else {
-                $('.comeet_field_personalnote_required').hide().removeClass('border-pulse-addition');
+                $('.comeet_extra_options_personalnote').slideUp();
                 $('#comeet_field_personalnote_required').val('false');
                 $('#comeet_field_personalnote_required').attr('disabled', true);
             }

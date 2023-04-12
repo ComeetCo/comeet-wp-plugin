@@ -831,19 +831,7 @@ if (!class_exists('Comeet')) {
                 array($this, 'comeet_other_blank'),
                 'comeet'
             );
-            //Branding section
-            add_settings_section(
-                'comeet_branding',
-                'Sub-brand',
-                array($this, 'comeet_branding_box'),
-                'comeet'
-            );
-            add_settings_section(
-                'comeet_branding_blank',
-                '',
-                array($this, 'comeet_other_blank'),
-                'comeet'
-            );
+
 
 
             //Advanced Section
@@ -897,14 +885,6 @@ if (!class_exists('Comeet')) {
 		        'Advanced Customization',
 		        array($this, 'comeet_advanced_customization'),
 		        'comeet'
-	        );
-
-	        add_settings_field(
-		        'comeet_subpage_template',
-		        'Template for locations / departments',
-		        array($this, 'comeet_subpage_input'),
-		        'comeet',
-		        'comeet_advanced_customization'
 	        );
 
 	        add_settings_section(
