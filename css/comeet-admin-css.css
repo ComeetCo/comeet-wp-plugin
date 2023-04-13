@@ -1,0 +1,37 @@
+.comeet_other_settings,
+.comeet_form_styles,
+.comeet_form_settings,
+.comeet_advanced,
+.comeet_sub_brand,
+.comeet_404_handling,
+.comeet_cookie_consent,
+.comeet_other_settings{
+    height: 65px;
+    overflow: hidden;
+    transition: height 0.5s;
+}
+.comeet_normal_height{
+    height: auto !important;
+}
+.comeet_rotate_icon_left{
+    transition: rotate 0.3s;
+    cursor: pointer;
+}
+.comeet_rotate_icon_right{
+    transform: rotate(90deg) !important;
+    transition: rotate 0.3s;
+}
+.comeet_option_title_wrap{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+.comeet_option_title_wrap h2{
+    user-select: none;
+}
+.comeet_website_required th,.comeet_website_required td,
+.comeet_coverletter_required th, .comeet_coverletter_required td
+.comeet_portfolio_required th, .comeet_portfolio_required td{
+    padding-top: 0;
+}

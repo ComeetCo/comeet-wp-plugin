@@ -29,7 +29,7 @@ comeet_init = {
    "social-employees": comeetvar.comeet_social_employees,
    "social-show-title": comeetvar.comeet_social_show_title,
    "social-share-url": comeetvar.comeet_social_share_url,
-   "social-color": comeetvar.comeet_social_color,
+   "social-color": comeetvar.comeet_social_color
 };
 if(comeetvar.comeet_css_cache == 'set_no_cache'){
    comeet_init['css-cache'] = false;

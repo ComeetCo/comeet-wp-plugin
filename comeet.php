@@ -3,7 +3,7 @@
  * Plugin Name: Comeet
  * Plugin URI: https://developers.comeet.com/reference/wordpress-plugin
  * Description: Job listing page using the Comeet API.
- * Version: 2.6.3
+ * Version: 3.0
  * Author: Comeet
  * Author URI: http://www.comeet.co
  * License: Apache 2
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '2.6.3';
+        public $version = '3.0';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -82,6 +82,8 @@ if (!class_exists('Comeet')) {
         //documentation url for use in different places in the code
         public $documentation_url = 'https://developers.comeet.com/reference/';
 
+        public $options;
+
         public function __construct() {
             //getting plugin URL
             $this->plugin_url = trailingslashit(plugin_dir_url(__FILE__));
@@ -93,6 +95,8 @@ if (!class_exists('Comeet')) {
             if (is_admin()) {
                 //adding admin specific setting that are not needed otherwise.
                 add_action('admin_init', array($this, 'register_settings'));
+                add_action('admin_init', [$this, 'admin_style']);
+                add_action('admin_init', [$this, 'admin_js']);
                 add_action('admin_menu', array($this, 'options_page'));
                 add_action('admin_init', array($this, 'flush_permalinks'));
                 //add_action('updated_option', array($this, 'check_option'), 10, 3);
@@ -108,6 +112,14 @@ if (!class_exists('Comeet')) {
             register_deactivation_hook( $plugin, array($this, 'comeet_deactivation') );
             //adding comeet.js to the thank you page.
             add_action( 'wp_head', array($this, 'comeet_add_js_to_thank_you_page'), 5);
+        }
+
+        public function admin_style() {
+            wp_enqueue_style('comeet_admin_style', $this->plugin_url . 'css/comeet-admin-css.css', null, time()/*$this->version*/, 'all');
+        }
+
+        public function admin_js() {
+            wp_enqueue_script("comeet_admin_script", ($this->plugin_url . 'js/comeet-admin-js.js'), ['jquery'], time()/*$this->version*/);
         }
 
         public function redirect_to_404($redirect_to = '404page'){
@@ -556,7 +568,6 @@ if (!class_exists('Comeet')) {
             if ($saved != $options) {
                 update_option($this->db_opt, $options);
             }
-
             return $options;
         }
 
@@ -634,288 +645,243 @@ if (!class_exists('Comeet')) {
         }
 
 
-        function add_settings_sections() {
-            // Comeet API required settings.
-            add_settings_section(
-                'comeet_api_settings',
-                'Company Identifier',
-                array($this, 'api_credentials_text'),
-                'comeet'
-            );
+        public function add_settings_sections() {
+            include('includes/admin_sections.php');
+        }
 
-            add_settings_field(
-                'comeet_uid',
-                'Company UID',
-                array($this, 'comeet_uid_input'),
-                'comeet',
-                'comeet_api_settings'
-            );
+        //starting form and social styles
+        function comeet_advanced_styles(){
+            echo '<div class="card comeet_form_styles" style="margin-bottom: 2em;">';
+            echo '<div class="comeet_option_title_wrap"><h2 class="comeet_open_icon comeet_rotate_icon_left" data-section="comeet_form_styles">Application form and Social Widget styles </h2><span class="dashicons dashicons-arrow-right"></span></div>';
+            echo '<p>Styling options for the <a href="https://developers.comeet.com/reference/application-form-widget">Application form</a> and <a href="https://developers.comeet.com/reference/social-widget">Social sharing widget - <a href="https://developers.comeet.com/reference/embedding-widgets">Learn More</a></p>';
+        }
+        function comeet_social_button_color(){
+            $options = $this->get_options();
 
-            add_settings_field(
-                'comeet_token',
-                'Token',
-                array($this, 'comeet_token_input'),
-                'comeet',
-                'comeet_api_settings'
-            );
+            $white = ($options['comeet_social_color'] == 'white') ? "selected=\"selected\"" : "" ;
+            $native = ($options['comeet_social_color'] == 'native') ? "selected=\"selected\"" : "";
+            echo '<select name="'.$this->db_opt.'[comeet_social_color]" id="comeet_social_color">';
+            echo "<option ".$white.' value="white">White</option>';
+            echo "<option ". $native.' value="native">Native</option>';
+            echo "</select>";
+        }
 
-            add_settings_section(
-                'comeet_api_blank',
-                '',
-                array($this, 'comeet_other_blank'),
-                'comeet'
-            );
-            // Other fields as needed.
-            add_settings_section(
-                'comeet_other_settings',
-                'Settings',
-                array($this, 'other_text'),
-                'comeet'
-            );
+        function comeet_labels_position(){
+            $options = $this->get_options();
+            $responsive = ($options['comeet_labels_position'] == 'responsive') ? "selected=\"selected\"" : "";
+            $left = ($options['comeet_labels_position'] == 'left') ? "selected=\"selected\"" : "";
+            $top = ($options['comeet_labels_position'] == 'top') ? "selected=\"selected\"" : "";
+             echo '<select name="'.$this->db_opt.'[comeet_labels_position]" id="comeet_labels_position">';
+             echo '<option '.$responsive.' value="responsive">Responsive</option>';
+             echo '<option '.$left.' value="left">Left</option>';
+             echo '<option '.$top.' value="top">Top</option>';
+             echo '</select>';
+        }
 
-            add_settings_field(
-                'post_id',
-                'Careers website page',
-                array($this, 'job_page_input'),
-                'comeet',
-                'comeet_other_settings'
-            );
+        function comeet_apply_as_employee(){
+            $options = $this->get_options();
+            $checked = ($options['comeet_apply_as_employee']) ? 'checked="checked"' : '';
+            echo '<input type="checkbox" id="comeet_apply_as_employee" name="' . $this->db_opt . '[comeet_apply_as_employee]" value="1" '.$checked.' />&nbsp;';
+            echo '<p class="description">When enabled, employees are given the option to “Apply as an employee.” Source will be noted as “Employees” and source type as “Internal Mobility.”</p>';
+        }
 
-            add_settings_field(
-                'advanced_search',
-                'Group Positions By',
-                array($this, 'advanced_search_input'),
-                'comeet',
-                'comeet_other_settings'
-            );
-            add_settings_field(
-                'thank_you_page',
-                'Thank you page',
-                array($this, 'thank_you_page_input'),
-                'comeet',
-                'comeet_other_settings'
-            );
-            add_settings_field(
-                'comeet_stylesheet',
-                'Style',
-                array($this, 'comeet_stylesheet_input'),
-                'comeet',
-                'comeet_other_settings'
-            );
-            add_settings_field(
-                'comeet_color',
-                'Form Main Color',
-                array($this, 'comeet_color_input'),
-                'comeet',
-                'comeet_other_settings'
-            );
-	        add_settings_field(
-		        'comeet_css_url',
-		        'CSS URL',
-		        array($this, 'comeet_css_url'),
-		        'comeet',
-		        'comeet_other_settings'
-	        );
-	        add_settings_field(
-		        'comeet_css_cache',
-		        'CSS URL Cache',
-		        array($this, 'comeet_css_cache'),
-		        'comeet',
-		        'comeet_other_settings'
-	        );
-            add_settings_field(
-                'comeet_bgcolor',
-                'Form Background Color',
-                array($this, 'comeet_bgcolor_input'),
-                'comeet',
-                'comeet_other_settings'
-            );
+        function comeet_button_color(){
+            $options = $this->get_options();
+            echo '<input type="text" placeholder="#167acd" name="'.$this->db_opt.'[comeet_button_color]" id="comeet_button_color" value="'.$options['comeet_button_color'].'" />';
+        }
 
-            add_settings_field(
-                'comeet_auto_generate_pages',
-                'Auto-generate pages',
-                array($this, 'comeet_auto_generate_pages'),
-                'comeet',
-                'comeet_other_settings'
-            );
+        function comeet_button_text(){
+            $options = $this->get_options();
+            echo '<input type="text" placeholder="Submit Application" name="'.$this->db_opt.'[comeet_button_text]" id="comeet_button_text" value="'.$options['comeet_button_text'].'" />';
+        }
 
-            add_settings_field(
-                'comeet_company_website_url',
-                'Company website URL',
-                array($this, 'comeet_company_website_url'),
-                'comeet',
-                'comeet_other_settings'
-            );
+        function comeet_font_size(){
+            $options = $this->get_options();
+            echo '<input type="text" placeholder="13px" name="'.$this->db_opt.'[comeet_font_size]" id="comeet_font_size" value="'.$options['comeet_font_size'].'" />';
+        }
 
-			add_settings_section(
-				'comeet_other_blank',
-				'',
-				array($this, 'comeet_other_blank'),
-				'comeet'
-			);
-            //Cookie consent section
-            add_settings_section(
-                'comeet_cookie_consent_handling',
-                'Cookie consent manager',
-                array($this, 'comeet_cookie_consent_handling_box'),
-                'comeet'
-            );
-            //Select what happen if position is missing
-           /* add_settings_field(
-                'comeet_cookie_option',
-                'Activate tracking script',
-                array($this, 'cookie_consent_option'),
-                'comeet',
-                'comeet_cookie_consent_handling'
-            );*/
+        function comeet_button_font_size(){
+            $options = $this->get_options();
+            echo '<input type="text" placeholder="13px" name="'.$this->db_opt.'[comeet_button_font_size]" id="comeet_button_font_size" value="'.$options['comeet_button_font_size'].'" />';
+        }
 
-            add_settings_section(
-                'comeet_consent_blank',
-                '',
-                array($this, 'comeet_other_blank'),
-                'comeet'
-            );
+        //end form and social styles
 
-            //404 handling section
-            add_settings_section(
-                'comeet_404_handling',
-                '404 handling',
-                array($this, 'comeet_404_handling_box'),
-                'comeet'
-            );
-            //Select what happen if position is missing
-            add_settings_field(
-                'comeet_404_option',
-                'Missing position action',
-                array($this, 'error_404_action'),
-                'comeet',
-                'comeet_404_handling'
-            );
+        //Starting field settings
+        function comeet_email_field(){
+            $options = $this->get_options();
+            $checked = ($options['comeet_field_email_required']) ? 'checked="checked"' : '';
+            echo '<input type="checkbox" id="comeet_field_email_required" name="' . $this->db_opt . '[comeet_field_email_required]" value="1" '.$checked.' />&nbsp;';
+        }
 
-            //error_404_page_input
-            add_settings_field(
-                'error_404_page',
-                '404 redirect page',
-                array($this, 'error_404_page_input'),
-                'comeet',
-                'comeet_404_handling'
-            );
+        function comeet_phone_field(){
+            $options = $this->get_options();
+            $checked = ($options['comeet_field_phone_required']) ? 'checked="checked"' : '';
+            echo '<input type="checkbox" id="comeet_field_phone_required" name="' . $this->db_opt . '[comeet_field_phone_required]" value="1" '.$checked.' />&nbsp;';
+        }
 
-            add_settings_section(
-                'comeet_404_blank',
-                '',
-                array($this, 'comeet_other_blank'),
-                'comeet'
-            );
+        function comeet_resume_field(){
+            $options = $this->get_options();
+            $checked = ($options['comeet_field_resume']) ? 'checked="checked"' : '';
+            echo '<input type="checkbox" id="comeet_field_resume" name="' . $this->db_opt . '[comeet_field_resume]" value="1" '.$checked.' />&nbsp;';
+        }
 
+        function comeet_linkedin_field(){
+            $options = $this->get_options();
+            $checked = ($options['comeet_field_linkedin']) ? 'checked="checked"' : '';
+            echo '<input type="checkbox" id="comeet_field_linkedin" name="' . $this->db_opt . '[comeet_field_linkedin]" value="1" '.$checked.' />&nbsp;';
+        }
 
-            //Branding section
-            add_settings_section(
-                'comeet_branding',
-                'Sub-brand',
-                array($this, 'comeet_branding_box'),
-                'comeet'
-            );
+        function comeet_profile_field(){
+            $options = $this->get_options();
+            $resume = ($options['comeet_require_profile'] == 'resume') ? "selected=\"selected\"" : "";
+            $linkedin = ($options['comeet_require_profile'] == 'linkedin') ? "selected=\"selected\"" : "";
+            $resume_linkedin = ($options['comeet_require_profile'] == 'resume-linkedin') ? "selected=\"selected\"" : "";
+            $any = ($options['comeet_require_profile'] == 'any') ? "selected=\"selected\"" : "";
+            $none = ($options['comeet_require_profile'] == 'none') ? "selected=\"selected\"" : "";
+            
+            echo '<select name="'.$this->db_opt.'[comeet_require_profile]" id="comeet_require_profile">';
+            echo '<option '.$resume.' value="resume">Resume</option>';
+            echo '<option '.$linkedin.' value="linkedin">LinkedIn</option>';
+            echo '<option '.$resume_linkedin.' value="resume-linkedin">Resume and LinkedIn</option>';
+            echo '<option '.$any.' value="any">Any</option>';
+            echo '<option '.$none.' value="none">None</option>';
+            echo '</select>';
+        }
 
-            add_settings_field(
-                'comeet_category_branding',
-                'Sub-brand field',
-                array($this, 'comeet_get_categories'),
-                'comeet',
-                'comeet_branding'
-            );
+        function comeet_website_field(){
+            $options = $this->get_options();
+            $checked = ($options['comeet_field_website']) ? 'checked="checked"' : '';
+            echo '<input type="checkbox" id="comeet_field_website" name="' . $this->db_opt . '[comeet_field_website]" value="1" '.$checked.' />';
+            echo '<span class="description"> - Show field</span>';
+        }
 
-            add_settings_section(
-                'comeet_branding_blank',
-                '',
-                array($this, 'comeet_other_blank'),
-                'comeet'
-            );
-
-
-
-            //Advanced Section
-            add_settings_section(
-                'comeet_advanced_settings',
-                'Advanced',
-                array($this, 'comeet_advanced_text'),
-                'comeet'
-            );
-            add_settings_field(
-                'comeet_subpage_template',
-                'Template for locations / departments',
-                array($this, 'comeet_subpage_input'),
-                'comeet',
-                'comeet_advanced_settings'
-            );
-            add_settings_field(
-                'comeet_positionpage_template',
-                'Template for the position page',
-                array($this, 'comeet_positionpage_input'),
-                'comeet',
-                'comeet_advanced_settings'
-            );
-            add_settings_section(
-                'comeet_advanced_blank',
-                '',
-                array($this, 'comeet_other_blank'),
-                'comeet'
-            );
-
-            /*Added section for branding ability*/
-
-            add_settings_field(
-                'comeet_category_branding',
-                'Sub-brand field',
-                array($this, 'comeet_get_categories'),
-                'comeet',
-                'comeet_branding'
-            );
-
-            add_settings_field(
-                'comeet_category_value_branding',
-                'Select sub-brand',
-                array($this, 'comeet_set_category_values'),
-                'comeet',
-                'comeet_branding'
-            );
-
-	        add_settings_section(
-		        'comeet_advanced_customization',
-		        'Advanced Customization',
-		        array($this, 'comeet_advanced_customization'),
-		        'comeet'
-	        );
-
-	        add_settings_section(
-		        'comeet_advanced_blank',
-		        '',
-		        array($this, 'comeet_other_blank'),
-		        'comeet'
-	        );
-
-
+        function comeet_website_field_required(){
+            $options = $this->get_options();
+            $disabled = ($options['comeet_field_website']) ? "" : "disabled=\"disabled\"";
+            $checked = ($options['comeet_field_website_required']) ? 'checked="checked"' : '';
+            echo '<input type="checkbox" id="comeet_field_website_required" name="' . $this->db_opt . '[comeet_field_website_required]" value="1" '.$checked.' '.$disabled.' />';
+            echo '<span class="description"> - Make required</span>';
         }
 
 
+
+        function comeet_coverletter_field(){
+            $options = $this->get_options();
+            $checked = ($options['comeet_field_coverletter']) ? 'checked="checked"' : '';
+            echo '<input type="checkbox" id="comeet_field_coverletter" name="' . $this->db_opt . '[comeet_field_coverletter]" value="1" '.$checked.' />';
+            echo '<span class="description"> - Show field</span>';
+        }
+
+        function comeet_coverletter_field_required(){
+            $options = $this->get_options();
+            $disabled = ($options['comeet_field_coverletter']) ? "" : "disabled=\"disabled\"";
+            $checked = ($options['comeet_field_coverletter_required']) ? 'checked="checked"' : '';
+            echo '<input type="checkbox" id="comeet_field_coverletter_required" name="' . $this->db_opt . '[comeet_field_coverletter_required]" value="1" '.$checked.' '.$disabled.' />';
+            echo '<span class="description"> - Make required</span>';
+        }
+
+
+        function comeet_portfolio_field(){
+            $options = $this->get_options();
+            $checked = ($options['comeet_field_portfolio']) ? 'checked="checked"' : '';
+            echo '<input type="checkbox" id="comeet_field_portfolio" name="' . $this->db_opt . '[comeet_field_portfolio]" value="1" '.$checked.' />';
+            echo '<span class="description"> - Show field</span>';
+        }
+
+        function comeet_portfolio_field_required(){
+            $options = $this->get_options();
+            $disabled = ($options['comeet_field_portfolio']) ? "" : "disabled=\"disabled\"";
+            $checked = ($options['comeet_field_portfolio_required']) ? 'checked="checked"' : '';
+            echo '<input type="checkbox" id="comeet_field_portfolio_required" name="' . $this->db_opt . '[comeet_field_portfolio_required]" value="1" '.$checked.' '.$disabled.' />';
+            echo '<span class="description"> - Make required</span>';
+        }
+
+
+        function comeet_personalnote_field(){
+            $options = $this->get_options();
+            $checked = ($options['comeet_field_personalnote']) ? 'checked="checked"' : '';
+            echo '<input type="checkbox" id="comeet_field_personalnote" name="' . $this->db_opt . '[comeet_field_personalnote]" value="1" '.$checked.' />&nbsp;';
+        }
+
+        function comeet_personalnote_field_required(){
+            $options = $this->get_options();
+            $disabled = ($options['comeet_field_personalnote']) ? "" : "disabled=\"disabled\"";
+            $checked = ($options['comeet_field_personalnote_required']) ? 'checked="checked"' : '';
+            echo '<input type="checkbox" id="comeet_field_personalnote_required" name="' . $this->db_opt . '[comeet_field_personalnote_required]" value="1" '.$checked.' '.$disabled.' />&nbsp;';
+        }
+
+
+        //social sharing widget
+        function comeet_show_social_on_careers(){
+            $options = $this->get_options();
+            $checked = ($options['comeet_social_sharing_on_careers']) ? 'checked="checked"' : '';
+            echo '<input type="checkbox" id="comeet_social_sharing_on_careers" name="' . $this->db_opt . '[comeet_social_sharing_on_careers]" value="1" '.$checked.'  />&nbsp;';
+        }
+        function comeet_show_social_on_positions(){
+            $options = $this->get_options();
+            $checked = ($options['comeet_social_sharing_on_positions']) ? 'checked="checked"' : '';
+            echo '<input type="checkbox" id="comeet_social_sharing_on_positions" name="' . $this->db_opt . '[comeet_social_sharing_on_positions]" value="1" '.$checked.'  />&nbsp;';
+        }
+
+        function comeet_pinterest_field(){
+            $options = $this->get_options();
+            $checked = ($options['comeet_social_pinterest']) ? 'checked="checked"' : '';
+            echo '<input type="checkbox" id="comeet_social_pinterest" name="' . $this->db_opt . '[comeet_social_pinterest]" value="1" '.$checked.' />&nbsp;';
+        }
+
+        function comeet_whatsapp_field(){
+            $options = $this->get_options();
+            $checked = ($options['comeet_social_whatsapp']) ? 'checked="checked"' : '';
+            echo '<input type="checkbox" id="comeet_social_whatsapp" name="' . $this->db_opt . '[comeet_social_whatsapp]" value="1" '.$checked.' />&nbsp;';
+        }
+
+        function comeet_employees_field(){
+            $options = $this->get_options();
+            $checked = ($options['comeet_social_employees']) ? 'checked="checked"' : '';
+            echo '<input type="checkbox" id="comeet_social_employees" name="' . $this->db_opt . '[comeet_social_employees]" value="1" '.$checked.' />&nbsp;';
+        }
+
+        function comeet_show_title_field(){
+            $options = $this->get_options();
+            $checked = ($options['comeet_social_show_title']) ? 'checked="checked"' : '';
+            echo '<input type="checkbox" id="comeet_social_show_title" name="' . $this->db_opt . '[comeet_social_show_title]" value="1" '.$checked.' />&nbsp;';
+        }
+
+        function comeet_social_fields_override_share_url(){
+            $options = $this->get_options();
+            echo '<input type="text" placeholder="" name="'.$this->db_opt.'[comeet_social_share_url]" id="comeet_social_share_url" value="'.$options['comeet_social_share_url'].'" />';
+        }
+
+        //end field settings
 
         /*Start settings page functions*/
         function api_credentials_text() {
-            echo '<div class="card" style="margin-bottom: 4em;"><p>To find these values, navigate in Comeet to Company Settings / Careers Website and make sure to enable the API. These settings are available to the company&#39;s admin. <a href="https://developers.comeet.com/v1.0/reference#careers-api-section-header" target="_blank">Learn More</a></p>';
+            echo '<div class="card" style="margin-bottom: 2em;"><p>To find these values, navigate in Comeet to Company Settings / Careers Website and make sure to enable the API. These settings are available to the company&#39;s admin. <a href="https://developers.comeet.com/v1.0/reference#careers-api-section-header" target="_blank">Learn More</a></p>';
         }
 
         function comeet_advanced_text() {
-            echo '<div class="card" style="margin-bottom: 4em;"><p>Use a different theme by specifying the templates that you would like to use.
-      Templates are PHP files that reside in your theme folder. <a target="_blank" href="https://developer.wordpress.org/themes/template-files-section/page-template-files/">Learn more about page templates</a>
-      </p>';
+            echo '<div class="card comeet_advanced" style="margin-bottom: 2em;">';
+            echo '<div class="comeet_option_title_wrap"><h2 class="comeet_open_icon comeet_rotate_icon_left" data-section="comeet_advanced">Advanced  </h2><span class="dashicons dashicons-arrow-right"></span></div>';
+            echo '<p>Use a different theme by specifying the templates that you would like to use.
+                    Templates are PHP files that reside in your theme folder. <a target="_blank" href="https://developer.wordpress.org/themes/template-files-section/page-template-files/">Learn more about page templates</a>
+                  </p>';
         }
 
-	    function comeet_advanced_customization() {
-		    include('includes/advanced_customization.php');
+	    function comeet_styles_section() {
+		    //include('includes/advanced_customization.php');
+            echo '<div class="card" style="margin-bottom: 2em;"><p>Field options for <a href="https://developers.comeet.com/reference/application-form-widget#:~:text=optional-,Fields%3A,-Name">Application form widget</a> and the <a href="https://developers.comeet.com/reference/social-widget#:~:text=optional-,Customize,-%3A">Social widget</a> - <a href="https://developers.comeet.com/reference/embedding-widgets">Learn More</a></p></div>';
 	    }
 
+        function comeet_widget_fields() {
+            $options = $this->get_options();
+            echo '<div class="card comeet_form_settings" style="margin-bottom: 2em;">';
+            echo '<div class="comeet_option_title_wrap"><h2 class="comeet_open_icon comeet_rotate_icon_left" data-section="comeet_form_settings">Application form and Social Widget Field Options  </h2><span class="dashicons dashicons-arrow-right"></span></div>';
+        }
+
         function other_text() {
-            echo '<div class="card">';
+            echo '<div class="card comeet_other_settings">';
+            echo '<div class="comeet_option_title_wrap"><h2 class="comeet_open_icon comeet_open_icon comeet_rotate_icon_left" data-section="comeet_other_settings">Settings</h2><span class="dashicons dashicons-arrow-right"></span></div>';
         }
 
         function comeet_token_input() {
@@ -931,11 +897,14 @@ if (!class_exists('Comeet')) {
         }
 
         public function comeet_404_handling_box(){
-            echo '<div class="card" style="margin-bottom: 4em;"><p>Select what happens when a user tries to view a position that has been closed or removed from Comeet. Please note, all redirects are 301 redirect. <a href="https://developers.google.com/search/docs/crawling-indexing/301-redirects">Learn more about 301 redirect here</a></p>';
+            echo '<div class="card comeet_404_handling" style="margin-bottom: 2em;">';
+            echo '<div class="comeet_option_title_wrap"><h2 class="comeet_open_icon comeet_rotate_icon_left" data-section="comeet_404_handling">404 handling  </h2><span class="dashicons dashicons-arrow-right"></span></div>';
+            echo '<p>Select what happens when a user tries to view a position that has been closed or removed from Comeet. Please note, all redirects are 301 redirect. <a href="https://developers.google.com/search/docs/crawling-indexing/301-redirects">Learn more about 301 redirect here</a></p>';
         }
 
         public function comeet_cookie_consent_handling_box(){
-            echo '<div class="card" style="margin-bottom: 4em;">';
+            echo '<div class="card comeet_cookie_consent" style="margin-bottom: 2em;">';
+            echo '<div class="comeet_option_title_wrap"><h2 class="comeet_open_icon comeet_rotate_icon_left" data-section="comeet_cookie_consent">Cookie consent manager  </h2><span class="dashicons dashicons-arrow-right"></span></div>';
             echo '<p>Comeet uses cookies to track candidate sources. To give visitors the option to accept or reject these cookies, you may want to use a cookie consent manager. Some cookie consent managers require the tracking script to be embedded differently so that it is enabled only if the visitor accepts the use of these cookies. For a list of supported managers and additional details, please visit <a href="https://developers.comeet.com/reference/cookies-consent">this page</a>.</p>';
             $options = $this->get_options();
             $trackin_on = '';
@@ -957,7 +926,9 @@ if (!class_exists('Comeet')) {
         }
 
 		public function comeet_branding_box(){
-			echo '<div class="card" style="margin-bottom: 4em;"><p>Only show positions of one sub-brand of the company.</p>';
+			echo '<div class="card comeet_sub_brand" style="margin-bottom: 2em;">';
+            echo '<div class="comeet_option_title_wrap"><h2 class="comeet_open_icon comeet_rotate_icon_left" data-section="comeet_sub_brand">Sub-brand  </h2><span class="dashicons dashicons-arrow-right"></span></div>';
+            echo '<p>Only show positions of one sub-brand of the company.</p>';
 		}
 
         public function comeet_get_categories(){
@@ -1018,26 +989,6 @@ if (!class_exists('Comeet')) {
                 }
                 echo "</select>";
             }
-
-            echo "<script type='text/javascript'>";
-            echo "jQuery(document).ready(function($){";
-            echo "$('.branding_categories').change(function(){";
-            echo "var selected_value = $(this).val();";
-            echo "if(selected_value == 'default'){";
-            echo "$('.comeet_default_disabled').show();
-                $('.comeet_val_select').hide();
-             } else {
-                $('.comeet_default_disabled').hide();
-                $('.comeet_default_disabled').attr('disabled', 'disabled');
-                $('.comeet_val_select').hide();
-                $('.branding_selected_value_'+selected_value).show();
-                $('.branding_selected_value_'+selected_value).attr('disabled', false);
-             }
-             ";
-            echo "})";
-            echo "})";
-            echo "</script>";
-
         }
 
         function comeet_other_blank() {
@@ -1090,22 +1041,6 @@ if (!class_exists('Comeet')) {
             echo $this->pages_input($post_id, 'error_404_page', '-- Select a page --', $disabled);
         }
 
-
-        function cookie_consent_option(){
-           /* $options = $this->get_options();
-            $comeet_cookie_consent_checked = '';
-            if(isset($options['comeet_cookie_consent']) && $options['comeet_cookie_consent'] == 1)
-                $comeet_cookie_consent_checked = 'checked="checked"';
-            echo '<div>';
-            echo '<input type="radio" id="comeet_cookie_consent_0" value="0" name="'.$this->db_opt . '[comeet_cookie_consent]" />';
-            echo '<label for="comeet_cookie_consent_0">Enable tracking script</label><br />';
-            echo '<input type="radio" id="comeet_cookie_consent_1" value="1" name="'.$this->db_opt . '[comeet_cookie_consent]" />';
-            echo '<label for="comeet_cookie_consent_0">A cookie consent manager is configured to enable the tracking script when approved by visitor</label>';
-            //echo '<input type="checkbox" id="comeet_cookie_consent" name="' . $this->db_opt . '[comeet_cookie_consent]" value="1" '.$comeet_cookie_consent_checked.' />&nbsp;';
-            //echo '<label for="comeet_cookie_consent">Check to activate</label><br />';
-            echo "</div>";*/
-        }
-
         function error_404_action(){
             $options = $this->get_options();
             echo '<div>';
@@ -1114,20 +1049,6 @@ if (!class_exists('Comeet')) {
             echo '<option value="redirect_to_404"' . ($options['comeet_404_option'] == 'redirect_to_404' ? ' selected="selected"' : '') . '>Redirect to 404 page</option>';
             echo '<option value="redirect_to_page"' . ($options['comeet_404_option'] == 'redirect_to_page' ? ' selected="selected"' : '') . '>Redirect to selected page</option>';
             echo '</select></div>';
-
-            echo "<script>
-            jQuery(document).ready(function($){
-                  $('#comeet_404_option').change(function(){
-                    console.log('Change detected');
-                    var comeet_404_option_selected_value = $(this).val();
-                    if(comeet_404_option_selected_value == 'redirect_to_page'){
-                        $('#error_404_page').attr('disabled', false);
-                    } else {
-                        $('#error_404_page').attr('disabled', true);
-                        $('#error_404_page').val('-1');
-                    }
-                  });
-            });</script>";
         }
 
 		function advanced_search_input() {
@@ -1225,6 +1146,8 @@ if (!class_exists('Comeet')) {
 
             echo '</select></div>';
         }
+
+
         /*End settings page functions*/
 
 
@@ -1232,17 +1155,6 @@ if (!class_exists('Comeet')) {
         function clear_cache($options) {
             ComeetData::get_api_data($options);
         }
-        //checking if options have been updated, if yes, clearing cache
-        /*function check_option($option, $old_value, $new_value) {
-            if ($option !== 'Comeet_Options') {
-                return;
-            }
-
-            if ($old_value['comeet_token'] !== $new_value['comeet_token'] ||
-                $old_value['comeet_uid'] !== $new_value['comeet_uid']
-            ) {
-            }
-        }*/
 
         /**
          * Validates plugin settings form when submitted.
@@ -1290,44 +1202,40 @@ if (!class_exists('Comeet')) {
             $valid['comeet_cookie_consent'] = (isset($input['comeet_cookie_consent'])) ? $input['comeet_cookie_consent'] : "";
 
             //advanced customization
-	        $valid['comeet_apply_as_employee'] = (isset($input['apply-as-employee']) ? ($input['apply-as-employee'] == 'true' ? true : false) : (true));
-	        $valid['comeet_field_email_required'] = (isset($input['field-email-required']) ? ($input['field-email-required'] == 'true' ? true : false) : (true));
-	        $valid['comeet_field_phone_required'] = (isset($input['field-phone-required']) ? ($input['field-phone-required'] == 'true' ? true : false) : (true));
-	        $valid['comeet_field_resume'] = (isset($input['field-resume']) ? ($input['field-resume'] == 'true' ? true : false) : (true));
-	        $valid['comeet_field_linkedin'] = (isset($input['field-linkedin']) ? ($input['field-linkedin'] == 'true' ? true : false) : (true));
-	        $valid['comeet_require_profile'] = (isset($input['require-profile'])) ? $input['require-profile'] : "resume";
-
-            if($input['comeet_field_website'] == "true"){
+	        $valid['comeet_apply_as_employee'] = ($input['comeet_apply_as_employee']) ? true : false;
+            $valid['comeet_field_email_required'] = ($input['comeet_field_email_required']) ? true : false;
+            $valid['comeet_field_phone_required'] = ($input['comeet_field_phone_required']) ? true : false;
+            $valid['comeet_field_resume'] = ($input['comeet_field_resume']) ? true : false;
+            $valid['comeet_field_linkedin'] = ($input['comeet_field_linkedin']) ? true : false;
+	        $valid['comeet_require_profile'] = ($input['comeet_require_profile']) ? $input['comeet_require_profile'] : "resume";
+            if($input['comeet_field_website']){
 	            $valid['comeet_field_website'] = true;
                 //can only be true if $valid['field-website'] is true.
-	            $valid['comeet_field_website_required'] = (isset($input['comeet_field_website_required']) ? ($input['comeet_field_website_required'] == 'true' ? true : false) : (true));
+	            $valid['comeet_field_website_required'] = ($input['comeet_field_website_required']) ? true : false;
             } else {
 	            $valid['comeet_field_website'] = false;
 	            $valid['comeet_field_website_required'] = false;
             }
-
-	        if($input['comeet_field_coverletter'] == "true"){
+	        if($input['comeet_field_coverletter']){
 		        $valid['comeet_field_coverletter'] = true;
 		        //can only be true if $valid['field-website'] is true.
-		        $valid['comeet_field_coverletter_required'] = (isset($input['comeet_field_coverletter_required']) ? ($input['comeet_field_coverletter_required'] == 'true' ? true : false) : (true));
+		        $valid['comeet_field_coverletter_required'] = ($input['comeet_field_coverletter_required']) ? true : false;
 	        } else {
 		        $valid['comeet_field_coverletter'] = false;
 		        $valid['comeet_field_coverletter_required'] = false;
 	        }
-
-	        if($input['comeet_field_portfolio'] == "true"){
+	        if($input['comeet_field_portfolio']){
 		        $valid['comeet_field_portfolio'] = true;
 		        //can only be true if $valid['field-website'] is true.
-		        $valid['comeet_field_portfolio_required'] = (isset($input['comeet_field_portfolio_required']) ? ($input['comeet_field_portfolio_required'] == 'true' ? true : false) : (true));
+		        $valid['comeet_field_portfolio_required'] = ($input['comeet_field_portfolio_required']) ? true : false;
 	        } else {
 		        $valid['comeet_field_portfolio'] = false;
 		        $valid['comeet_field_portfolio_required'] = false;
 	        }
-
-	        if($input['comeet_field_personalnote'] == "true"){
+	        if($input['comeet_field_personalnote']){
 		        $valid['comeet_field_personalnote'] = true;
 		        //can only be true if $valid['field-website'] is true.
-		        $valid['comeet_field_personalnote_required'] = (isset($input['comeet_field_personalnote_required']) ? ($input['comeet_field_personalnote_required'] == 'true' ? true : false) : (true));
+		        $valid['comeet_field_personalnote_required'] = ($input['comeet_field_personalnote_required']) ? true : false;
 	        } else {
 		        $valid['comeet_field_personalnote'] = false;
 		        $valid['comeet_field_personalnote_required'] = false;
@@ -1337,16 +1245,18 @@ if (!class_exists('Comeet')) {
 	        $valid['comeet_font_size'] = (isset($input['comeet_font_size'])) ? $input['comeet_font_size'] : "13px";
 	        $valid['comeet_button_font_size'] = (isset($input['comeet_button_font_size'])) ? $input['comeet_button_font_size'] : "13px";
 	        $valid['comeet_labels_position'] = (isset($input['comeet_labels_position'])) ? $input['comeet_labels_position'] : "responsive";
+
             //social share widget option
-	        $valid['comeet_social_pinterest'] = (isset($input['comeet_social_pinterest']) ? ($input['comeet_social_pinterest'] == 'true' ? true : false) : (true));
-	        $valid['comeet_social_whatsapp'] = (isset($input['comeet_social_whatsapp']) ? ($input['comeet_social_whatsapp'] == 'true' ? true : false) : (false));
-	        $valid['comeet_social_employees'] = (isset($input['comeet_social_employees']) ? ($input['comeet_social_employees'] == 'true' ? true : false) : (true));
-	        $valid['comeet_social_show_title'] = (isset($input['comeet_social_show_title']) ? ($input['comeet_social_show_title'] == 'true' ? true : false) : (true));
-	        $valid['comeet_social_share_url'] = (isset($input['comeet_social_share_url'])) ? $input['comeet_social_share_url'] : "";
-	        $valid['comeet_social_color'] = (isset($input['comeet_social_color'])) ? $input['comeet_social_color'] : "white";
+	        $valid['comeet_social_pinterest'] = ($input['comeet_social_pinterest']) ? true : false;
+	        $valid['comeet_social_whatsapp'] = ($input['comeet_social_whatsapp']) ? true : false;
+	        $valid['comeet_social_employees'] = ($input['comeet_social_employees']) ? true : false;
+	        $valid['comeet_social_show_title'] = ($input['comeet_social_show_title']) ? true : false;
+	        $valid['comeet_social_share_url'] = ($input['comeet_social_share_url']) ? $input['comeet_social_share_url'] : "";
+	        $valid['comeet_social_color'] = ($input['comeet_social_color']) ? $input['comeet_social_color'] : "white";
+
             //display or hide social widget on careers and position pages.
-            $valid['comeet_social_sharing_on_positions'] = (isset($input['comeet_social_sharing_on_positions']) ? ($input['comeet_social_sharing_on_positions'] == 'true' ? true : false) : (true));
-            $valid['comeet_social_sharing_on_careers'] = (isset($input['comeet_social_sharing_on_careers']) ? ($input['comeet_social_sharing_on_careers'] == 'true' ? true : false) : (true));
+            $valid['comeet_social_sharing_on_positions'] = ($input['comeet_social_sharing_on_positions']) ? true : false;
+            $valid['comeet_social_sharing_on_careers'] = ($input['comeet_social_sharing_on_careers']) ? true : false;
 
 
 	        //end advanced customization
@@ -1538,7 +1448,7 @@ if (!class_exists('Comeet')) {
                 "comeet_field_phone_required" => ($options['comeet_field_phone_required']) ? "true" : "false",
                 "comeet_field_resume" => ($options['comeet_field_resume']) ? "true" : "false",
                 "comeet_field_linkedin" => ($options['comeet_field_linkedin']) ? "true" : "false",
-                "comeet_require_profile" => ($options['comeet_require_profile']) ? "true" : "false",
+                "comeet_require_profile" => $options['comeet_require_profile'],
                 "comeet_field_website" => ($options['comeet_field_website']) ? "true" : "false",
                 "comeet_field_website_required" => ($options['comeet_field_website_required']) ? "true" : "false",
                 "comeet_field_coverletter" => ($options['comeet_field_coverletter']) ? "true" : "false",
