@@ -517,7 +517,7 @@ if (!class_exists('Comeet')) {
                 'location' => '',
                 'post_id' => '',
                 'advanced_search' => 1,
-                'comeet_color' => '278fe6',
+                'comeet_color' => '',
                 'comeet_bgcolor' => '',
                 'comeet_stylesheet' => 'comeet-cards.css',
                 'comeet_subpage_template' => 'page.php',
@@ -529,8 +529,8 @@ if (!class_exists('Comeet')) {
                 'comeet_cookie_consent' => false,
                 'comeet_company_url' => '',
                 //adding advanced customization
-                'comeet_apply_as_employee' => false,
-                'comeet_field_email_required' => false,
+                'comeet_apply_as_employee' => true,
+                'comeet_field_email_required' => true,
                 'comeet_field_phone_required' => true,
                 'comeet_field_resume' => true,
                 'comeet_field_linkedin' => true,
@@ -543,12 +543,14 @@ if (!class_exists('Comeet')) {
                 'comeet_field_portfolio_required' => false,
                 'comeet_field_personalnote' => true,
                 'comeet_field_personalnote_required' => false,
-                'comeet_button_text' => 'Submit Application',
-                'comeet_font_size' => '13px',
-                'comeet_button_font_size' => '13px',
+                'comeet_button_text' => '',
+                'comeet_font_size' => '',
+                'comeet_button_font_size' => '',
                 'comeet_labels_position' => 'responsive',
-                'comeet_button_color' => '#167acd',
+                'comeet_button_color' => '',
                 //advanced customization for Social widget
+                "comeet_social_sharing_on_careers" => true,
+                "comeet_social_sharing_on_positions" => true,
                 "comeet_social_pinterest" => true,
                 "comeet_social_whatsapp" => false,
                 "comeet_social_employees" => true,
@@ -652,8 +654,8 @@ if (!class_exists('Comeet')) {
         //starting form and social styles
         function comeet_advanced_styles(){
             echo '<div class="card comeet_form_styles" style="margin-bottom: 2em;">';
-            echo '<div class="comeet_option_title_wrap"><h2 class="comeet_open_icon comeet_rotate_icon_left" data-section="comeet_form_styles">Application form and Social Widget styles </h2><span class="dashicons dashicons-arrow-right"></span></div>';
-            echo '<p>Styling options for the <a href="https://developers.comeet.com/reference/application-form-widget">Application form</a> and <a href="https://developers.comeet.com/reference/social-widget">Social sharing widget - <a href="https://developers.comeet.com/reference/embedding-widgets">Learn More</a></p>';
+            echo '<div class="comeet_option_title_wrap"><h2 class="comeet_open_icon comeet_rotate_icon_left" data-section="comeet_form_styles">Styling</h2><span class="dashicons dashicons-arrow-right"></span></div>';
+            echo '<p>Styling options for the <a href="https://developers.comeet.com/reference/application-form-widget">Application form</a> and <a href="https://developers.comeet.com/reference/social-widget">Social sharing widget.</a></p>';
         }
         function comeet_social_button_color(){
             $options = $this->get_options();
@@ -681,8 +683,8 @@ if (!class_exists('Comeet')) {
         function comeet_apply_as_employee(){
             $options = $this->get_options();
             $checked = ($options['comeet_apply_as_employee']) ? 'checked="checked"' : '';
-            echo '<input type="checkbox" id="comeet_apply_as_employee" name="' . $this->db_opt . '[comeet_apply_as_employee]" value="1" '.$checked.' />&nbsp;';
-            echo '<p class="description">When enabled, employees are given the option to “Apply as an employee.” Source will be noted as “Employees” and source type as “Internal Mobility.”</p>';
+            echo '<input type="checkbox" id="comeet_apply_as_employee" name="' . $this->db_opt . '[comeet_apply_as_employee]" value="1" '.$checked.' />';
+            echo '<span class="description">Allow to apply as an Employee</span>';
         }
 
         function comeet_button_color(){
@@ -711,25 +713,29 @@ if (!class_exists('Comeet')) {
         function comeet_email_field(){
             $options = $this->get_options();
             $checked = ($options['comeet_field_email_required']) ? 'checked="checked"' : '';
-            echo '<input type="checkbox" id="comeet_field_email_required" name="' . $this->db_opt . '[comeet_field_email_required]" value="1" '.$checked.' />&nbsp;';
+            echo '<input type="checkbox" id="comeet_field_email_required" name="' . $this->db_opt . '[comeet_field_email_required]" value="1" '.$checked.' />';
+            echo '<span class="description"> Required</span>';
         }
 
         function comeet_phone_field(){
             $options = $this->get_options();
             $checked = ($options['comeet_field_phone_required']) ? 'checked="checked"' : '';
-            echo '<input type="checkbox" id="comeet_field_phone_required" name="' . $this->db_opt . '[comeet_field_phone_required]" value="1" '.$checked.' />&nbsp;';
+            echo '<input type="checkbox" id="comeet_field_phone_required" name="' . $this->db_opt . '[comeet_field_phone_required]" value="1" '.$checked.' />';
+            echo '<span class="description"> Required</span>';
         }
 
         function comeet_resume_field(){
             $options = $this->get_options();
             $checked = ($options['comeet_field_resume']) ? 'checked="checked"' : '';
-            echo '<input type="checkbox" id="comeet_field_resume" name="' . $this->db_opt . '[comeet_field_resume]" value="1" '.$checked.' />&nbsp;';
+            echo '<input type="checkbox" id="comeet_field_resume" name="' . $this->db_opt . '[comeet_field_resume]" value="1" '.$checked.' />';
+            echo '<span> Show</span>';
         }
 
         function comeet_linkedin_field(){
             $options = $this->get_options();
             $checked = ($options['comeet_field_linkedin']) ? 'checked="checked"' : '';
-            echo '<input type="checkbox" id="comeet_field_linkedin" name="' . $this->db_opt . '[comeet_field_linkedin]" value="1" '.$checked.' />&nbsp;';
+            echo '<input type="checkbox" id="comeet_field_linkedin" name="' . $this->db_opt . '[comeet_field_linkedin]" value="1" '.$checked.' />';
+            echo '<span class="description"> Show</span>';
         }
 
         function comeet_profile_field(){
@@ -744,8 +750,8 @@ if (!class_exists('Comeet')) {
             echo '<option '.$resume.' value="resume">Resume</option>';
             echo '<option '.$linkedin.' value="linkedin">LinkedIn</option>';
             echo '<option '.$resume_linkedin.' value="resume-linkedin">Resume and LinkedIn</option>';
-            echo '<option '.$any.' value="any">Any</option>';
-            echo '<option '.$none.' value="none">None</option>';
+            echo '<option '.$any.' value="any">Resume or LinkedIn</option>';
+            echo '<option '.$none.' value="none">Not Required</option>';
             echo '</select>';
         }
 
@@ -753,7 +759,7 @@ if (!class_exists('Comeet')) {
             $options = $this->get_options();
             $checked = ($options['comeet_field_website']) ? 'checked="checked"' : '';
             echo '<input type="checkbox" id="comeet_field_website" name="' . $this->db_opt . '[comeet_field_website]" value="1" '.$checked.' />';
-            echo '<span class="description"> - Show field</span>';
+            echo '<span class="description"> Show</span>';
         }
 
         function comeet_website_field_required(){
@@ -761,7 +767,7 @@ if (!class_exists('Comeet')) {
             $disabled = ($options['comeet_field_website']) ? "" : "disabled=\"disabled\"";
             $checked = ($options['comeet_field_website_required']) ? 'checked="checked"' : '';
             echo '<input type="checkbox" id="comeet_field_website_required" name="' . $this->db_opt . '[comeet_field_website_required]" value="1" '.$checked.' '.$disabled.' />';
-            echo '<span class="description"> - Make required</span>';
+            echo '<span class="description"> Required</span>';
         }
 
 
@@ -770,7 +776,7 @@ if (!class_exists('Comeet')) {
             $options = $this->get_options();
             $checked = ($options['comeet_field_coverletter']) ? 'checked="checked"' : '';
             echo '<input type="checkbox" id="comeet_field_coverletter" name="' . $this->db_opt . '[comeet_field_coverletter]" value="1" '.$checked.' />';
-            echo '<span class="description"> - Show field</span>';
+            echo '<span class="description"> Show</span>';
         }
 
         function comeet_coverletter_field_required(){
@@ -778,7 +784,7 @@ if (!class_exists('Comeet')) {
             $disabled = ($options['comeet_field_coverletter']) ? "" : "disabled=\"disabled\"";
             $checked = ($options['comeet_field_coverletter_required']) ? 'checked="checked"' : '';
             echo '<input type="checkbox" id="comeet_field_coverletter_required" name="' . $this->db_opt . '[comeet_field_coverletter_required]" value="1" '.$checked.' '.$disabled.' />';
-            echo '<span class="description"> - Make required</span>';
+            echo '<span class="description"> Required</span>';
         }
 
 
@@ -786,7 +792,7 @@ if (!class_exists('Comeet')) {
             $options = $this->get_options();
             $checked = ($options['comeet_field_portfolio']) ? 'checked="checked"' : '';
             echo '<input type="checkbox" id="comeet_field_portfolio" name="' . $this->db_opt . '[comeet_field_portfolio]" value="1" '.$checked.' />';
-            echo '<span class="description"> - Show field</span>';
+            echo '<span class="description"> Show</span>';
         }
 
         function comeet_portfolio_field_required(){
@@ -794,21 +800,23 @@ if (!class_exists('Comeet')) {
             $disabled = ($options['comeet_field_portfolio']) ? "" : "disabled=\"disabled\"";
             $checked = ($options['comeet_field_portfolio_required']) ? 'checked="checked"' : '';
             echo '<input type="checkbox" id="comeet_field_portfolio_required" name="' . $this->db_opt . '[comeet_field_portfolio_required]" value="1" '.$checked.' '.$disabled.' />';
-            echo '<span class="description"> - Make required</span>';
+            echo '<span class="description"> Required</span>';
         }
 
 
         function comeet_personalnote_field(){
             $options = $this->get_options();
             $checked = ($options['comeet_field_personalnote']) ? 'checked="checked"' : '';
-            echo '<input type="checkbox" id="comeet_field_personalnote" name="' . $this->db_opt . '[comeet_field_personalnote]" value="1" '.$checked.' />&nbsp;';
+            echo '<input type="checkbox" id="comeet_field_personalnote" name="' . $this->db_opt . '[comeet_field_personalnote]" value="1" '.$checked.' />';
+            echo '<span class="description"> Show</span>';
         }
 
         function comeet_personalnote_field_required(){
             $options = $this->get_options();
             $disabled = ($options['comeet_field_personalnote']) ? "" : "disabled=\"disabled\"";
             $checked = ($options['comeet_field_personalnote_required']) ? 'checked="checked"' : '';
-            echo '<input type="checkbox" id="comeet_field_personalnote_required" name="' . $this->db_opt . '[comeet_field_personalnote_required]" value="1" '.$checked.' '.$disabled.' />&nbsp;';
+            echo '<input type="checkbox" id="comeet_field_personalnote_required" name="' . $this->db_opt . '[comeet_field_personalnote_required]" value="1" '.$checked.' '.$disabled.' />';
+            echo '<span class="description"> Required</span>';
         }
 
 
@@ -816,30 +824,42 @@ if (!class_exists('Comeet')) {
         function comeet_show_social_on_careers(){
             $options = $this->get_options();
             $checked = ($options['comeet_social_sharing_on_careers']) ? 'checked="checked"' : '';
-            echo '<input type="checkbox" id="comeet_social_sharing_on_careers" name="' . $this->db_opt . '[comeet_social_sharing_on_careers]" value="1" '.$checked.'  />&nbsp;';
+            echo '<input type="checkbox" id="comeet_social_sharing_on_careers" name="' . $this->db_opt . '[comeet_social_sharing_on_careers]" value="1" '.$checked.'  />';
+            echo '<span class="description"> Show on Careers page</span>';
         }
         function comeet_show_social_on_positions(){
             $options = $this->get_options();
             $checked = ($options['comeet_social_sharing_on_positions']) ? 'checked="checked"' : '';
-            echo '<input type="checkbox" id="comeet_social_sharing_on_positions" name="' . $this->db_opt . '[comeet_social_sharing_on_positions]" value="1" '.$checked.'  />&nbsp;';
+            echo '<input type="checkbox" id="comeet_social_sharing_on_positions" name="' . $this->db_opt . '[comeet_social_sharing_on_positions]" value="1" '.$checked.'  />';
+            echo '<span class="description"> Show on position pages</span>';
+        }
+
+        function comeet_linkedin_social_field(){
+            $options = $this->get_options();
+            $checked = 'checked="checked"';
+            echo '<input type="checkbox" disabled="disabled" id="comeet_social_linkedin" name=" value="1" '.$checked.' />';
+            echo '<span class="description"> Show</span>';
         }
 
         function comeet_pinterest_field(){
             $options = $this->get_options();
             $checked = ($options['comeet_social_pinterest']) ? 'checked="checked"' : '';
-            echo '<input type="checkbox" id="comeet_social_pinterest" name="' . $this->db_opt . '[comeet_social_pinterest]" value="1" '.$checked.' />&nbsp;';
+            echo '<input type="checkbox" id="comeet_social_pinterest" name="' . $this->db_opt . '[comeet_social_pinterest]" value="1" '.$checked.' />';
+            echo '<span class="description"> Show</span>';
         }
 
         function comeet_whatsapp_field(){
             $options = $this->get_options();
             $checked = ($options['comeet_social_whatsapp']) ? 'checked="checked"' : '';
-            echo '<input type="checkbox" id="comeet_social_whatsapp" name="' . $this->db_opt . '[comeet_social_whatsapp]" value="1" '.$checked.' />&nbsp;';
+            echo '<input type="checkbox" id="comeet_social_whatsapp" name="' . $this->db_opt . '[comeet_social_whatsapp]" value="1" '.$checked.' />';
+            echo '<span class="description"> Show</span>';
         }
 
         function comeet_employees_field(){
             $options = $this->get_options();
             $checked = ($options['comeet_social_employees']) ? 'checked="checked"' : '';
-            echo '<input type="checkbox" id="comeet_social_employees" name="' . $this->db_opt . '[comeet_social_employees]" value="1" '.$checked.' />&nbsp;';
+            echo '<input type="checkbox" id="comeet_social_employees" name="' . $this->db_opt . '[comeet_social_employees]" value="1" '.$checked.' />';
+            echo '<span class="description"> Allow to authenticate</span>';
         }
 
         function comeet_show_title_field(){
@@ -857,12 +877,14 @@ if (!class_exists('Comeet')) {
 
         /*Start settings page functions*/
         function api_credentials_text() {
-            echo '<div class="card" style="margin-bottom: 2em;"><p>To find these values, navigate in Comeet to Company Settings / Careers Website and make sure to enable the API. These settings are available to the company&#39;s admin. <a href="https://developers.comeet.com/v1.0/reference#careers-api-section-header" target="_blank">Learn More</a></p>';
+            echo '<div class="card" style="margin-bottom: 2em;">';
+            echo '<div class="comeet_option_title_wrap"><h2 class="">Company identifiers  </h2></div>';
+            echo '<p>To find your identifiers, navigate in Comeet to Settings > Careers Website (requires permission). <a href="https://developers.comeet.com/v1.0/reference#careers-api-section-header">Learn more</a></p>';
         }
 
         function comeet_advanced_text() {
             echo '<div class="card comeet_advanced" style="margin-bottom: 2em;">';
-            echo '<div class="comeet_option_title_wrap"><h2 class="comeet_open_icon comeet_rotate_icon_left" data-section="comeet_advanced">Advanced  </h2><span class="dashicons dashicons-arrow-right"></span></div>';
+            echo '<div class="comeet_option_title_wrap"><h2 class="comeet_open_icon comeet_rotate_icon_left" data-section="comeet_advanced">Custom Templates  </h2><span class="dashicons dashicons-arrow-right"></span></div>';
             echo '<p>Use a different theme by specifying the templates that you would like to use.
                     Templates are PHP files that reside in your theme folder. <a target="_blank" href="https://developer.wordpress.org/themes/template-files-section/page-template-files/">Learn more about page templates</a>
                   </p>';
@@ -876,7 +898,7 @@ if (!class_exists('Comeet')) {
         function comeet_widget_fields() {
             $options = $this->get_options();
             echo '<div class="card comeet_form_settings" style="margin-bottom: 2em;">';
-            echo '<div class="comeet_option_title_wrap"><h2 class="comeet_open_icon comeet_rotate_icon_left" data-section="comeet_form_settings">Application form and Social Widget Field Options  </h2><span class="dashicons dashicons-arrow-right"></span></div>';
+            echo '<div class="comeet_option_title_wrap"><h2 class="comeet_open_icon comeet_rotate_icon_left" data-section="comeet_form_settings">Application form</h2><span class="dashicons dashicons-arrow-right"></span></div>';
         }
 
         function other_text() {
@@ -898,8 +920,13 @@ if (!class_exists('Comeet')) {
 
         public function comeet_404_handling_box(){
             echo '<div class="card comeet_404_handling" style="margin-bottom: 2em;">';
-            echo '<div class="comeet_option_title_wrap"><h2 class="comeet_open_icon comeet_rotate_icon_left" data-section="comeet_404_handling">404 handling  </h2><span class="dashicons dashicons-arrow-right"></span></div>';
+            echo '<div class="comeet_option_title_wrap"><h2 class="comeet_open_icon comeet_rotate_icon_left" data-section="comeet_404_handling">Closed positions  </h2><span class="dashicons dashicons-arrow-right"></span></div>';
             echo '<p>Select what happens when a user tries to view a position that has been closed or removed from Comeet. Please note, all redirects are 301 redirect. <a href="https://developers.google.com/search/docs/crawling-indexing/301-redirects">Learn more about 301 redirect here</a></p>';
+        }
+
+        public function comeet_widget_fields_handling_box(){
+            echo '<div class="card comeet_404_handling" style="margin-bottom: 2em;">';
+            echo '<div class="comeet_option_title_wrap"><h2 class="comeet_open_icon comeet_rotate_icon_left" data-section="comeet_404_handling">Social sharing  </h2><span class="dashicons dashicons-arrow-right"></span></div>';
         }
 
         public function comeet_cookie_consent_handling_box(){

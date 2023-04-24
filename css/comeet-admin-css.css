@@ -31,7 +31,14 @@
     user-select: none;
 }
 .comeet_website_required th,.comeet_website_required td,
-.comeet_coverletter_required th, .comeet_coverletter_required td
-.comeet_portfolio_required th, .comeet_portfolio_required td{
+.comeet_coverletter_required th, .comeet_coverletter_required td,
+.comeet_portfolio_required th, .comeet_portfolio_required td,
+.comeet_personalnote_required th, .comeet_personalnote_required td{
     padding-top: 0;
+}
+.comeet_website_show th,.comeet_website_show td,
+.comeet_coverletter_show th, .comeet_coverletter_show td,
+.comeet_portfolio_show th, .comeet_portfolio_show td,
+.comeet_personalnote_show th, .comeet_personalnote_show td{
+    padding-bottom: 0;
 }

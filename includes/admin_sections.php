@@ -2,7 +2,7 @@
 // Comeet API required settings - UID and Token.
 add_settings_section(
 	'comeet_api_settings',
-	'Company Identifier',
+	'',
 	array($this, 'api_credentials_text'),
 	'comeet'
 );
@@ -45,11 +45,11 @@ add_settings_field(
 	'comeet',
 	'comeet_other_settings'
 );
-//Select Grouping type - Department/Location
+//Auto generate pages
 add_settings_field(
-	'advanced_search',
-	'Group Positions By',
-	array($this, 'advanced_search_input'),
+	'comeet_auto_generate_pages',
+	'Auto-generate pages',
+	array($this, 'comeet_auto_generate_pages'),
 	'comeet',
 	'comeet_other_settings'
 );
@@ -64,24 +64,16 @@ add_settings_field(
 //Display style
 add_settings_field(
 	'comeet_stylesheet',
-	'Display Style',
+	'Display style',
 	array($this, 'comeet_stylesheet_input'),
 	'comeet',
 	'comeet_other_settings'
 );
-//Auto generate pages
+//Select Grouping type - Department/Location
 add_settings_field(
-	'comeet_auto_generate_pages',
-	'Auto-generate pages',
-	array($this, 'comeet_auto_generate_pages'),
-	'comeet',
-	'comeet_other_settings'
-);
-//Apply as employee option
-add_settings_field(
-	'comeet_apply_as_employee	',
-	'Apply as Employee',
-	array($this, 'comeet_apply_as_employee'),
+	'advanced_search',
+	'Group positions by',
+	array($this, 'advanced_search_input'),
 	'comeet',
 	'comeet_other_settings'
 );
@@ -93,6 +85,24 @@ add_settings_field(
 	'comeet',
 	'comeet_other_settings'
 );
+
+add_settings_field(
+	'comeet_social_fields_employees',
+	'Company employees',
+	array($this, 'comeet_employees_field'),
+	'comeet',
+	'comeet_other_settings',
+	['class' => 'comeet_social_options']
+);
+//Apply as employee option
+add_settings_field(
+	'comeet_apply_as_employee	',
+	'',
+	array($this, 'comeet_apply_as_employee'),
+	'comeet',
+	'comeet_other_settings'
+);
+
 //End Settings section
 add_settings_section(
 	'comeet_other_blank',
@@ -101,10 +111,326 @@ add_settings_section(
 	'comeet'
 );
 
+add_settings_section(
+	'comeet_form_fields',
+	'',
+	array($this, 'comeet_widget_fields'),
+	'comeet'
+);
+
+add_settings_field(
+	'comeet_form_fields_email',
+	'Email',
+	array($this, 'comeet_email_field'),
+	'comeet',
+	'comeet_form_fields'
+);
+
+add_settings_field(
+	'comeet_form_fields_phone',
+	'Phone',
+	array($this, 'comeet_phone_field'),
+	'comeet',
+	'comeet_form_fields'
+);
+
+add_settings_field(
+	'comeet_form_fields_resume',
+	'Upload resume',
+	array($this, 'comeet_resume_field'),
+	'comeet',
+	'comeet_form_fields'
+);
+
+add_settings_field(
+	'comeet_form_fields_linkedin',
+	'LinkedIn',
+	array($this, 'comeet_linkedin_field'),
+	'comeet',
+	'comeet_form_fields'
+);
+
+add_settings_field(
+	'comeet_form_fields_profile',
+	'Required profile',
+	array($this, 'comeet_profile_field'),
+	'comeet',
+	'comeet_form_fields'
+);
+
+add_settings_field(
+	'comeet_form_fields_website',
+	'Website',
+	array($this, 'comeet_website_field'),
+	'comeet',
+	'comeet_form_fields',
+	['class' => 'comeet_website_show']
+);
+
+add_settings_field(
+	'comeet_form_fields_website_required',
+	'',
+	array($this, 'comeet_website_field_required'),
+	'comeet',
+	'comeet_form_fields',
+	['class' => 'comeet_website_required']
+);
+
+add_settings_field(
+	'comeet_form_fields_coverletter',
+	'Cover letter',
+	array($this, 'comeet_coverletter_field'),
+	'comeet',
+	'comeet_form_fields',
+	['class' => 'comeet_coverletter_show']
+);
+
+add_settings_field(
+	'comeet_form_fields_coverletter_required',
+	'',
+	array($this, 'comeet_coverletter_field_required'),
+	'comeet',
+	'comeet_form_fields',
+	['class' => 'comeet_coverletter_required']
+);
+
+add_settings_field(
+	'comeet_form_fields_portfolio',
+	'Portfolio',
+	array($this, 'comeet_portfolio_field'),
+	'comeet',
+	'comeet_form_fields',
+	['class' => 'comeet_portfolio_show']
+);
+
+add_settings_field(
+	'comeet_form_fields_portfolio_required',
+	'',
+	array($this, 'comeet_portfolio_field_required'),
+	'comeet',
+	'comeet_form_fields',
+	['class' => 'comeet_portfolio_required']
+);
+
+add_settings_field(
+	'comeet_form_fields_personalnote',
+	'Personal note',
+	array($this, 'comeet_personalnote_field'),
+	'comeet',
+	'comeet_form_fields',
+	['class' => 'comeet_personalnote_show']
+);
+
+add_settings_field(
+	'comeet_form_fields_personalnote_required',
+	'',
+	array($this, 'comeet_personalnote_field_required'),
+	'comeet',
+	'comeet_form_fields',
+	['class' => 'comeet_personalnote_required']
+);
+
+/*add_settings_field(
+	'comeet_social_fields_title',
+	'Show a title?',
+	array($this, 'comeet_show_title_field'),
+	'comeet',
+	'comeet_form_fields',
+	['class' => 'comeet_social_options']
+);*/
+
+/*add_settings_field(
+	'comeet_social_fields_override_share_url',
+	'Override the URL to share:',
+	array($this, 'comeet_social_fields_override_share_url'),
+	'comeet',
+	'comeet_form_fields',
+);*/
+
+
+add_settings_section(
+	'comeet_form_fields_blank',
+	'',
+	array($this, 'comeet_other_blank'),
+	'comeet'
+);
+
+//start widget fields
+add_settings_section(
+	'comeet_widget_fields_handling',
+	'',
+	array($this, 'comeet_widget_fields_handling_box'),
+	'comeet'
+);
+
+add_settings_field(
+	'comeet_social_show_on_careers',
+	'Social sharing widget',
+	array($this, 'comeet_show_social_on_careers'),
+	'comeet',
+	'comeet_widget_fields_handling',
+);
+
+add_settings_field(
+	'comeet_social_show_on_position',
+	'',
+	array($this, 'comeet_show_social_on_positions'),
+	'comeet',
+	'comeet_widget_fields_handling',
+);
+
+add_settings_field(
+	'comeet_social_fields_linkedin',
+	'LinkedIn',
+	array($this, 'comeet_linkedin_social_field'),
+	'comeet',
+	'comeet_widget_fields_handling',
+	['class' => 'comeet_social_options']
+);
+
+add_settings_field(
+	'comeet_social_fields_facebook',
+	'Facebook',
+	array($this, 'comeet_linkedin_social_field'),
+	'comeet',
+	'comeet_widget_fields_handling',
+	['class' => 'comeet_social_options']
+);
+
+add_settings_field(
+	'comeet_social_fields_twitter',
+	'Twitter',
+	array($this, 'comeet_linkedin_social_field'),
+	'comeet',
+	'comeet_widget_fields_handling',
+	['class' => 'comeet_social_options']
+);
+
+add_settings_field(
+	'comeet_social_fields_pinterest',
+	'Pinterest',
+	array($this, 'comeet_pinterest_field'),
+	'comeet',
+	'comeet_widget_fields_handling',
+	['class' => 'comeet_social_options']
+);
+
+add_settings_field(
+	'comeet_social_fields_whatsapp',
+	'WhatsApp',
+	array($this, 'comeet_whatsapp_field'),
+	'comeet',
+	'comeet_widget_fields_handling',
+	['class' => 'comeet_social_options']
+);
+
+add_settings_section(
+	'comeet_widget_fields_blank',
+	'',
+	array($this, 'comeet_other_blank'),
+	'comeet'
+);
+
+
+add_settings_section(
+	'comeet_advanced_styles',
+	'',
+	array($this, 'comeet_advanced_styles'),
+	'comeet'
+);
+
+add_settings_field(
+	'comeet_css_url',
+	'CSS URL',
+	array($this, 'comeet_css_url'),
+	'comeet',
+	'comeet_advanced_styles'
+);
+add_settings_field(
+	'comeet_css_cache',
+	'CSS URL cache',
+	array($this, 'comeet_css_cache'),
+	'comeet',
+	'comeet_advanced_styles'
+);
+
+add_settings_field(
+	'comeet_color',
+	'Main color',
+	array($this, 'comeet_color_input'),
+	'comeet',
+	'comeet_advanced_styles'
+);
+
+add_settings_field(
+	'comeet_bgcolor',
+	'Background color',
+	array($this, 'comeet_bgcolor_input'),
+	'comeet',
+	'comeet_advanced_styles'
+);
+
+add_settings_field(
+	'comeet_labels_position',
+	'Label location ',
+	array($this, 'comeet_labels_position'),
+	'comeet',
+	'comeet_advanced_styles'
+);
+
+add_settings_field(
+	'comeet_button_color',
+	'Submit button color',
+	array($this, 'comeet_button_color'),
+	'comeet',
+	'comeet_advanced_styles'
+);
+
+add_settings_field(
+	'comeet_button_text',
+	'Submit button text',
+	array($this, 'comeet_button_text'),
+	'comeet',
+	'comeet_advanced_styles'
+);
+
+add_settings_field(
+	'comeet_font_size',
+	'Font size',
+	array($this, 'comeet_font_size'),
+	'comeet',
+	'comeet_advanced_styles'
+);
+
+add_settings_field(
+	'comeet_button_font_size',
+	'Submit button font size',
+	array($this, 'comeet_button_font_size'),
+	'comeet',
+	'comeet_advanced_styles'
+);
+
+add_settings_field(
+	'comeet_social_fields_title',
+	'Social buttons color',
+	array($this, 'comeet_social_button_color'),
+	'comeet',
+	'comeet_advanced_styles',
+);
+
+
+add_settings_section(
+	'comeet_advanced_styles_blank',
+	'',
+	array($this, 'comeet_other_blank'),
+	'comeet'
+);
+
+
 //Start Cookie consent section
 add_settings_section(
 	'comeet_cookie_consent_handling',
-	'',
+	'Advanced',
 	array($this, 'comeet_cookie_consent_handling_box'),
 	'comeet'
 );
@@ -233,281 +559,4 @@ add_settings_section(
 	'comeet'
 );
 
-add_settings_section(
-	'comeet_form_fields',
-	'',
-	array($this, 'comeet_widget_fields'),
-	'comeet'
-);
-
-add_settings_field(
-	'comeet_form_fields_email',
-	'Email field required?',
-	array($this, 'comeet_email_field'),
-	'comeet',
-	'comeet_form_fields'
-);
-
-add_settings_field(
-	'comeet_form_fields_phone',
-	'Phone field required?',
-	array($this, 'comeet_phone_field'),
-	'comeet',
-	'comeet_form_fields'
-);
-
-add_settings_field(
-	'comeet_form_fields_resume',
-	'Show the option to attach resume?',
-	array($this, 'comeet_resume_field'),
-	'comeet',
-	'comeet_form_fields'
-);
-
-add_settings_field(
-	'comeet_form_fields_linkedin',
-	'Enable LinkedIn?',
-	array($this, 'comeet_linkedin_field'),
-	'comeet',
-	'comeet_form_fields'
-);
-
-add_settings_field(
-	'comeet_form_fields_profile',
-	'Which profile is required?',
-	array($this, 'comeet_profile_field'),
-	'comeet',
-	'comeet_form_fields'
-);
-
-add_settings_field(
-	'comeet_form_fields_website',
-	'Website field?',
-	array($this, 'comeet_website_field'),
-	'comeet',
-	'comeet_form_fields'
-);
-
-add_settings_field(
-	'comeet_form_fields_website_required',
-	'Require website?',
-	array($this, 'comeet_website_field_required'),
-	'comeet',
-	'comeet_form_fields',
-	['class' => 'comeet_website_required']
-);
-
-add_settings_field(
-	'comeet_form_fields_coverletter',
-	'Cover letter field?',
-	array($this, 'comeet_coverletter_field'),
-	'comeet',
-	'comeet_form_fields'
-);
-
-add_settings_field(
-	'comeet_form_fields_coverletter_required',
-	'Require cover letter?',
-	array($this, 'comeet_coverletter_field_required'),
-	'comeet',
-	'comeet_form_fields',
-	['class' => 'comeet_coverletter_required']
-);
-
-add_settings_field(
-	'comeet_form_fields_portfolio',
-	'Portfolio field?',
-	array($this, 'comeet_portfolio_field'),
-	'comeet',
-	'comeet_form_fields'
-);
-
-add_settings_field(
-	'comeet_form_fields_portfolio_required',
-	'Require portfolio?',
-	array($this, 'comeet_portfolio_field_required'),
-	'comeet',
-	'comeet_form_fields',
-	['class' => 'comeet_portfolio_required']
-);
-
-add_settings_field(
-	'comeet_form_fields_personalnote',
-	'Show personal note field?',
-	array($this, 'comeet_personalnote_field'),
-	'comeet',
-	'comeet_form_fields'
-);
-
-add_settings_field(
-	'comeet_form_fields_personalnote_required',
-	'Require personal note?',
-	array($this, 'comeet_personalnote_field_required'),
-	'comeet',
-	'comeet_form_fields',
-	['class' => 'comeet_personalnote_required']
-);
-
-//social share
-add_settings_field(
-	'comeet_social_show_on_careers',
-	'Show social sharing widget on Careers page?',
-	array($this, 'comeet_show_social_on_careers'),
-	'comeet',
-	'comeet_form_fields',
-);
-
-add_settings_field(
-	'comeet_social_show_on_position',
-	'Show social sharing widget on position pages?',
-	array($this, 'comeet_show_social_on_positions'),
-	'comeet',
-	'comeet_form_fields',
-);
-
-
-
-add_settings_field(
-	'comeet_social_fields_pinterest',
-	'Show the Pinterest button?',
-	array($this, 'comeet_pinterest_field'),
-	'comeet',
-	'comeet_form_fields',
-	['class' => 'comeet_social_options']
-);
-add_settings_field(
-	'comeet_social_fields_whatsapp',
-	'Show the WhatsApp button?',
-	array($this, 'comeet_whatsapp_field'),
-	'comeet',
-	'comeet_form_fields',
-	['class' => 'comeet_social_options']
-);
-add_settings_field(
-	'comeet_social_fields_employees',
-	'Enable support for employees?',
-	array($this, 'comeet_employees_field'),
-	'comeet',
-	'comeet_form_fields',
-	['class' => 'comeet_social_options']
-);
-add_settings_field(
-	'comeet_social_fields_title',
-	'Show a title?',
-	array($this, 'comeet_show_title_field'),
-	'comeet',
-	'comeet_form_fields',
-	['class' => 'comeet_social_options']
-);
-
-add_settings_field(
-	'comeet_social_fields_override_share_url',
-	'Override the URL to share:',
-	array($this, 'comeet_social_fields_override_share_url'),
-	'comeet',
-	'comeet_form_fields',
-);
-
-
-add_settings_section(
-	'comeet_form_fields_blank',
-	'',
-	array($this, 'comeet_other_blank'),
-	'comeet'
-);
-
-
-add_settings_section(
-	'comeet_advanced_styles',
-	'',
-	array($this, 'comeet_advanced_styles'),
-	'comeet'
-);
-
-add_settings_field(
-	'comeet_css_url',
-	'CSS URL',
-	array($this, 'comeet_css_url'),
-	'comeet',
-	'comeet_advanced_styles'
-);
-add_settings_field(
-	'comeet_css_cache',
-	'CSS URL Cache',
-	array($this, 'comeet_css_cache'),
-	'comeet',
-	'comeet_advanced_styles'
-);
-
-add_settings_field(
-	'comeet_color',
-	'Form Main Color',
-	array($this, 'comeet_color_input'),
-	'comeet',
-	'comeet_advanced_styles'
-);
-
-add_settings_field(
-	'comeet_bgcolor',
-	'Form Background Color',
-	array($this, 'comeet_bgcolor_input'),
-	'comeet',
-	'comeet_advanced_styles'
-);
-
-add_settings_field(
-	'comeet_labels_position',
-	'Where to place the labels? ',
-	array($this, 'comeet_labels_position'),
-	'comeet',
-	'comeet_advanced_styles'
-);
-
-add_settings_field(
-	'comeet_button_color',
-	'Application form Submit button color:',
-	array($this, 'comeet_button_color'),
-	'comeet',
-	'comeet_advanced_styles'
-);
-
-add_settings_field(
-	'comeet_button_text',
-	'Application form Submit button text:',
-	array($this, 'comeet_button_text'),
-	'comeet',
-	'comeet_advanced_styles'
-);
-
-add_settings_field(
-	'comeet_font_size',
-	'Application form font size:',
-	array($this, 'comeet_font_size'),
-	'comeet',
-	'comeet_advanced_styles'
-);
-
-add_settings_field(
-	'comeet_button_font_size',
-	'Application form submit button font size:',
-	array($this, 'comeet_button_font_size'),
-	'comeet',
-	'comeet_advanced_styles'
-);
-
-add_settings_field(
-	'comeet_social_fields_title',
-	'Which colors to use for social buttons?',
-	array($this, 'comeet_social_button_color'),
-	'comeet',
-	'comeet_advanced_styles',
-);
-
-
-add_settings_section(
-	'comeet_advanced_styles_blank',
-	'',
-	array($this, 'comeet_other_blank'),
-	'comeet'
-);
 
