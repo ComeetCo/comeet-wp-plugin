@@ -1269,8 +1269,16 @@ if (!class_exists('Comeet')) {
 	        }
 	        $valid['comeet_button_color'] = (isset($input['comeet_button_color'])) ? $input['comeet_button_color'] : "#167acd";
 	        $valid['comeet_button_text'] = (isset($input['comeet_button_text'])) ? $input['comeet_button_text'] : "Submit Application";
-	        $valid['comeet_font_size'] = (isset($input['comeet_font_size'])) ? $input['comeet_font_size'] : "13px";
-	        $valid['comeet_button_font_size'] = (isset($input['comeet_button_font_size'])) ? $input['comeet_button_font_size'] : "13px";
+            $font_size= (isset($input['comeet_font_size'])) ? $input['comeet_font_size'] : "13px";
+            if(!empty($font_size) && !strstr($font_size, 'px')){
+                $font_size .= 'px';
+            }
+	        $valid['comeet_font_size'] = $font_size;
+            $comeet_button_font_size = (isset($input['comeet_button_font_size'])) ? $input['comeet_button_font_size'] : "13px";
+            if(!empty($comeet_button_font_size) && !strstr($comeet_button_font_size, 'px')){
+                $comeet_button_font_size .= 'px';
+            }
+	        $valid['comeet_button_font_size'] = $comeet_button_font_size;
 	        $valid['comeet_labels_position'] = (isset($input['comeet_labels_position'])) ? $input['comeet_labels_position'] : "responsive";
 
             //social share widget option
