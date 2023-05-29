@@ -345,4 +345,16 @@ function comeet_search($array, $key, $value) {
 
     return $results;
 }
+
+/** 
+* Filter the Comeet template path.
+* @param string $path
+* @return string
+*/
+
+function comeet_wp_template_path($path,$template) {
+    return $path;
+}
+
+add_filter('comeet_wp_template_path', 'comeet_wp_template_path', 10, 2);
 ?>
