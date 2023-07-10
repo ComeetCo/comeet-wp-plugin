@@ -435,3 +435,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     comeet.php - added a settings options allowing user to set the company URL. If set the job Schema will have sameAs added
 
 
+## [3.0]
+    comeet.php - Added the new Advanced settings
+    - Moved the Sections and settings to an external file being included - for easier maintenance.
+    - Moved styles to a css file being included only in admin
+    - Moved JS to a JS file being included only in admin
+    - Added all the new setting functions and validation + setting of the comeetvar js variable.
+
+    comeet-admin-css.css - new CSS file
+    admin_sections.php - added new admin_section file being included into comeet.php
+    comeet-admin-js.js - added new js file
+
+    comeet.js - added all the new parameters being used for advanced customization.
+
+[3.0.1]
+    comeet-data.php - handling cases where "wp_remote_get" returns error
+
+

@@ -30,8 +30,13 @@ class ComeetData {
     static private function comeet_get_data($comeeturl) {
         $url = $comeeturl . '&' . comeet_plugin_version_arg();
         $result = wp_remote_get($url);
-        $full_response['all_data'] = json_decode($result['body'], true);
-        $full_response['status'] = $result['response']['code'];
+		if(!is_wp_error($result)) {
+			$full_response['all_data'] = json_decode( $result['body'], true );
+			$full_response['status']   = $result['response']['code'];
+		} else {
+			$full_response['status'] = false;
+			$full_response['all_data'] = false;
+		}
         return $full_response;
     }
 
