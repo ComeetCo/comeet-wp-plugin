@@ -1389,10 +1389,10 @@ if (!class_exists('Comeet')) {
         }
 
 
-        function comeet_content($text) {
+        function comeet_content() {
             $this->add_frontend_css();
             $this->add_frontend_scripts();
-            $text .= $this->comeet_add_template();
+            $text = $this->comeet_add_template();
             //debugging function
             $this->plugin_debug(['Comeet Shortcode detected - Commet-data'], __LINE__, __FILE__);
             return $text;
