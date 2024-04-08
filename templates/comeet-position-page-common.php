@@ -47,7 +47,7 @@
                                 <?php $title = $this->get_position_title($details['name']); ?>
                                 <?php $css = $this->get_position_css($details['name']); ?>
                                 <?php $prop = $this->get_schema_prop($details['name']); ?>
-                                <h4><?php echo $title; ?></h4>
+                                <h4 class="comeet-position-<?php echo $css;?>"><?php echo $title; ?></h4>
                                 <div class="comeet-position-<?php echo $css; ?> comeet-user-text">
                                     <?php echo $details['value'] ?>
                                 </div>

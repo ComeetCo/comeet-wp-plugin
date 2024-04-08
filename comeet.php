@@ -1389,10 +1389,10 @@ if (!class_exists('Comeet')) {
         }
 
 
-        function comeet_content($text) {
+        function comeet_content() {
             $this->add_frontend_css();
             $this->add_frontend_scripts();
-            $text .= $this->comeet_add_template();
+            $text = $this->comeet_add_template();
             //debugging function
             $this->plugin_debug(['Comeet Shortcode detected - Commet-data'], __LINE__, __FILE__);
             return $text;
@@ -1466,7 +1466,7 @@ if (!class_exists('Comeet')) {
             if (empty($options['comeet_token']) || empty($options['comeet_uid'])) {
                 return;
             }
-            wp_register_script("comeet_script", ($this->plugin_url . 'js/comeet.js'), [], $this->version);
+            wp_register_script("comeet_script", ($this->plugin_url . 'js/comeet.js'), [], 10);//$this->version);
             wp_register_script("comeet_src_script", ($this->plugin_url . 'js/comeet-src.js'), ['comeet_script'], $this->version);
 
             $post = get_post($options['post_id']);

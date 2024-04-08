@@ -141,32 +141,39 @@ class ComeetData {
     static private function get_groups_data($options) {
         //Read main data for all positions
         $all_data = self::get_api_data($options);
-        foreach ($all_data as $key => $job) {
-            if (empty($job['department'])) {
-                $all_data[$key]['department'] = 'Other';
-            }
-            if (empty($job['location']) || empty($job['location']['name'])) {
-                if (empty($all_data[$key]['location'])) {
-                    $all_data[$key]['location'] = array();
-                }
-                $all_data[$key]['location']['name'] = 'Other';
-            }
+		foreach ( $all_data as $key => $job ) {
+			if ( empty( $job['department'] ) ) {
+				if(isset($all_data[ $key ])) {
+					$all_data[ $key ]['department'] = 'Other';
+				}
+			}
+			if ( empty( $job['location'] ) || empty( $job['location']['name'] ) ) {
+				if ( empty( $all_data[ $key ]['location'] ) ) {
+					if(isset($all_data[ $key ])) {
+						$all_data[ $key ]['location'] = array();
+					}
+				}
+				if(isset($all_data[ $key ])) {
+					$all_data[ $key ]['location']['name'] = 'Other';
+				}
+			}
 
-            //checking for filtered positions -
-            //Positions filtering can be set in the Comeet settings page.
-            if($options['comeet_selected_category'] != 'default'){
-                //Position filter is set - will filter the positions accordingly
-                $display_position = false;
-                foreach($job['categories'] as $category){
-                    if(str_replace(" ", "_", $category['name']) == $options['comeet_selected_category'] && str_replace(" ", "_", $category['value']) == $options['comeet_selected_category_value']){
-                        $display_position = true;
-                    }
-                }
-                if(!$display_position){
-                    unset($all_data[$key]);
-                }
-            }
-        }
+			//checking for filtered positions -
+			//Positions filtering can be set in the Comeet settings page.
+			if ( $options['comeet_selected_category'] != 'default' ) {
+				//Position filter is set - will filter the positions accordingly
+				$display_position = false;
+				foreach ( $job['categories'] as $category ) {
+					if ( str_replace( " ", "_", $category['name'] ) == $options['comeet_selected_category'] && str_replace( " ", "_", $category['value'] ) == $options['comeet_selected_category_value'] ) {
+						$display_position = true;
+					}
+				}
+				if ( ! $display_position ) {
+					unset( $all_data[ $key ] );
+				}
+			}
+		}
+
         $response = $all_data;
         return $response;
     }
