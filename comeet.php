@@ -12,7 +12,7 @@
 
 /*
 
-Copyright 2023 Comeet
+Copyright 2024 Comeet
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '3.0.2';
+        public $version = '3.0.3';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -866,6 +866,7 @@ if (!class_exists('Comeet')) {
             $options = $this->get_options();
             $checked = ($options['comeet_social_show_title']) ? 'checked="checked"' : '';
             echo '<input type="checkbox" id="comeet_social_show_title" name="' . $this->db_opt . '[comeet_social_show_title]" value="1" '.$checked.' />&nbsp;';
+            echo '<span class="description"> Show social sharing title</span>';
         }
 
         function comeet_social_fields_override_share_url(){
@@ -926,7 +927,7 @@ if (!class_exists('Comeet')) {
 
         public function comeet_widget_fields_handling_box(){
             echo '<div class="card comeet_404_handling" style="margin-bottom: 2em;">';
-            echo '<div class="comeet_option_title_wrap"><h2 class="comeet_open_icon comeet_rotate_icon_left" data-section="comeet_404_handling">Social sharing  </h2><span class="dashicons dashicons-arrow-right"></span></div>';
+            echo '<div class="comeet_option_title_wrap"><h2 class="comeet_open_icon comeet_rotate_icon_left" data-section="comeet_social_share_handling">Social sharing  </h2><span class="dashicons dashicons-arrow-right"></span></div>';
         }
 
         public function comeet_cookie_consent_handling_box(){

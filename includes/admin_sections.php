@@ -103,6 +103,15 @@ add_settings_field(
 	'comeet_other_settings'
 );
 
+add_settings_field(
+    'comeet_social_fields_employees_2',
+    'Social Title',
+    array($this, 'comeet_show_title_field'),
+    'comeet',
+    'comeet_other_settings',
+    ['class' => 'comeet_social_options']
+);
+
 //End Settings section
 add_settings_section(
 	'comeet_other_blank',

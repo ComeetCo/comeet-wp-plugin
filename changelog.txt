@@ -451,4 +451,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [3.0.1]
     comeet-data.php - handling cases where "wp_remote_get" returns error
 
+[3.0.3]
+    comeet.php - corrected  data-section text to correctly describe the section.
+    admin_section.php - added missing control for Social sharing title
+    comeet.js - added let to the comeet_init object
+
+
 

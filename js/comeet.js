@@ -1,4 +1,4 @@
-comeet_init = {
+ let comeet_init = {
    "token":               comeetvar.comeet_token,
    "company-uid":         comeetvar.comeet_uid,
    "candidate-source-storage": false,
@@ -30,8 +30,6 @@ comeet_init = {
    "social-show-title": comeetvar.comeet_social_show_title,
    "social-share-url": comeetvar.comeet_social_share_url,
    "social-color": comeetvar.comeet_social_color,
-   "social-employees": true,
-   "social-show-titles": false
 };
 if(comeetvar.comeet_css_cache == 'set_no_cache'){
    comeet_init['css-cache'] = false;
@@ -54,3 +52,6 @@ window.comeetInit = function() {
    js.src = "//www.comeet.co/careers-api/api.js";
    fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'comeet-jsapi'));
+
+
+
