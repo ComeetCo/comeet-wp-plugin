@@ -237,7 +237,7 @@ if (!class_exists('Comeet')) {
         }
         //will check if yoast is active and if not, remove defauolt canonical and add fixed one.
         public function check_for_canonical_fix(){
-            if ($this->is_comeet_content_page && (!is_plugin_active('wordpress-seo/wp-seo.php'))){
+            if ($this->is_comeet_content_page && (!is_plugin_active('wordpress-seo/wp-seo.php') && (!is_plugin_active('seo-by-rank-math/rank-math.php')))){
                 remove_action( 'wp_head', 'rel_canonical' );
                 add_action( 'wp_head', array($this, 'rel_canonical_fix'), 9 );
             }
