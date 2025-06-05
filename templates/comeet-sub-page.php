@@ -4,7 +4,7 @@
     $options = $this->get_options();
     $post = get_post($options['post_id']);
     ?>
-    <a href="<?php echo site_url() . '/' . $post->post_name; ?>">&larr; All Jobs</a>
+    <a href="<?php echo get_permalink( $post ) ?>">&larr; All Jobs</a>
 </div>
 <?php endif; ?>
 
