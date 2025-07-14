@@ -1,0 +1,15 @@
+{
+  "name": "comeetco/comeet-wp-plugin",
+  "description": "Official Comeet plugin for integrating job listings into WordPress.",
+  "type": "wordpress-plugin",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Comeet",
+      "homepage": "https://www.comeet.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.6"
+  }
+}
