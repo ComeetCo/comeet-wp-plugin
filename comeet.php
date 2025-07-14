@@ -1849,7 +1849,7 @@ if (!class_exists('Comeet')) {
 
         //adding settings link to the plugin page
         function plugin_add_settings_link( $links ) {
-            $settings_link = '<a href="options-general.php?page=comeet">' . __( 'Settings' ) . '</a>';
+            $settings_link = '<a href="options-general.php?page=recruit">' . __( 'Settings' ) . '</a>';
             array_push( $links, $settings_link );
             return $links;
         }
@@ -2007,7 +2007,7 @@ if (!class_exists('Comeet')) {
 
         function comeet_activation_redirect( $plugin ) {
             if( $plugin == plugin_basename( __FILE__ )) {
-                exit( wp_redirect( admin_url( 'options-general.php?page=comeet' ) ) );
+                exit( wp_redirect( admin_url( 'options-general.php?page=recruit' ) ) );
             }
         }
         add_action( 'activated_plugin', 'comeet_activation_redirect' );
