@@ -1,7 +1,7 @@
 === Plugin Name ===
 Requires at least: 5
 Tested up to: 6.8.1
-Stable tag: 4.0.0
+Stable tag: 4.0.1
 License: Apache 2
 License URI: http://www.apache.org/licenses/LICENSE-2.0
 
@@ -37,6 +37,9 @@ You can to the developers resource [here](https://developers.comeet.com/referenc
 
 
 == Changelog ==
+
+= 4.0.1 =
+* fix to automatic redirect when plugin active + the settings link on the plugins page.
 
 = 4.0.0 =
 * Added automatic updating.
