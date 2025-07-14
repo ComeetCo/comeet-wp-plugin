@@ -3,8 +3,8 @@
       <?php
       $plugin_basename = str_replace('includes/comeet-options.php', '', plugin_basename(__FILE__));
       ?>
-      <img src="<?php echo plugins_url($plugin_basename.'img/comeet-logo.png') ?>" style="width:110px;margin-bottom:-5px;"/>
-    Careers Website
+      <img src="<?php echo plugins_url($plugin_basename.'img/sparkhire-recruit.svg') ?>" style="width:250px;margin-bottom:-5px;"/>
+     - Careers Website
     <?php $options = $this->get_options(); 
     $post = get_post($options['post_id']);
 
@@ -24,7 +24,7 @@
       <p>For more information visit <a href="https://developers.comeet.com/reference/wordpress-plugin" target="_blank">our guide</a> or <a href="mailto:support@comeet.co" target="_blank">contact us</a>.</p>
         <p>
             <?php
-            echo "Comeet Plugin version: ".Comeet::get_version()."<br />";
+            echo "Spark Hire Recruit Plugin version: ".Comeet::get_version()."<br />";
             echo "Wordpress version: ".get_bloginfo( 'version' )."<br />";
             echo "PHP version: ".phpversion()."<br />";
             ?>

@@ -1,18 +1,18 @@
 <?php
 /*
- * Plugin Name: Comeet
+ * Plugin Name: Spark Hire Recruit
  * Plugin URI: https://developers.comeet.com/reference/wordpress-plugin
- * Description: Job listing page using the Comeet API.
- * Version: 3.0.2
- * Author: Comeet
- * Author URI: http://www.comeet.co
+ * Description: Job listing page using the Recruit API.
+ * Version: 3.0.5
+ * Author: Sparkhire - Recruit
+ * Author URI: https://www.sparkhire.com/applicant-tracking-system/
  * License: Apache 2
  */
 
 
 /*
 
-Copyright 2024 Comeet
+Copyright 2025 Spark Hire Recruit
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,6 +27,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+
+
+//allowing plugin automatic updates.
+require 'plugin-update-checker-5.6/plugin-update-checker.php';
+
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+
+$recruitUpdateChecker = PucFactory::buildUpdateChecker(
+    'https://github.com/ComeetCo/comeet-wp-plugin/',
+    __FILE__,
+    'sparkhire-recruite-plugin'
+);
+$recruitUpdateChecker->setBranch('master');
+
 
 include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 $plugin_dir = trailingslashit(plugin_dir_path(__FILE__));
@@ -54,7 +68,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '3.0.3';
+        public $version = '3.0.5';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -577,7 +591,7 @@ if (!class_exists('Comeet')) {
          * Registers the options page.
          */
         function options_page() {
-            add_options_page('Comeet Settings', 'Comeet', 'manage_options', 'comeet', array($this, 'handle_options'));
+            add_options_page('Recruit Settings', 'Recruit', 'manage_options', 'recruit', array($this, 'handle_options'));
         }
 
         //flush convenience function
@@ -880,7 +894,7 @@ if (!class_exists('Comeet')) {
         function api_credentials_text() {
             echo '<div class="card" style="margin-bottom: 2em;">';
             echo '<div class="comeet_option_title_wrap"><h2 class="">Company identifiers  </h2></div>';
-            echo '<p>To find your identifiers, navigate in Comeet to Settings > Careers Website (requires permission). <a href="https://developers.comeet.com/v1.0/reference#careers-api-section-header">Learn more</a></p>';
+            echo '<p>To find your identifiers, navigate in Recruit to Settings > Careers Website (requires permission). <a href="https://developers.comeet.com/v1.0/reference#careers-api-section-header">Learn more</a></p>';
         }
 
         function comeet_advanced_text() {
@@ -926,7 +940,7 @@ if (!class_exists('Comeet')) {
         }
 
         public function comeet_widget_fields_handling_box(){
-            echo '<div class="card comeet_404_handling" style="margin-bottom: 2em;">';
+            echo '<div class="card comeet_social_share_handling" style="margin-bottom: 2em;">';
             echo '<div class="comeet_option_title_wrap"><h2 class="comeet_open_icon comeet_rotate_icon_left" data-section="comeet_social_share_handling">Social sharing  </h2><span class="dashicons dashicons-arrow-right"></span></div>';
         }
 

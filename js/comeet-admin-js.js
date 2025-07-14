@@ -62,7 +62,6 @@ jQuery(document).ready(function($){
     });
 
     $('#comeet_404_option').change(function(){
-        console.log('Change detected');
         var comeet_404_option_selected_value = $(this).val();
         if(comeet_404_option_selected_value == 'redirect_to_page'){
             $('#error_404_page').attr('disabled', false);
@@ -75,12 +74,7 @@ jQuery(document).ready(function($){
     $('.comeet_option_title_wrap').click(function(){
         $(this).find('.dashicons').toggleClass('comeet_rotate_icon_right');
         let section_to_open = $(this).find('h2').data('section');
-        console.log('Sectio to open is: ',section_to_open);
         $('.'+section_to_open).toggleClass('comeet_normal_height');
-
-        /*$('.'+section_to_open).toggle({
-         'height' : '725px'
-        }); */
     });
 
 

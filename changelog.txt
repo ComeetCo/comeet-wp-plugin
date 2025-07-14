@@ -1,51 +1,332 @@
-# Changelog
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
-and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
-
-## [1.6.9.4] - 2018-05-03
-### Added
- - Added this changelog file
-### Fixed
- - Fixed issue with Thank you page when thank you page was not set in the plugin settings.
-
-## [1.6.9.5] - 2018-05-03
-### Added
- - Added comeet-reset.css file with basic css rules to allow for a good display regardless of the theme being used.
-### Changed
- - comeet.php, enqueing the new css file.
+[4.0.0]
+    Added automatic updating.
+    Fix bug in settings page.
+    Merge 2 PR's
 
 
-## [1.6.9.6] - 2018-05-07
-### Changed
- - Template files:
-    comeet-cateers.php
-    comeet-position-page-common.php
-    commet-sub-page-custom.php
+[3.0.3]
+    comeet.php - corrected  data-section text to correctly describe the section.
+    admin_section.php - added missing control for Social sharing title
+    comeet.js - added let to the comeet_init object
 
-  All logic replaced with functions that reside in the class.
-  To allow easier templating and updating of the plugin with future versions of the plugin.
+[3.0.1]
+    comeet-data.php - handling cases where "wp_remote_get" returns error
 
+[3.0]
+    comeet.php - Added the new Advanced settings
+    - Moved the Sections and settings to an external file being included - for easier maintenance.
+    - Moved styles to a css file being included only in admin
+    - Moved JS to a JS file being included only in admin
+    - Added all the new setting functions and validation + setting of the comeetvar js variable.
 
-## [1.7] - 2018-05-11
-### Changed
- - comeet-data.php
-    Added caching to plugin - cache is for 30 minutes and then updates from API
-    Added ability to temporarily disable cache with URL flag - allows testing and force refresh of transient
-    Added debugging functionality for better handling of future issues
+    comeet-admin-css.css - new CSS file
+    admin_sections.php - added new admin_section file being included into comeet.php
+    comeet-admin-js.js - added new js file
+
+    comeet.js - added all the new parameters being used for advanced customization.
+
+## [2.6.3] - 2023-03-02
+    comeet.php - added a settings options allowing user to set the company URL. If set the job Schema will have sameAs added
+
+## [2.6.2] - 2023-03-02
+    comeet.php - updated the text and look/feel of the "Cookie consent manager" in the settings page
+    comeet-data.php - switched from using cURL to get the API response to using wp_remote_get - more inline with Wordpress standards
+
+## [2.6] - 2023-03-01
+    Better handling of Cookie consent services such as CookieBot and Termly.
+
+## [2.5] - 2023-02-08
+    Fixing error that occurs when the API returns an empty array (No available positions)
+    Added "Clear cache" button to the options page.
+
+## [2.4.6] - 2023-01-31
+    Cookie consent fix - allowing the application form to work AFTER cookie consent.
+
+## [2.4.5] - 2022-12-21
+    Version bump - view fix
+
+## [2.4.5] - 2022-12-16
+###Update
+    Adding the ability for the user (Site admin) to decide how to handle missing positions.
+    Default behaviour is to load the position URL with a response 200 and show a default built in message,
+    User now has 3 options, default, redirect to 404 page with a response code of 404, redirect to user selected page.
+    In case of redirect, the redirect is a 301 redirect
+
+## [2.4.1] - 2022-09-12
+###Fix
+    Removing parameter that was forcing all API calls to bypass API response caching.
+
+## [2.4] - 2022-09-12
+###Fix
+    -comeet.php
+        Fixing some issues that were displaying warnings in special cases like multi site installs and so on.
+        Fixing issue with the 'comee-deactivation' function.
+    -comeet-data.php
+        Fixing issue where in some cases, on multi sites 'comeet_string_clean' function would get redeclared causing a fata error
+        We now check if the function exists before declaring it to avoid the issue.
+
+## [2.3.9] - 2022-05-31
+###Fix
+    -comeet.php
+        Fix to for Elementor pro issue
+
+## [2.3.8] - 2022-05-31
+###Fix
+    -comeet-sub-page-custom.php
+        Backwards compatibility fix
+
+## [2.3.7] - 2022-05-23
+###Fix
+    -comeet-careers.php
+        Backwards compatibility fix
+
+## [2.3.6] - 2022-05-13
+###Fix
+    -comeet.php
+        If a user does not explicitly select a thank you page, non will be set.
+
+## [2.3.5] - 2022-05-12
+###Fix
+    -comeet.php
+        Fixing for backwards compatibility of the "generate_page_titles" function
+
+###Update
+    -comeet.php, comeet-careers.php, comeet-sub-page-custom.php
+        Updated position URL's that are generated so they are always the same no matter where they
+        are being generated from, This is to resolve an issue where 1 position could have multiple
+        URL's causing content duplication and issues with SEO.
+
+## [2.3.4] - 2022-05-04
+###Fix
+    -comeet.php
+        Fixing issue where job schema is added to pages even on closed/non existant positions
+        if a position is closed or doesn't exist the data on the page will lead back to the careers page
+
+###Update
+    -comeet.php
+        Updated Plugin URI to the current documentation
+
+## [2.3.3] - 2022-03-18
+###Fix
+    -comeet.php
+        fixing rare issue where PHP tries and fails to load a template file that does not exist
+        when a folder named comeet is created in the theme folder.
+
+## [2.3.2] - 2022-03-02
+###Fix
+    -comeet-data.php
+        Added CURLOPT_TIMEOUT to cURL call. This is to handle very rare cases where a connection
+        to the API is initiated and stalls for some reason. The addition of this paramter will allow
+        PHP to drop the connection after 5 seconds and continue working.
+
+## [2.3.1] - 2021-14-12
+###Fix
+    -comeet.php
+        Fixing job posting schema description.
+        There was an issue with special characters not being escaped and some characters that don' need escaping being escaped.
+        This fix is in response to issue #9 in Github.
+
+## [2.3] - 2021-06-12
+###Update
+    -comeet.php
+        Version update to 2.3
+###Fix
+    -comeet.php
+        css-cache - fixing label on the settings page
+        ensuring cleaner and more reliable css-cache = false
+        this is done with the addition of timestamp to the CSS url when cache set to false
+    -comeet.js
+        applying changes described above to the js file
+
+## [2.2] - 2021-04-11
+###Fix
+    -comeet.php
+        Fixing issue with updating the Position meta description with Yoast.
+
+## [2.18.6] - 2021-22-09
+###Fix
+   -comeet.php
+        Fixing issue with CSS-CACHE. As long as a CSS-URL was set, the CSS-CACHE was also set. Now fixed.
+
+   -comeet.js
+        Fix, same as above.
+
+## [2.18.5] - 2021-22-09
+###Fix
+   -comeet.php
+        Fixing sub-brand issue. If the category name included spaces, this could cause an issue with selecting
+        the sub-brand value to use
+   -comeet-data.php
+        Fixing sub-brand issue. If the category name included spaces, this could cause an issue with selecting
+                the sub-brand value to use
+
+## [2.18] - 2021-03-09
+###Update
+   -comeet.php
+        Added CSS-URL and CSS-Cache to the Comeet settings page
+        By Default Location and Department URL's will not be created.
+   -comeet.js
+        reformated so we can handle the css-cache case.
+
+## [2.17.7] - 2021-12-08
+###Update
+   -comeet.php
+        Added "directApply" : "True" to the Job posting js schema.
+
+## [2.17.6] - 2021-27-07
+###FIX
+    -comeet.php
+        Fixing the Description added to the JSON schema of each position page - Handling " in the description"
+
+## [2.17.5] - 2021-28-06
+###FIX
+    -comeet.php
+        Fixing the Description added to the JSON schema of each position page.
+
+## [2.17] - 2021-21-06
+###Update
+ -comeet-data.php
+    Changed plugin cache time from 30 minutes to 5 minutes.
+###FIX
+ -comeet-position-page-common.php
+    Fixing issue where a closed position shows a message but breaks part of the page (Footer not included and stuff like that.)
+
+## [2.0.6.11] - 2019-23-12
+###Changed
+ -comeet.php
+    Job Meta Schema updated to include PostalCode and StreetAddress.
+ -comeet.php
+    Typo fix
+
+## [2.0.6.9] - 2019-17-12
+###Changed
+ -comeet.php
+    No longer relying on "has_shortcode" to check if the page is a Comeet page.
+    With the use of plugins such as ACF's this is no longer reliable. We now compare the post ID to the post that was set in the Comeet Settings page.
+
+## [2.0.6.8] - 2019-16-12
+###Changed
+ -comeet.php
+    Fixing issue with 404 redirects when the plugin saves bad redirections.
+    Now checking the URL for extra ? and replacing them with &
+
+## [2.0.6.7] - 2019-21-10
+###Changed
+ -comeet.php
+    It Seems that LinkedIn fetches the title from the wrong location. As long as we have the oembed meta tags in the page,
+    LinkedIn will take the title from the oembed page/code. As a fix, on the individual position pages, we remove the oembed meta tags. (This removal is limited to the position pages)
+
+## [2.0.6.6] - 2019-15-10
+###Changed
+ -comeet.php
+    Added debug output - this is used when debugging issues with the plugin using the debug_comeet_plugin get parameter
+###Fix
+ -comeet-data.php
+    Cases where there are no open positions would result in an error from the API (not realy, the plugin treated it as such)
+    Fixed this case by not checking for Empty (which would throw the false error) but instead checking for array.
+
+## [2.0.6.5] - 2019-27-05
+###Changed
+ -comeet.php
+    Moved Meta tag editing so that it ONLY happens if the page is a Comeet page, containing the Comeet ShortCode.
+    Improved OG:image handling
+ -comeet-data.php
+    Improved position UID comparison, we had cases where the UID's being compared where upper case and lower case, so strtolower added to ensure that they are the same case.
+
+## [2.0.6.1] - 2019-08-04
+###Fix
+ -comeet.php
+    Adding fix for canonical meta tags.
+    Making sure the meta tag is correct + includes the coref url parameter when preset - fix for LinkedIn sharing.
+    Improving how the filter_url function works - Just displaying the current URL + making sure that the coref parameter continues to pass.
+    This all works with or without Yoast SEO plugin
+
+## [2.0.6] - 2019-05-04
+###Fix
+ -comeet.php
+    Adding fix for canonical meta tags.
+    Making sure the meta tag is correct + includes the coref url parameter when preset - fix for LinkedIn sharing.
+
+## [2.0.5.7] - 2019-06-03
+###Fix
+ -comeet.php
+    Version bump
+    Renamed all refrences to clean( to comeet_string_clean( to avoid naming conflicts with other functions called clean (That could appear in other plugins, themes or what not.)
+ -comeet-data.php
+    Renamed function clean() to comeet_string_clean() - Less generic name for plugin specific name, to avoid naming conflicts
+    Renamed all refrences to clean( to comeet_string_clean( to avoid naming conflicts with other functions called clean (That could appear in other plugins, themes or what not.)
+
+## [2.0.5.6] - 2019-28-02
+###Minor Fix
+ -comeet.php
+    Version bump
+ -includes/comeet-options.php
+    Fix issue with Comeet logo not showing. Expected Plugin folder was comeet-wp-plugin but it was sometimes different when users downloaded from Github.
+    After this fix the logo will appear no matter what the plugin folder is named.
+
+## [2.0.5.5] - 2019-13-01
+###Changed
+ -comeet.php
+    Typo fix.
+
+## [2.0.5] - 2018-12-12
+###Changed
+ -comeet.php
+    Added trim to UID and Token validation function - this is to handle cases where the UID or Token that is copied and pasted has extra spaces in the start or end of the string, which can cause issues and errors.
+    Thank you page will now have the comeet.js included in the head.
+
+## [2.0.4] - 2018-12-12
+###Changed
+ -comeet.php
+    The 404 function that handles redirecting in cases that the page is a Comeet page, will not check if there are
+    GET parameters in the URL, and if so, pass them on.
+    This is to handle cases of UTM and other such parameters.
+
+## [2.0.3] - 2018-10-09
+###Changed
+ -comeet.php
+    When saving settings the cache will be cleared.
+    Please note that the cache will ONLY be cleared if the API call works correctly. If the cache exists and the API call fails cache will NOT be replaced.
+ -comeet-data.php
+    Modified the function that fetches the data. When settings are saved a new options parameter is passed into the funciton: "clear_comeet_cache", if this parameter isset in the
+    options array, the API call will be made and if succesfull the Cache will be updated. If the API call fails, cache will not be updated!
+
+## [2.0.2] - 2018-10-08
+###Changed
  - comeet.php
-    Added debugging functionality for better handling of future issues
- - comeet-sub-page-custom.php
-    Added debugging functionality for better handling of future issues
- - comeet-position-page-common.php
-    Added debugging functionality for better handling of future issues
-    Fixed potential issue detected in Zooz client site.
+    Added a check for WP_error - when the API test call is made. Better handling of errors, if an error is detected, the error message will be displayed in the admin dashboard.
+ -comeet-data.php
+    Added a timeout to the cURL call that is made to the API - 5 seconds
+    Changed caching mechanism, the cache now does NOT expire automatically, but lasts for ever.
+    In addition to the Data Cache, we also store the time the last API call was made. The data will be pulled from cache for 30 minutes,
+    after 30 minutes a new API call is made and the cache is updated along with the call time.
+    If the API call fails for what ever reason, the data will continue to be pulled from Cache and the time will be reset, so another API call will not be attempted for 30 minutes.
+    This is to allow for API failure or Server issues (cURL not working for some reason) while still showing content on the front end.
 
-## [1.7.1] - 2018-05-15
-### Changed
- - comeet.php
-    Changed the way the cURL notification works. Detailed notification for Settings page, and limited notification for admin.
+## [2.0.1.2] - 2018-07-16
+###Fix
+ -comeet.php
+    Fixing issue with job posting Schema - The descrioption could have slashes that would cause the JSON to not be valid.
+    Fix - Addslashes to the descriotion value - so special characters are escaped.
+
+## [2.0.1.1] - 2018-07-15
+###Fix
+ -comeet.php
+    Fixing issue with job posting Schema.
+
+## [2.0.1.0] - 2018-06-25
+###Fix
+ -comeet-data.php
+    Stopped calling function from Comeet statically as it was throwing a Deprected warning - created an identical static function in comeet-data and calling that statically
+ -comeet.php Better handling of the debug function, in some cases the function was being called with variables that were not set - checking for variable isset now first (not in all cases)
+ -comeet-position-page-common.php Better handling of the debug function, in some cases the function was being called with variables that were not set - checking for variable isset now first (not in all cases)
+
+
+## [2.0.0.1] - 2018-05-30
+### Fix
+ -comeet-data.php
+    Added missing !
+    It being missing wouldn't let content be displayed even when it existed.
 
 ## [2.0] - 2018-05-17
 ### Changed
@@ -61,400 +342,44 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - comeet-two-columns.css
     Fixed error in the css
 
-## [2.0.0.1] - 2018-05-30
-### Fix
- -comeet-data.php
-    Added missing !
-    It being missing wouldn't let content be displayed even when it existed.
-
-## [2.0.1.0] - 2018-06-25
-### Fix
- -comeet-data.php
-    Stopped calling function from Comeet statically as it was throwing a Deprected warning - created an identical static function in comeet-data and calling that statically
- -comeet.php Better handling of the debug function, in some cases the function was being called with variables that were not set - checking for variable isset now first (not in all cases)
- -comeet-position-page-common.php Better handling of the debug function, in some cases the function was being called with variables that were not set - checking for variable isset now first (not in all cases)
-
-
-## [2.0.1.1] - 2018-07-15
-### Fix
- -comeet.php
-    Fixing issue with job posting Schema.
-
-## [2.0.1.2] - 2018-07-16
-### Fix
- -comeet.php
-    Fixing issue with job posting Schema - The descrioption could have slashes that would cause the JSON to not be valid.
-    Fix - Addslashes to the descriotion value - so special characters are escaped.
-
-## [2.0.2] - 2018-10-08
+## [1.7.1] - 2018-05-15
 ### Changed
  - comeet.php
-    Added a check for WP_error - when the API test call is made. Better handling of errors, if an error is detected, the error message will be displayed in the admin dashboard.
- -comeet-data.php
-    Added a timeout to the cURL call that is made to the API - 5 seconds
-    Changed caching mechanism, the cache now does NOT expire automatically, but lasts for ever.
-    In addition to the Data Cache, we also store the time the last API call was made. The data will be pulled from cache for 30 minutes,
-    after 30 minutes a new API call is made and the cache is updated along with the call time.
-    If the API call fails for what ever reason, the data will continue to be pulled from Cache and the time will be reset, so another API call will not be attempted for 30 minutes.
-    This is to allow for API failure or Server issues (cURL not working for some reason) while still showing content on the front end.
+    Changed the way the cURL notification works. Detailed notification for Settings page, and limited notification for admin.
 
-## [2.0.3] - 2018-10-09
+## [1.7] - 2018-05-11
 ### Changed
- -comeet.php
-    When saving settings the cache will be cleared.
-    Please note that the cache will ONLY be cleared if the API call works correctly. If the cache exists and the API call fails cache will NOT be replaced.
- -comeet-data.php
-    Modified the function that fetches the data. When settings are saved a new options parameter is passed into the funciton: "clear_comeet_cache", if this parameter isset in the
-    options array, the API call will be made and if succesfull the Cache will be updated. If the API call fails, cache will not be updated!
+ - comeet-data.php
+    Added caching to plugin - cache is for 30 minutes and then updates from API
+    Added ability to temporarily disable cache with URL flag - allows testing and force refresh of transient
+    Added debugging functionality for better handling of future issues
+ - comeet.php
+    Added debugging functionality for better handling of future issues
+ - comeet-sub-page-custom.php
+    Added debugging functionality for better handling of future issues
+ - comeet-position-page-common.php
+    Added debugging functionality for better handling of future issues
+    Fixed potential issue detected in Zooz client site.
 
-## [2.0.4] - 2018-12-12
+## [1.6.9.6] - 2018-05-07
 ### Changed
- -comeet.php
-    The 404 function that handles redirecting in cases that the page is a Comeet page, will not check if there are
-    GET parameters in the URL, and if so, pass them on.
-    This is to handle cases of UTM and other such parameters.
+ - Template files:
+    comeet-cateers.php
+    comeet-position-page-common.php
+    commet-sub-page-custom.php
 
-## [2.0.5] - 2018-12-12
+  All logic replaced with functions that reside in the class.
+  To allow easier templating and updating of the plugin with future versions of the plugin.
+
+
+## [1.6.9.5] - 2018-05-03
+### Added
+ - Added comeet-reset.css file with basic css rules to allow for a good display regardless of the theme being used.
 ### Changed
- -comeet.php
-    Added trim to UID and Token validation function - this is to handle cases where the UID or Token that is copied and pasted has extra spaces in the start or end of the string, which can cause issues and errors.
-    Thank you page will now have the comeet.js included in the head.
+ - comeet.php, enqueing the new css file.
 
-## [2.0.5.5] - 2019-13-01
-### Changed
- -comeet.php
-    Typo fix.
 
-## [2.0.5.6] - 2019-28-02
-### Minor Fix
- -comeet.php
-    Version bump
- -includes/comeet-options.php
-    Fix issue with Comeet logo not showing. Expected Plugin folder was comeet-wp-plugin but it was sometimes different when users downloaded from Github.
-    After this fix the logo will appear no matter what the plugin folder is named.
-
-## [2.0.5.7] - 2019-06-03
-### Fix
- -comeet.php
-    Version bump
-    Renamed all refrences to clean( to comeet_string_clean( to avoid naming conflicts with other functions called clean (That could appear in other plugins, themes or what not.)
- -comeet-data.php
-    Renamed function clean() to comeet_string_clean() - Less generic name for plugin specific name, to avoid naming conflicts
-    Renamed all refrences to clean( to comeet_string_clean( to avoid naming conflicts with other functions called clean (That could appear in other plugins, themes or what not.)
-
-## [2.0.6] - 2019-05-04
-### Fix
- -comeet.php
-    Adding fix for canonical meta tags.
-    Making sure the meta tag is correct + includes the coref url parameter when preset - fix for LinkedIn sharing.
-
-## [2.0.6.1] - 2019-08-04
-### Fix
- -comeet.php
-    Adding fix for canonical meta tags.
-    Making sure the meta tag is correct + includes the coref url parameter when preset - fix for LinkedIn sharing.
-    Improving how the filter_url function works - Just displaying the current URL + making sure that the coref parameter continues to pass.
-    This all works with or without Yoast SEO plugin
-
-## [2.0.6.5] - 2019-27-05
-### Changed
- -comeet.php
-    Moved Meta tag editing so that it ONLY happens if the page is a Comeet page, containing the Comeet ShortCode.
-    Improved OG:image handling
- -comeet-data.php
-    Improved position UID comparison, we had cases where the UID's being compared where upper case and lower case, so strtolower added to ensure that they are the same case.
-
-## [2.0.6.6] - 2019-15-10
-### Changed
- -comeet.php
-    Added debug output - this is used when debugging issues with the plugin using the debug_comeet_plugin get parameter
-### Fix
- -comeet-data.php
-    Cases where there are no open positions would result in an error from the API (not realy, the plugin treated it as such)
-    Fixed this case by not checking for Empty (which would throw the false error) but instead checking for array.
-
-## [2.0.6.7] - 2019-21-10
-### Changed
- -comeet.php
-    It Seems that LinkedIn fetches the title from the wrong location. As long as we have the oembed meta tags in the page,
-    LinkedIn will take the title from the oembed page/code. As a fix, on the individual position pages, we remove the oembed meta tags. (This removal is limited to the position pages)
-
-
-## [2.0.6.8] - 2019-16-12
-### Changed
- -comeet.php
-    Fixing issue with 404 redirects when the plugin saves bad redirections.
-    Now checking the URL for extra ? and replacing them with &
-
-## [2.0.6.9] - 2019-17-12
-### Changed
- -comeet.php
-    No longer relying on "has_shortcode" to check if the page is a Comeet page.
-    With the use of plugins such as ACF's this is no longer reliable. We now compare the post ID to the post that was set in the Comeet Settings page.
-
-## [2.0.6.11] - 2019-23-12
-### Changed
- -comeet.php
-    Job Meta Schema updated to include PostalCode and StreetAddress.
- -comeet.php
-    Typo fix
-
-## [2.1] - 2020-14-09
-### Changed
- -comeet.php
-    Added support for new API param - location.is_remote
-    If parameter exists and is true, Google structured data to job postings will have specific data included:
-    Location will not be specified (Other then Country) and "jobLocationType" : "TELECOMMUTE" will be added.
-
-## [2.1] - 2020-16-09
-### update
- -comeet.php
-    $post_data changed back to public to allow better access in template files
-    Added options for user to filter position by brand
-    Updated Comeet logo to new logo on Settings page
-
- -comeet-data.php
-    Added position filtering based on settings set in settings page.
-    This defaults to NO filter, so all positions are shown.
-
- -comeet-logo.png
-    File removes and replaced with comeet-logo.svg - new logo
-
- -comeet-options.php
-    Logo replaced with new one.
-
-## [2.1] - 2020-01-10
-###FIX
- -comee-data.php
-    Fixing issue with cache force reset.
-
-
-## [2.11] - 2020-02-10
-###FIX
- -comeet-data.php
-    Before trying to get the categories that a company has - checking that the company has categories.
-    this is to avoid showing warnings if and when PHP is trying to access an array key that doesn't exist
-
-
-## [2.15] - 2020-24-11
-###Update
- -comeet.php
-    WPML plugin has a very aggressive URL rewriting, as a result Position URL's would be overwriten
-    and not work properly. This fix removes https or http from the generated URL, which stops WPML from rewriting the URL.
-
-## [2.15] - 2020-25-11
-###Feature
- -comeet.php
-    WPML plugin has a very aggressive URL rewriting, as a result Position URL's would be overwriten
-    and not work properly. This fix removes https or http from the generated URL, which stops WPML from rewriting the URL.
-
-## [2.16] - 2020-03-12
-###Update
- -comeet.php
-    Fixed how we handle Yoast SEO, og:title meta tag.
-
-## [2.16] - 2020-07-12 - No version change.
-###Update
- -comeet.php
- Fixed link to Wordpress documentation
- Updated references to support.comeet.co => developers.comeet.com
- -comeet-data.php
- Updated references to support.comeet.co => developers.comeet.com
- -comeet-options.php
- Updated references to support.comeet.co => developers.comeet.com
-
-## [2.16.5] - 2021-10-05
-###FIX
- -comeet-position-page-common.php
-    Fixed position image issue. If image is added to position in Comeet - it will be displayed on the position page.
-
-
-## [2.17] - 2021-21-06
-###Update
- -comeet-data.php
-    Changed plugin cache time from 30 minutes to 5 minutes.
-###FIX
- -comeet-position-page-common.php
-    Fixing issue where a closed position shows a message but breaks part of the page (Footer not included and stuff like that.)
-
-## [2.17.5] - 2021-28-06
-###FIX
-    -comeet.php
-        Fixing the Description added to the JSON schema of each position page.
-
-## [2.17.6] - 2021-27-07
-###FIX
-    -comeet.php
-        Fixing the Description added to the JSON schema of each position page - Handling " in the description"
-
-## [2.17.7] - 2021-12-08
-###Update
-   -comeet.php
-        Added "directApply" : "True" to the Job posting js schema.
-
-## [2.18] - 2021-03-09
-###Update
-   -comeet.php
-        Added CSS-URL and CSS-Cache to the Comeet settings page
-        By Default Location and Department URL's will not be created.
-   -comeet.js
-        reformated so we can handle the css-cache case.
-
-## [2.18.5] - 2021-22-09
-###Fix
-   -comeet.php
-        Fixing sub-brand issue. If the category name included spaces, this could cause an issue with selecting
-        the sub-brand value to use
-   -comeet-data.php
-        Fixing sub-brand issue. If the category name included spaces, this could cause an issue with selecting
-                the sub-brand value to use
-
-## [2.18.6] - 2021-22-09
-###Fix
-   -comeet.php
-        Fixing issue with CSS-CACHE. As long as a CSS-URL was set, the CSS-CACHE was also set. Now fixed.
-
-   -comeet.js
-        Fix, same as above.
-
-## [2.2] - 2021-04-11
-###Fix
-    -comeet.php
-        Fixing issue with updating the Position meta description with Yoast.
-
-## [2.3] - 2021-06-12
-###Update
-    -comeet.php
-        Version update to 2.3
-###Fix
-    -comeet.php
-        css-cache - fixing label on the settings page
-        ensuring cleaner and more reliable css-cache = false
-        this is done with the addition of timestamp to the CSS url when cache set to false
-    -comeet.js
-        applying changes described above to the js file
-
-## [2.3.1] - 2021-14-12
-###Fix
-    -comeet.php
-        Fixing job posting schema description.
-        There was an issue with special characters not being escaped and some characters that don' need escaping being escaped.
-        This fix is in response to issue #9 in Github.
-
-## [2.3.2] - 2022-03-02
-###Fix
-    -comeet-data.php
-        Added CURLOPT_TIMEOUT to cURL call. This is to handle very rare cases where a connection
-        to the API is initiated and stalls for some reason. The addition of this paramter will allow
-        PHP to drop the connection after 5 seconds and continue working.
-
-## [2.3.3] - 2022-03-18
-###Fix
-    -comeet.php
-        fixing rare issue where PHP tries and fails to load a template file that does not exist
-        when a folder named comeet is created in the theme folder.
-###Update
-    -comeet.php
-        Updated Plugin URI to the current documentation
-
-## [2.3.4] - 2022-05-04
-###Fix
-    -comeet.php
-        Fixing issue where job schema is added to pages even on closed/non existant positions
-        if a position is closed or doesn't exist the data on the page will lead back to the careers page
-
-###Update
-    -comeet.php, comeet-careers.php, comeet-sub-page-custom.php
-        Updated position URL's that are generated so they are always the same no matter where they
-        are being generated from, This is to resolve an issue where 1 position could have multiple
-        URL's causing content duplication and issues with SEO.
-
-## [2.3.5] - 2022-05-12
-###Fix
-    -comeet.php
-        Fixing for backwards compatibility of the "generate_page_titles" function
-
-## [2.3.6] - 2022-05-13
-###Fix
-    -comeet.php
-        If a user does not explicitly select a thank you page, non will be set.
-
-## [2.3.7] - 2022-05-23
-###Fix
-    -comeet-careers.php
-        Backwards compatibility fix
-
-## [2.3.8] - 2022-05-31
-###Fix
-    -comeet-sub-page-custom.php
-        Backwards compatibility fix
-
-## [2.3.9] - 2022-05-31
-###Fix
-    -comeet.php
-        Fix to for Elementor pro issue
-
-## [2.4] - 2022-09-12
-###Fix
-    -comeet.php
-        Fixing some issues that were displaying warnings in special cases like multi site installs and so on.
-        Fixing issue with the 'comee-deactivation' function.
-    -comeet-data.php
-        Fixing issue where in some cases, on multi sites 'comeet_string_clean' function would get redeclared causing a fata error
-        We now check if the function exists before declaring it to avoid the issue.
-
-## [2.4.1] - 2022-09-12
-###Fix
-    Removing parameter that was forcing all API calls to bypass API response caching.
-
-## [2.4.5] - 2022-12-16
-###Update
-    Adding the ability for the user (Site admin) to decide how to handle missing positions.
-    Default behaviour is to load the position URL with a response 200 and show a default built in message,
-    User now has 3 options, default, redirect to 404 page with a response code of 404, redirect to user selected page.
-    In case of redirect, the redirect is a 301 redirect
-
-## [2.4.5] - 2022-12-21
-    Version bump - view fix
-
-## [2.4.6] - 2023-01-31
-    Cookie consent fix - allowing the application form to work AFTER cookie consent.
-
-## [2.5] - 2023-02-08
-    Fixing error that occurs when the API returns an empty array (No available positions)
-    Added "Clear cache" button to the options page.
-
-## [2.6] - 2023-03-01
-    Better handling of Cookie consent services such as CookieBot and Termly.
-
-## [2.6.2] - 2023-03-02
-    comeet.php - updated the text and look/feel of the "Cookie consent manager" in the settings page
-    comeet-data.php - switched from using cURL to get the API response to using wp_remote_get - more inline with Wordpress standards
-
-## [2.6.3] - 2023-03-02
-    comeet.php - added a settings options allowing user to set the company URL. If set the job Schema will have sameAs added
-
-
-## [3.0]
-    comeet.php - Added the new Advanced settings
-    - Moved the Sections and settings to an external file being included - for easier maintenance.
-    - Moved styles to a css file being included only in admin
-    - Moved JS to a JS file being included only in admin
-    - Added all the new setting functions and validation + setting of the comeetvar js variable.
-
-    comeet-admin-css.css - new CSS file
-    admin_sections.php - added new admin_section file being included into comeet.php
-    comeet-admin-js.js - added new js file
-
-    comeet.js - added all the new parameters being used for advanced customization.
-
-[3.0.1]
-    comeet-data.php - handling cases where "wp_remote_get" returns error
-
-[3.0.3]
-    comeet.php - corrected  data-section text to correctly describe the section.
-    admin_section.php - added missing control for Social sharing title
-    comeet.js - added let to the comeet_init object
-
-
-
+## [1.6.9.4] - 2018-05-03
+### Added
+ - Added this changelog file
+### Fixed
