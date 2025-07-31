@@ -1587,10 +1587,14 @@ if (!class_exists('Comeet')) {
 
         //get template path
         function get_template_path_or_die($template) {
+            //default path
+            $path = $this->plugin_dir . 'templates';
+            //allow template override
+            $template_directory = apply_filters('comeet_wp_template_path', $path, $template);
             $paths = array(
                 get_stylesheet_directory(),
                 get_stylesheet_directory() . '/comeet',
-                $this->plugin_dir . 'templates'
+                $template_directory
             );
 
             foreach ($paths as $path) {
