@@ -1,4 +1,7 @@
-[4.0.0]
+[4.0.2]
+    Added declaration of $comeet_token and $comeet_uid to avoid Deprecated: warnings in log files.
+
+[4.0.1]
     Fix to automatic redirect when plugin active + the settings link on the plugins page.
 
 [4.0.0]

@@ -3,7 +3,7 @@
  * Plugin Name: Spark Hire Recruit
  * Plugin URI: https://developers.comeet.com/reference/wordpress-plugin
  * Description: Job listing page using the Recruit API.
- * Version: 4.0.1
+ * Version: 4.0.2
  * Author: Sparkhire - Recruit
  * Author URI: https://www.sparkhire.com/applicant-tracking-system/
  * License: Apache 2
@@ -69,7 +69,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '4.0.1';
+        public $version = '4.0.2';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -98,6 +98,9 @@ if (!class_exists('Comeet')) {
         public $documentation_url = 'https://developers.comeet.com/reference/';
 
         public $options;
+
+        public $comeet_uid;
+        public $comeet_token;
 
         public function __construct() {
             //getting plugin URL
