@@ -345,9 +345,10 @@ function comeet_search($array, $key, $value) {
 
     if (is_array($array)) {
         $array_value = ComeetData::get_group_value($array, $key);
-
-        if (isset($array_value) && strtolower(comeet_string_clean($array_value)) == strtolower($value)) {
-            $results[] = $array;
+        if(!is_null($array_value) && !is_null($value)) {
+            if (isset($array_value) && strtolower(comeet_string_clean($array_value)) == strtolower($value)) {
+                $results[] = $array;
+            }
         }
 
         foreach ($array as $subarray) {

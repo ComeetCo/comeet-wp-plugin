@@ -1,3 +1,7 @@
+[4.0.3]
+    Added declaration of $comeet_pos to avoid Deprecated: warnings in log files.
+    Checking for null before using strtolower
+
 [4.0.2]
     Added declaration of $comeet_token and $comeet_uid to avoid Deprecated: warnings in log files.
 
