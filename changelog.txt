@@ -1,3 +1,6 @@
+[4.0.4]
+    Changing check to a strict comparison notation to compare both value and type.
+
 [4.0.3]
     Added declaration of $comeet_pos to avoid Deprecated: warnings in log files.
     Checking for null before using strtolower
