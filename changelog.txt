@@ -1,3 +1,6 @@
+[4.0.5]
+    Ensuring variable exist before trying to access them.
+
 [4.0.4]
     Changing check to a strict comparison notation to compare both value and type.
 

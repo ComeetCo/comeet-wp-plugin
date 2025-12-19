@@ -1,7 +1,7 @@
 === Plugin Name ===
 Requires at least: 5
 Tested up to: 6.8.3
-Stable tag: 4.0.4
+Stable tag: 4.0.5
 License: Apache 2
 License URI: http://www.apache.org/licenses/LICENSE-2.0
 
@@ -37,6 +37,9 @@ You can to the developers resource [here](https://developers.comeet.com/referenc
 
 
 == Changelog ==
+
+= 4.0.4 =
+*Ensuring variable exist before trying to access them.
 
 = 4.0.4 =
 *Changing check to a strict comparison notation to compare both value and type.
