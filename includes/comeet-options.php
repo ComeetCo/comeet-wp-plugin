@@ -3,7 +3,7 @@
       <?php
       $plugin_basename = str_replace('includes/comeet-options.php', '', plugin_basename(__FILE__));
       ?>
-      <img src="<?php echo plugins_url($plugin_basename.'img/sparkhire-recruit.svg') ?>" style="width:250px;margin-bottom:-5px;"/>
+      <img src="<?php echo esc_url(plugins_url($plugin_basename.'img/sparkhire-recruit.svg')); ?>" style="width:250px;margin-bottom:-5px;"/>
      - Careers Website
     <?php $options = $this->get_options(); 
     $post = get_post($options['post_id']);
@@ -11,7 +11,7 @@
     ?>
 	<?php
 	if (isset($post->post_name)) { ?>
-		<a class="button" href="<?php echo get_permalink( $post->ID );?>" target="_blank" style="float: right;"/>Open &#8599;</a>
+		<a class="button" href="<?php echo esc_url(get_permalink( $post->ID )); ?>" target="_blank" style="float: right;"/>Open &#8599;</a>
 	<?php }
 	?>
   </h2>

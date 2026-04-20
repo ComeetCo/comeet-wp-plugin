@@ -1,3 +1,4 @@
+<?php defined( 'ABSPATH' ) || exit; ?>
 <?php
 $comeet_count_result = count(comeet_search($data, $sub_group, $comeet_cat));
 $this->plugin_debug(['Template page: comeet-sub-page-custom.php', 'Data:', 'Comeetgroups:', $comeet_groups, 'Comeet sub group is:', $sub_group, 'Comeet cat is:', $comeet_cat, 'comeet search result count:', $comeet_count_result], __LINE__, __FILE__);
@@ -30,18 +31,18 @@ $this->plugin_debug(['Template page: comeet-sub-page-custom.php', 'Data:', 'Come
                     foreach ($data as $post) {
                         if ($this->check_for_category($post, $group_element, $category, $sub_group, $comeet_cat)) {
                             echo '<li class="comeet-position">';
-                            echo '<div class="comeet-position-name"><a href="' . $this->generate_careers_url(get_the_permalink($options['post_id']),$category, $post) . '">' . $post['name'] . '</a></div>';
+                            echo '<div class="comeet-position-name"><a href="' . esc_url($this->generate_careers_url(get_the_permalink($options['post_id']), $category, $post)) . '">' . esc_html($post['name']) . '</a></div>';
                             echo '<div class="comeet-position-meta">';
                             if ($comeet_group == 0) {
-                                echo $post['department'];
+                                echo esc_html($post['department']);
                             } else {
-                                echo $post['location']['name'];
+                                echo esc_html($post['location']['name']);
                             }
                             if (!$post['employment_type'] == NULL || !$post['employment_type'] == "") {
-                                echo '  &middot;  ' . $post['employment_type'];
+                                echo '  &middot;  ' . esc_html($post['employment_type']);
                             }
                             if (!$post['experience_level'] == NULL || !$post['experience_level'] == "") {
-                                echo '  &middot;  ' . $post['experience_level'];
+                                echo '  &middot;  ' . esc_html($post['experience_level']);
                             }
                             echo '</div></li>';
                         }

@@ -1,3 +1,4 @@
+<?php defined( 'ABSPATH' ) || exit; ?>
 <div class="comeet-outer-wrapper">
 <div class="comeet-thenkyou-message">
 	<h2 class="comeet-title">Thanks for applying!</h2>
