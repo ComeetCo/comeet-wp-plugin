@@ -37,6 +37,11 @@ You can to the developers resource [here](https://developers.comeet.com/referenc
 
 
 == Changelog ==
+= 4.0.6 =
+
+= 4.0.5 =
+    Thank you pages that have parent pages will now return the correct URL.
+
 
 = 4.0.4 =
 *Ensuring variable exist before trying to access them.

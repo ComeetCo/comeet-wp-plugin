@@ -1,3 +1,6 @@
+[4.0.6]
+    Thank you pages that have parent pages will now return the correct URL.
+
 [4.0.5]
     Ensuring variable exist before trying to access them.
 
