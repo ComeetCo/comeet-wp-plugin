@@ -54,7 +54,7 @@ class ComeetData {
             $transient_time = time();
             $transient_data = false;
         }
-        if(time() - $transient_time > $cache_time || isset($_GET['comeet_disable_cache'])){
+        if(time() - $transient_time > $cache_time || (isset($_GET['comeet_disable_cache']) && current_user_can('manage_options'))){
             $transient_data = false;
         }
         if($transient_data){
@@ -67,7 +67,7 @@ class ComeetData {
 
             //in case of forced cache disable OR clearing comeet cache, we add a time parameter to the API
             //URL to ensure that we get a clean un cached response from the API server.
-            if(isset($_GET['comeet_disable_cache'])){
+            if(isset($_GET['comeet_disable_cache']) && current_user_can('manage_options')){
                 $comeet_post_url = $comeet_post_url.'&'.time();
             }
 
@@ -332,11 +332,11 @@ class ComeetData {
     }
 
     static function plugin_debug($message, $line, $file){
-        if(isset($_GET['debug_comeet_plugin'])){
-            echo "<pre>";
-            echo $file." - ".$line."<br />";
-            print_r($message);
-            echo "</pre>";
+        if(isset($_GET['debug_comeet_plugin']) && current_user_can('manage_options')){
+            echo '<pre>';
+            echo esc_html($file) . ' - ' . esc_html($line) . '<br />';
+            echo esc_html(print_r($message, true));
+            echo '</pre>';
         }
     }
 }

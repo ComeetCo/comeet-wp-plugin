@@ -1,3 +1,4 @@
+<?php defined( 'ABSPATH' ) || exit; ?>
 <div class="comeet-outer-wrapper">
 <?php
 if (isset($comeet_groups) && !empty($comeet_groups)) {
@@ -9,7 +10,7 @@ if (isset($comeet_groups) && !empty($comeet_groups)) {
 			<div class="comeet-g-r">
 				<div class="comeet-u-1-2">
 					<div class="comeet-list comeet-group-name">
-						<?= $this->generate_page_titles(false, $category, false, $base) ?>
+						<?php echo $this->generate_page_titles(false, $category, false, $base); ?>
 					</div>
 				</div>
 				<div class="comeet-u-1-2">
@@ -23,23 +24,22 @@ if (isset($comeet_groups) && !empty($comeet_groups)) {
                                         $href = $this->generate_careers_url($base, $category, $post);
                                         ?>
                                         <li>
-                                            <a class="comeet-position" href="<?= $href?>">
+                                            <a class="comeet-position" href="<?php echo esc_url($href); ?>">
                                                 <div class="comeet-position-name">
-                                                    <!--<a href="<?= $href?>"><?=$post['name']?></a> -->
-                                                    <?=$post['name']?>
+                                                    <?php echo esc_html($post['name']); ?>
                                                 </div>
                                                 <div class="comeet-position-meta">
                                         <?php
                                             if ($comeet_group == 0) {
-                                                echo $post['department'];
+                                                echo esc_html($post['department']);
                                             } else {
-                                                echo $post['location']['name'];
+                                                echo esc_html($post['location']['name']);
                                             }
                                             if (!$post['employment_type'] == NULL || !$post['employment_type'] == "") {
-                                                echo '  &middot;  ' . $post['employment_type'];
+                                                echo '  &middot;  ' . esc_html($post['employment_type']);
                                             }
                                             if (!$post['experience_level'] == NULL || !$post['experience_level'] == "") {
-                                                echo '  &middot;  ' . $post['experience_level'];
+                                                echo '  &middot;  ' . esc_html($post['experience_level']);
                                             }
                                             ?>
                                                 </div>

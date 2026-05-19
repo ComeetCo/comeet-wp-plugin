@@ -162,67 +162,51 @@ if (!class_exists('Comeet')) {
         //function for adding json schema to header of page on individual job pages.
         public function add_job_posting_js_schema(){
             $options = $this->get_options();
-            $positions_details = '';
-            if(isset($this->post_data['details'])) {
-                foreach ($this->post_data['details'] as $detail) {
-                    $positions_details .= "<b>" . $detail['name'] . "</b><br />" . addslashes($detail['value']) . "<br />";
-                }
+
+            $schema = array(
+                '@context'       => 'http://schema.org',
+                '@type'          => 'JobPosting',
+                'title'          => $this->post_data['name'],
+                'url'            => $this->post_data['url_active_page'],
+                'datePosted'     => $this->post_data['time_updated'],
+                'employmentType' => $this->post_data['employment_type'],
+                'hiringOrganization' => array(
+                    '@type' => 'Organization',
+                    'name'  => $this->post_data['company_name'],
+                ),
+                'image'       => $this->post_data['picture_url'],
+                'description' => $this->get_social_graph_description(),
+                'directApply' => true,
+            );
+
+            if (!empty($options['comeet_company_url'])) {
+                $schema['hiringOrganization']['sameAs'] = $options['comeet_company_url'];
             }
-            //getting position description and escaping only specific characters
-            $description = $this->get_social_graph_description();
-            $description = addcslashes($description, '"');
-            $description = addcslashes($description, '\\');
-            ?>
-            <script type="application/ld+json">{
-                    "@context": "http://schema.org",
-                    "@type": "JobPosting",
-                    "title": "<?= $this->post_data['name']?>",
-                    "url": "<?= $this->post_data['url_active_page']?>",
-                    "datePosted": "<?= $this->post_data['time_updated']?>",
-                    "employmentType": "<?= $this->post_data['employment_type']?>",
-                    "hiringOrganization":
-                    {
-                        "@type": "Organization",
-                        <?php
-                        if(empty($options['comeet_company_url'])){
-                        ?>
-"name": "<?php echo  $this->post_data['company_name']?>",
-                        <?php } else {?>
-"name": "<?php echo  $this->post_data['company_name']?>",
-                        "sameAs": "<?php echo $options['comeet_company_url']?>"
-                        <?php } ?>
-                    },
-                    <?php if(isset($this->post_data['location']['is_remote']) && $this->post_data['location']['is_remote']){?>
-                    "applicantLocationRequirements" : {
-                        "@type": "Country",
-                        "name" : "<?= $this->post_data['location']['country']?>"
-                    },
-"jobLocationType" : "TELECOMMUTE",
-                    <?php } else { ?>
-"jobLocation":
-                    {
-                        "@type": "Place",
-                        "address":
-                        {
-                            "@type": "PostalAddress",
-                            "addressLocality": "<?= $this->post_data['location']['city']?>",
-                            "addressRegion": "<?= $this->post_data['location']['state']?>",
-                            "addressCountry":
-                            {
-                                "@type": "Country",
-                                "name": "<?= $this->post_data['location']['country']?>"
-                            },
-                            "postalCode": "<?= $this->post_data['location']['postal_code']?>",
-                            "streetAddress": "<?= $this->post_data['location']['street_name']?>"
-                        }
-                    },
-                    <?php }?>
-                    "image": "<?= $this->post_data['picture_url']?>",
-                    "description": "<?= $description?>",
-                    "directApply" : "True"
-                    }
-                </script>
-            <?php
+
+            if (isset($this->post_data['location']['is_remote']) && $this->post_data['location']['is_remote']) {
+                $schema['applicantLocationRequirements'] = array(
+                    '@type' => 'Country',
+                    'name'  => $this->post_data['location']['country'],
+                );
+                $schema['jobLocationType'] = 'TELECOMMUTE';
+            } else {
+                $schema['jobLocation'] = array(
+                    '@type'   => 'Place',
+                    'address' => array(
+                        '@type'           => 'PostalAddress',
+                        'addressLocality' => $this->post_data['location']['city'],
+                        'addressRegion'   => $this->post_data['location']['state'],
+                        'addressCountry'  => array(
+                            '@type' => 'Country',
+                            'name'  => $this->post_data['location']['country'],
+                        ),
+                        'postalCode'    => $this->post_data['location']['postal_code'],
+                        'streetAddress' => $this->post_data['location']['street_name'],
+                    ),
+                );
+            }
+
+            echo '<script type="application/ld+json">' . wp_json_encode($schema) . '</script>' . "\n";
         }
 
         //actual funciton that checks for shortcode.
@@ -266,8 +250,8 @@ if (!class_exists('Comeet')) {
         public function rel_canonical_fix(){
             global $wp;
             $current_url = home_url( $wp->request );
-            $coref = (isset($_GET['coref'])) ? "?coref=".$_GET['coref'] : "";
-            echo "<link rel=\"canonical\" href=\"".$current_url.$coref."\">\n";
+            $coref = isset($_GET['coref']) ? '?coref=' . rawurlencode(sanitize_text_field(wp_unslash($_GET['coref']))) : '';
+            echo '<link rel="canonical" href="' . esc_url($current_url . $coref) . '">' . "\n";
         }
 
         //getter function for the description for meta tags
@@ -309,8 +293,8 @@ if (!class_exists('Comeet')) {
         function filter_url($canonical){
             global $wp;
             $current_url = rtrim(home_url( $wp->request ), '/').'/';
-            $coref = (isset($_GET['coref'])) ? "?coref=".$_GET['coref'] : "";
-            return  $current_url.$coref;
+            $coref = isset($_GET['coref']) ? '?coref=' . rawurlencode(sanitize_text_field(wp_unslash($_GET['coref']))) : '';
+            return esc_url($current_url . $coref);
         }
 
         //checking and setting the value to true of comeet page detected.
@@ -368,14 +352,14 @@ if (!class_exists('Comeet')) {
             if (!is_plugin_active('wordpress-seo/wp-seo.php')) : ?>
                 <!-- COMEET PLUGIN -->
                 <?php if (isset($this->title)) : ?>
-                    <meta name="og:title" content="<?= $this->title ?>"/>
+                    <meta name="og:title" content="<?php echo esc_attr($this->title); ?>"/>
                 <?php endif; ?>
                 <?php if (isset($this->social_graph_image)) : ?>
-                    <meta property="og:image" content="<?= $this->social_graph_image ?>"/>
+                    <meta property="og:image" content="<?php echo esc_url($this->social_graph_image); ?>"/>
                 <?php endif; ?>
-                <meta property="og:description" content="<?= $this->get_social_graph_description() ?>">
-                <meta name="description" content="<?= $this->get_social_graph_description() ?>">
-                <meta property="og:url" content="<?= $this->get_current_url(); ?>"/>
+                <meta property="og:description" content="<?php echo esc_attr($this->get_social_graph_description()); ?>">
+                <meta name="description" content="<?php echo esc_attr($this->get_social_graph_description()); ?>">
+                <meta property="og:url" content="<?php echo esc_url($this->get_current_url()); ?>"/>
                 <meta property="og:type" content="article" />
                 <!-- COMEET PLUGIN -->
             <?php
@@ -708,22 +692,22 @@ if (!class_exists('Comeet')) {
 
         function comeet_button_color(){
             $options = $this->get_options();
-            echo '<input type="text" placeholder="#167acd" name="'.$this->db_opt.'[comeet_button_color]" id="comeet_button_color" value="'.$options['comeet_button_color'].'" />';
+            echo '<input type="text" placeholder="#167acd" name="' . esc_attr($this->db_opt) . '[comeet_button_color]" id="comeet_button_color" value="' . esc_attr($options['comeet_button_color']) . '" />';
         }
 
         function comeet_button_text(){
             $options = $this->get_options();
-            echo '<input type="text" placeholder="Submit Application" name="'.$this->db_opt.'[comeet_button_text]" id="comeet_button_text" value="'.$options['comeet_button_text'].'" />';
+            echo '<input type="text" placeholder="Submit Application" name="' . esc_attr($this->db_opt) . '[comeet_button_text]" id="comeet_button_text" value="' . esc_attr($options['comeet_button_text']) . '" />';
         }
 
         function comeet_font_size(){
             $options = $this->get_options();
-            echo '<input type="text" placeholder="13px" name="'.$this->db_opt.'[comeet_font_size]" id="comeet_font_size" value="'.$options['comeet_font_size'].'" />';
+            echo '<input type="text" placeholder="13px" name="' . esc_attr($this->db_opt) . '[comeet_font_size]" id="comeet_font_size" value="' . esc_attr($options['comeet_font_size']) . '" />';
         }
 
         function comeet_button_font_size(){
             $options = $this->get_options();
-            echo '<input type="text" placeholder="13px" name="'.$this->db_opt.'[comeet_button_font_size]" id="comeet_button_font_size" value="'.$options['comeet_button_font_size'].'" />';
+            echo '<input type="text" placeholder="13px" name="' . esc_attr($this->db_opt) . '[comeet_button_font_size]" id="comeet_button_font_size" value="' . esc_attr($options['comeet_button_font_size']) . '" />';
         }
 
         //end form and social styles
@@ -929,13 +913,13 @@ if (!class_exists('Comeet')) {
         function comeet_token_input() {
             $options = $this->get_options();
 
-            echo '<input type="text" id="comeet_token" name="' . $this->db_opt . '[comeet_token]" value="' . $options['comeet_token'] . '" size="25" style="width:200px" />';
+            echo '<input type="text" id="comeet_token" name="' . esc_attr($this->db_opt) . '[comeet_token]" value="' . esc_attr($options['comeet_token']) . '" size="25" style="width:200px" />';
         }
 
         function comeet_uid_input() {
             $options = $this->get_options();
 
-            echo '<input type="text" id="comeet_uid" name="' . $this->db_opt . '[comeet_uid]" value="' . $options['comeet_uid'] . '" size="25"  style="width:200px" />';
+            echo '<input type="text" id="comeet_uid" name="' . esc_attr($this->db_opt) . '[comeet_uid]" value="' . esc_attr($options['comeet_uid']) . '" size="25"  style="width:200px" />';
         }
 
         public function comeet_404_handling_box(){
@@ -1106,7 +1090,7 @@ if (!class_exists('Comeet')) {
         function comeet_color_input() {
             $options = $this->get_options();
 
-            echo '<input type="text" id="comeet_color" name="' . $this->db_opt . '[comeet_color]" value="' . $options['comeet_color'] . '" size="25"  style="width:200px" />';
+            echo '<input type="text" id="comeet_color" name="' . esc_attr($this->db_opt) . '[comeet_color]" value="' . esc_attr($options['comeet_color']) . '" size="25"  style="width:200px" />';
             echo '<p class="description">Optional. e.g. 278fe6</p>';
         }
 
@@ -1116,8 +1100,8 @@ if (!class_exists('Comeet')) {
             if(isset($options['comeet_css_url']))
                 $comeet_css_url = $options['comeet_css_url'];
 
-		    echo '<input type="text" id="comeet_css_url" name="' . $this->db_opt . '[comeet_css_url]" value="' . $comeet_css_url . '" size="25"  style="width:200px" />';
-		    echo '<p class="description">Optional - <a href="'.$this->documentation_url.'custom-css" target="_blank">See documentation</a></p>';
+		    echo '<input type="text" id="comeet_css_url" name="' . esc_attr($this->db_opt) . '[comeet_css_url]" value="' . esc_url($comeet_css_url) . '" size="25"  style="width:200px" />';
+		    echo '<p class="description">Optional - <a href="' . esc_url($this->documentation_url . 'custom-css') . '" target="_blank">See documentation</a></p>';
 	    }
 
 	    function comeet_css_cache() {
@@ -1135,7 +1119,7 @@ if (!class_exists('Comeet')) {
         function comeet_bgcolor_input() {
             $options = $this->get_options();
 
-            echo '<input type="text" id="comeet_bgcolor" name="' . $this->db_opt . '[comeet_bgcolor]" value="' . $options['comeet_bgcolor'] . '" size="25"  style="width:200px" />';
+            echo '<input type="text" id="comeet_bgcolor" name="' . esc_attr($this->db_opt) . '[comeet_bgcolor]" value="' . esc_attr($options['comeet_bgcolor']) . '" size="25"  style="width:200px" />';
             echo '<p class="description">Optional. e.g. eeeeee</p>';
         }
 
@@ -1165,21 +1149,21 @@ if (!class_exists('Comeet')) {
 
         function comeet_company_website_url(){
             $options = $this->get_options();
-            echo '<input type="text" id="comeet_comapny_url" name="' . $this->db_opt . '[comeet_company_url]" value="' . $options['comeet_company_url'] . '" size="25"  style="width:200px" />';
+            echo '<input type="text" id="comeet_comapny_url" name="' . esc_attr($this->db_opt) . '[comeet_company_url]" value="' . esc_url($options['comeet_company_url']) . '" size="25"  style="width:200px" />';
             echo '<p class="description">Optional. e.g. https://www.acme.com</p>';
         }
 
         function comeet_subpage_input() {
             $options = $this->get_options();
 
-            echo '<input type="text" id="comeet_subpage_template" name="' . $this->db_opt . '[comeet_subpage_template]" value="' . $options['comeet_subpage_template'] . '" size="25"  style="width:200px" />';
+            echo '<input type="text" id="comeet_subpage_template" name="' . esc_attr($this->db_opt) . '[comeet_subpage_template]" value="' . esc_attr($options['comeet_subpage_template']) . '" size="25"  style="width:200px" />';
             echo '<p class="description">Optional. e.g. page.php</p>';
         }
 
         function comeet_positionpage_input() {
             $options = $this->get_options();
 
-            echo '<input type="text" id="comeet_positionpage_template" name="' . $this->db_opt . '[comeet_positionpage_template]" value="' . $options['comeet_positionpage_template'] . '" size="25"  style="width:200px" />';
+            echo '<input type="text" id="comeet_positionpage_template" name="' . esc_attr($this->db_opt) . '[comeet_positionpage_template]" value="' . esc_attr($options['comeet_positionpage_template']) . '" size="25"  style="width:200px" />';
             echo '<p class="description">Optional. e.g. page.php</p>';
         }
 
@@ -1984,11 +1968,11 @@ if (!class_exists('Comeet')) {
         //$message can be String or Array
         //To view the debug messages, add ?debug_comeet_plugin to the URL.
         public function plugin_debug($message, $line, $file){
-            if(isset($_GET['debug_comeet_plugin'])){
-                echo "<pre>";
-                echo $file." - ".$line."<br />";
-                print_r($message);
-                echo "</pre>";
+            if(isset($_GET['debug_comeet_plugin']) && current_user_can('manage_options')){
+                echo '<pre>';
+                echo esc_html($file) . ' - ' . esc_html($line) . '<br />';
+                echo esc_html(print_r($message, true));
+                echo '</pre>';
             }
         }
 

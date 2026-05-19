@@ -1,3 +1,4 @@
 <?php
- echo $content;
+defined( 'ABSPATH' ) || exit;
+echo $content;
 ?>
