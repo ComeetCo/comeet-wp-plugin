@@ -1,3 +1,6 @@
+[4.0.7]
+    Hardening the plugin for cases where the API response or cached data is not a proper array
+
 [4.0.6]
     Thank you pages that have parent pages will now return the correct URL.
 

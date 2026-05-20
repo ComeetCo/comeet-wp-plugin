@@ -37,11 +37,14 @@ You can to the developers resource [here](https://developers.comeet.com/referenc
 
 
 == Changelog ==
-= 4.0.6 =
+[4.0.7]
+    Hardening the plugin for cases where the API response or cached data is not a proper array
 
-= 4.0.5 =
+= 4.0.6 =
     Thank you pages that have parent pages will now return the correct URL.
 
+= 4.0.5 =
+    Ensuring variable exist before trying to access them.
 
 = 4.0.4 =
 *Ensuring variable exist before trying to access them.

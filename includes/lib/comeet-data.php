@@ -74,7 +74,7 @@ class ComeetData {
             $full_response = self::comeet_get_data($comeet_post_url);
             //debug function
             ComeetData::plugin_debug(['URL used for API call: ', $comeet_post_url], __LINE__, __FILE__);
-            if (!is_array($full_response['all_data']) || (isset($full_response['status']) &&  $full_response['status'] != 200)) {
+            if (!is_array($full_response) || !isset($full_response['all_data']) || !is_array($full_response['all_data']) || (isset($full_response['status']) &&  $full_response['status'] != 200)) {
                 ComeetData::plugin_debug(['Data from API - returned error', $full_response['all_data']], __LINE__, __FILE__);
                 //we attempted to get the data from the API, there was an issue, so we fall back on the Cache
                 $all_data = get_option($transient_prefix);
@@ -90,6 +90,12 @@ class ComeetData {
             //getting the categories and values
             self::get_categories_and_values($all_data);
 
+        }
+        // Final safety net: corrupted cached option, fallback to cache when no cache
+        // exists, or any other path that left $all_data non-array. Returning [] keeps
+        // every consumer's foreach/array access safe.
+        if (!is_array($all_data)) {
+            $all_data = [];
         }
         return $all_data;
     }
@@ -120,12 +126,18 @@ class ComeetData {
     //get data of specific position
     static function get_position_data($options, $comeet_pos) {
         if (empty($options['comeet_token']) || empty($options['comeet_uid'])) {
-            return;
+            return null;
         }
         $post_data = self::get_api_data($options);
         ComeetData::plugin_debug(['Specified position is: '.$comeet_pos], __LINE__, __FILE__);
-        $response = '';
+        if (!is_array($post_data)) {
+            return null;
+        }
+        $response = null;
         foreach($post_data as $data){
+            if (!is_array($data) || !isset($data['uid'])) {
+                continue;
+            }
             if(strtolower($data['uid']) === strtolower($comeet_pos)){
                 $response = $data;
                 break;

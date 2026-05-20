@@ -3,7 +3,7 @@
  * Plugin Name: Spark Hire Recruit
  * Plugin URI: https://developers.comeet.com/reference/wordpress-plugin
  * Description: Job listing page using the Recruit API.
- * Version: 4.0.6
+ * Version: 4.0.7
  * Author: Sparkhire - Recruit
  * Author URI: https://www.sparkhire.com/applicant-tracking-system/
  * License: Apache 2
@@ -12,7 +12,7 @@
 
 /*
 
-Copyright 2025 Spark Hire Recruit
+Copyright 2026 Spark Hire Recruit
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ if (!class_exists('Comeet')) {
 
     class Comeet {
         //current plugin version - used to display version as a comment on comeet pages and in the settings page
-        public $version = '4.0.5';
+        public $version = '4.0.7';
         var $plugin_url;
         var $plugin_dir;
         //All commet options are stored in the wp options table in an array
@@ -161,10 +161,18 @@ if (!class_exists('Comeet')) {
 
         //function for adding json schema to header of page on individual job pages.
         public function add_job_posting_js_schema(){
+            // Defensive: registered via add_action, so post_data could shift between
+            // registration and execution. Bail before emitting any offset accesses.
+            if (!is_array($this->post_data)) {
+                return;
+            }
             $options = $this->get_options();
             $positions_details = '';
-            if(isset($this->post_data['details'])) {
+            if(isset($this->post_data['details']) && is_array($this->post_data['details'])) {
                 foreach ($this->post_data['details'] as $detail) {
+                    if (!is_array($detail)) {
+                        continue;
+                    }
                     $positions_details .= "<b>" . $detail['name'] . "</b><br />" . addslashes($detail['value']) . "<br />";
                 }
             }
@@ -336,7 +344,7 @@ if (!class_exists('Comeet')) {
                 //adding json schema to head  and modifying Yoast SEO meta tags and or no Yoast meta tags as needed, on pages that have the Comeet shortcode
                 // ONLY if we are on individual job page
                 if(isset($wp_query->query_vars['comeet_pos'])){
-                    if(!empty($this->post_data)) {
+                    if(is_array($this->post_data) && !empty($this->post_data)) {
                         $this->plugin_debug([$wp_query->query_vars], __LINE__, __FILE__);
                         add_action('wp_head', array($this, 'add_job_posting_js_schema'));
                         add_filter('wpseo_opengraph_title', array($this, 'get_og_title'));
@@ -1365,6 +1373,12 @@ if (!class_exists('Comeet')) {
 				if (isset($this->comeet_pos)) {
 					$this->post_data = ComeetData::get_position_data($this->get_options(), $this->comeet_pos);
 
+					// Guard against non-array payloads (e.g. malformed cache/API responses)
+					// so downstream offset accesses cannot trigger a fatal TypeError.
+					if (!is_array($this->post_data)) {
+						$this->post_data = null;
+					}
+
                     if(empty($this->post_data)) {
                     //checking to see what should happen in this case according to the user
                         $options = $this->get_options();
@@ -1379,10 +1393,12 @@ if (!class_exists('Comeet')) {
                     }
 
 					$this->plugin_debug(['Fetched post data - within comeet_preload_data is', $this->post_data], __LINE__, __FILE__);
-					$this->social_graph_description = ComeetData::get_property_value($this->post_data['details'], 'Description');
-					$this->title = 'Job opportunity: '.$this->post_data['name'];
-					$this->social_graph_title = $this->title;
-					$this->social_graph_image = $this->post_data['picture_url'];
+					if (is_array($this->post_data)) {
+						$this->social_graph_description = ComeetData::get_property_value($this->post_data['details'], 'Description');
+						$this->title = 'Job opportunity: '.$this->post_data['name'];
+						$this->social_graph_title = $this->title;
+						$this->social_graph_image = $this->post_data['picture_url'];
+					}
 				} else if (isset($this->comeet_cat)) {
 					$options = $this->get_options();
 					list($comeet_groups, $data, $group_element) = ComeetData::get_groups($options, $this->comeet_cat);
